@@ -118,7 +118,7 @@ pvalue <- sum(abs(avg_diff) >= abs(observed_diff)) / length(avg_diff)
 ggplot(as.data.frame(avg_diff), aes(x=avg_diff)) +
   geom_histogram(bins=30) +
   geom_vline(xintercept=c(observed_diff, -observed_diff), linetype="dotted") +
-  xlab("Test statistic t (difference in group averages)")
+  xlab("Test statistic t (difference between sample averages)")
 ggsave(filename="writeup/4c.png", width=5, height=3, units="in")
 
 
