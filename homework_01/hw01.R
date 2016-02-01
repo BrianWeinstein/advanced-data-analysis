@@ -123,17 +123,28 @@ ggsave(filename="writeup/4c.png", width=5, height=3, units="in")
 
 
 
-
-
-
-
-
-
-
-
 rm(ratData, rat.ndx,
    ratGroupA, ratGroupA.zinc, ratGroupB, ratGroupB.zinc,
    i, observed_avg, observed_diff, avg_diff, pvalue)
+
+
+
+# Problem 6: Ramsey 2.14 ###############################################################################
+
+# load data
+fishOilData <- Sleuth3::ex0112
+
+# compute the 95% confidience interval (in the same way as in Section 2.3.3, which uses a 2-sided CI)
+t.test(formula=BP~Diet, data=fishOilData,
+       var.equal=TRUE, conf.level=0.95)
+
+# given that we're using a 1-sided p-value (which we get here), we could
+# also use a 1-sided condificne "interval" with an infinite upper bound
+t.test(formula=BP~Diet, data=fishOilData,
+       var.equal=TRUE, conf.level=0.95,
+       alternative="greater")
+
+
 
 
 
