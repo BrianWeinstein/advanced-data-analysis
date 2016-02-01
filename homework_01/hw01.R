@@ -128,6 +128,14 @@ rm(ratData, rat.ndx,
    i, observed_avg, observed_diff, avg_diff, pvalue)
 
 
+# Problem 5: Ramsey 2.12 ###############################################################################
+
+dt(seq(-1, 1, 0.05), df=1095) # density function
+pt(seq(-1, 1, 0.05), df=1095) # cumulative distribution function
+qt(seq(0, 1, 0.05), df=1095) # quantile function
+
+
+
 
 # Problem 6: Ramsey 2.14 ###############################################################################
 
