@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  26 JAN 2016 23:35
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  27 JAN 2016 18:01
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -774,17 +774,13 @@ Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 131.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 131.
 Package rerunfilecheck Info: File `writeup_template.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 131.
  ) 
 Here is how much of TeX's memory you used:
- 15962 strings out of 493488
- 283056 string characters out of 3141326
- 456304 words of memory out of 3000000
- 18976 multiletter control sequences out of 15000+200000
+ 15924 strings out of 493488
+ 282409 string characters out of 3141326
+ 455855 words of memory out of 3000000
+ 18938 multiletter control sequences out of 15000+200000
  8234 words of font info for 30 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
  63i,10n,57p,453b,545s stack positions out of 5000i,500n,10000p,200000b,50000s
