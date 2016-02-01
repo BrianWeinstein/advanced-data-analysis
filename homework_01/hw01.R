@@ -145,10 +145,39 @@ t.test(formula=BP~Diet, data=fishOilData,
        alternative="greater")
 
 
+rm(fishOilData)
+
+
+# Problem 7: Ramsey 2.16 ###############################################################################
+
+# load data
+creativityData <- Sleuth3::case0101
+
+# reorder Treatment factor levels to be consistent with book's analysis
+creativityData$Treatment <- relevel(creativityData$Treatment, "Intrinsic")
+
+# compute t-test
+t.test(formula=Score~Treatment, data=creativityData,
+       var.equal=TRUE, conf.level=0.95)
+
+rm(creativityData)
 
 
 
+# Problem 8: Ramsey 2.23 ###############################################################################
+
+# load data
+highwayData <- Sleuth3::ex0223
+
+# compute t-test
+t.test(formula=PctChange~SpeedLimit, data=highwayData,
+       var.equal=TRUE, conf.level=0.95)
+
+ggplot(highwayData, aes(x=SpeedLimit, y=PctChange)) +
+  geom_boxplot() +
+  ylab("% change in traffic fatalities")
+ggsave(filename="writeup/8.png", width=5, height=3, units="in")
 
 
-
+rm(highwayData)
 
