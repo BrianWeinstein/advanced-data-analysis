@@ -1,1 +1,6 @@
-.Rhistory
+*.Rhistory
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.tdo
