@@ -15,8 +15,7 @@ library(ggplot2); theme_set(theme_bw())
 
 
 
-
-# Problem 1: Ramsey 1.17 ###############################################################################
+# Problem 1: Ramsey 1.17 #######################################################################
 
 # score data (a1, a2, a3, a4, b1, b2, b3)
 scores <- c(68, 77, 82, 85, 53, 64, 71)
@@ -31,7 +30,7 @@ sets <- lapply(1:length(setA), function(i){c(setA[[i]], setB[[i]])}) %>%
   as.data.frame()
 colnames(sets) <- c("a1", "a2", "a3", "a4", "b1", "b2", "b3")
 
-rm(setA, setB)
+rm(list = ls()) # clear working environment
 
 # calculate difference between sample averages
 sets <- sets %>%
@@ -45,13 +44,11 @@ observed_diff <- sets$avg_diff[1] # row 1 has the observed data
 # caluclate two-sided p-value of observed_diff
 pvalue <- sum(abs(sets$avg_diff) >= abs(observed_diff)) / nrow(sets)
 
-
-rm(sets, observed_diff, pvalue, scores)
-
+rm(list = ls()) # clear working environment
 
 
 
-# Problem 3: Ramsey 1.25 (b) ###############################################################################
+# Problem 3: Ramsey 1.25 (b) #######################################################################
 
 # load data
 ratData <- Sleuth3::ex0125
@@ -64,10 +61,9 @@ ggsave(filename="writeup/3.png", width=5, height=3, units="in")
 
 
 
+# Problem 4 #######################################################################
 
-# Problem 4 ###############################################################################
-
-# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # calculate the observed difference in group averages
 observed_avg <- ratData %>%
@@ -79,8 +75,7 @@ observed_diff <- observed_avg$groupAvg[1] - observed_avg$groupAvg[2]
 # Null hypothesis: observed_diff = 0
 # Alternative hypothesis: observed_diff != 0
 
-
-# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # created an index
 rat.ndx <- 1:nrow(ratData)
@@ -112,8 +107,7 @@ avg_diff <- unlist(avg_diff)
 # caluclate two-sided p-value of observed_diff
 pvalue <- sum(abs(avg_diff) >= abs(observed_diff)) / length(avg_diff)
 
-
-# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 ggplot(as.data.frame(avg_diff), aes(x=avg_diff)) +
   geom_histogram(bins=30) +
@@ -123,12 +117,11 @@ ggsave(filename="writeup/4c.png", width=5, height=3, units="in")
 
 
 
-rm(ratData, rat.ndx,
-   ratGroupA, ratGroupA.zinc, ratGroupB, ratGroupB.zinc,
-   i, observed_avg, observed_diff, avg_diff, pvalue)
+rm(list = ls()) # clear working environment
 
 
-# Problem 5: Ramsey 2.12 ###############################################################################
+
+# Problem 5: Ramsey 2.12 #######################################################################
 
 # dt density function; pt cumulative distribution function; qt quantile function
 
@@ -159,16 +152,15 @@ MakeConfidenceInterval(mean=mean_value, se=std_err, df=df_value, confLevel=0.90)
 
 # t-statistic: (mean - hypothesized_mean) / se, for hypothesized_mean=0
 t_stat <- (mean_value - 0) / std_err
-t_stat
 
 # two-sided p-value for this t statistic
 2 * pt(q=(-1 * abs(t_stat)), df=df_value)
 
-rm(mean_value, std_err, df_value, t_stat)
+rm(list = ls()) # clear working environment
 
 
 
-# Problem 6: Ramsey 2.14 ###############################################################################
+# Problem 6: Ramsey 2.14 #######################################################################
 
 # load data
 fishOilData <- Sleuth3::ex0112
@@ -183,11 +175,11 @@ t.test(formula=BP~Diet, data=fishOilData,
        var.equal=TRUE, conf.level=0.95,
        alternative="greater")
 
+rm(list = ls()) # clear working environment
 
-rm(fishOilData)
 
 
-# Problem 7: Ramsey 2.16 ###############################################################################
+# Problem 7: Ramsey 2.16 #######################################################################
 
 # load data
 creativityData <- Sleuth3::case0101
@@ -199,11 +191,11 @@ creativityData$Treatment <- relevel(creativityData$Treatment, "Intrinsic")
 t.test(formula=Score~Treatment, data=creativityData,
        var.equal=TRUE, conf.level=0.95)
 
-rm(creativityData)
+rm(list = ls()) # clear working environment
 
 
 
-# Problem 8: Ramsey 2.23 ###############################################################################
+# Problem 8: Ramsey 2.23 #######################################################################
 
 # load data
 highwayData <- Sleuth3::ex0223
@@ -217,6 +209,4 @@ ggplot(highwayData, aes(x=SpeedLimit, y=PctChange)) +
   ylab("% change in traffic fatalities")
 ggsave(filename="writeup/8.png", width=5, height=3, units="in")
 
-
-rm(highwayData)
-
+rm(list = ls()) # clear working environment

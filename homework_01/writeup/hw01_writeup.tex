@@ -59,13 +59,24 @@
 \maketitle
 
 
+Code is attached here and also posted at \href{https://github.com/BrianWeinstein/advanced-data-analysis}{https://github.com/BrianWeinstein/advanced-data-analysis}. Where relevant, code snippets and output are are included in-line.
 
 \begin{questions}
 
 
 \titledquestion{\ramsey 1.17}
 
-See \texttt{hw01.R} for code.
+A subset of the 35 possible combinations, along with their sample averages and difference in sample averages is provided below:
+\begin{code}
+   a1 a2 a3 a4 b1 b2 b3 avg_a    avg_b    avg_diff
+1  68 77 82 85 53 64 71 78.00 62.66667  15.3333333
+2  68 77 82 53 85 64 71 70.00 73.33333  -3.3333333
+3  68 77 82 64 85 53 71 72.75 69.66667   3.0833333
+...
+33 82 85 64 71 68 77 53 75.50 66.00000   9.5000000
+34 82 53 64 71 68 77 85 67.50 76.66667  -9.1666667
+35 85 53 64 71 68 77 82 68.25 75.66667  -7.4166667
+\end{code}
 
 The observed difference between sample averages is $15.333$, which, based on the 35 differences in the randomization distribution, corresponds to a two-sided p-value of $0.0867$.
 
@@ -112,12 +123,6 @@ The researchers' conclusions make both causal inferences and inferences to the p
 
 
 
-
-
-
-
-
-\todo{problem 2 (1.21), pt 2}
 \part A Randomized, Controlled Trial of an Aerosolized Vaccine against Measles
 
 
@@ -163,7 +168,17 @@ The researchers' conclusion makes both a causal inference and an inference to th
 
 \titledquestion{\ramsey 1.25 (b)}
 
-See Figure \ref{fig:3}.
+A boxplot of zinc concentrations in the blood for two groups of rats is shown in Figure \ref{fig:3}.
+ 
+\begin{code}
+# load data
+ratData <- Sleuth3::ex0125
+
+# create boxplots
+ggplot(ratData, aes(x=Group, y=Zinc)) +
+  geom_boxplot() + 
+  ylab("Zinc concentration (mg/ml)")
+\end{code}
 
 \begin{figure}[h!]
 	\centering
@@ -176,6 +191,8 @@ See Figure \ref{fig:3}.
 
 
 \titledquestion{Use the data from Problem 3 to answer the following questions.}
+
+See attached code.
 
 \begin{parts}
 
@@ -349,11 +366,8 @@ Performing the t-test on this data generates a one-sided p-value of $0.43495$ an
 The high p-value indicates that there is nearly no evidence to reject the null hypothesis, which states that the difference in means $\mu_{Inc} - \mu_{Ret}$ is positive.
 
 
-
-
-
 \end{questions}
 
-\listoftodos
+% \listoftodos
 
 \end{document}
