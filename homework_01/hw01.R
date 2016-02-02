@@ -130,10 +130,41 @@ rm(ratData, rat.ndx,
 
 # Problem 5: Ramsey 2.12 ###############################################################################
 
-dt(seq(-1, 1, 0.05), df=1095) # density function
-pt(seq(-1, 1, 0.05), df=1095) # cumulative distribution function
-qt(seq(0, 1, 0.05), df=1095) # quantile function
+# dt density function; pt cumulative distribution function; qt quantile function
 
+# Define a fn to calcuate a conf interval for a given mean, std error, df, and conf level
+MakeConfidenceInterval <- function(mean, se, df, confLevel){
+  
+  sigLevel <- 1 - confLevel
+  
+  error <- qt(p=1-(sigLevel/2), df=df) * se
+  
+  lowerBound <- mean - error
+  upperBound <- mean + error
+  
+  confidenceInterval <- c(lowerBound, upperBound)
+  
+  return(confidenceInterval)
+  
+}
+
+# define variables for this problem
+mean_value <- 280
+std_err <- 46.66
+df_value <- 1095
+
+# 95% and 90% confidence intervals for (mu_2 - mu_1)
+MakeConfidenceInterval(mean=mean_value, se=std_err, df=df_value, confLevel=0.95)
+MakeConfidenceInterval(mean=mean_value, se=std_err, df=df_value, confLevel=0.90)
+
+# t-statistic: (mean - hypothesized_mean) / se, for hypothesized_mean=0
+t_stat <- (mean_value - 0) / std_err
+t_stat
+
+# two-sided p-value for this t statistic
+2 * pt(q=(-1 * abs(t_stat)), df=df_value)
+
+rm(mean_value, std_err, df_value, t_stat)
 
 
 

@@ -20,6 +20,7 @@
 \usepackage{float}
 \setlength\parindent{0pt}
 \usepackage{lipsum}
+\usepackage{amsmath}
 
 
 \qformat{\textbf{Problem \thequestion: \thequestiontitle}\quad \hfill}
@@ -105,7 +106,7 @@ It isn't explicitly stated that participant selection was randomized, but it is 
 
 \subpart \textit{Determine whether inferential statements are limited to or go beyond the scope allowed in Display 1.5.}
 
-The researcher's conclusions make both causal inferences and inferences to the population, both of which are allowed by the study's placement in Display 1.5.
+The researchers' conclusions make both causal inferences and inferences to the population, both of which are allowed by the study's placement in Display 1.5.
 
 \end{subparts}
 
@@ -135,15 +136,20 @@ Full Article: \href{http://www.nejm.org.ezproxy.cul.columbia.edu/doi/full/10.105
 
 \subpart \textit{Summary of study design and conclusions:}
 
-asdf
+This study measured the effect of a measles vaccine delivered via aerosol inhalation vs subcutaneous injection. Children in Pune, India between the ages of 9.0 and 11.9 months who were eligible to receive the vaccine (according to WHO criteria) were randomly selected to participate in the experiment, and were randomly assigned in a 1:1 ratio to one of the treatment groups.
+
+Researchers were testing the hypothesis that the aerosol inhalation was not inferior to the subutaneous injection. As a measure of treatment efficacy, researchers tested if (1) the participant was seropositive (had antibodies against measles) 91 days after vaccination, and (2) the participant had any adverse effects in the 0--90 days after vaccination.
+
+On day 91, 85.4\% of the aerosol group (95\% CI, 82.5 to 88.0) was seropositive, compared to 94.6\% of the subcutaneous group (95\% CI, 92.7 to 96.1); a difference of −9.2 percentage points (95\% CI, −12.2 to −6.3). The researchers found that, at the pre-specified 5 percentage-point margin, ``the aerosolized vaccine was inferior to the subcutaneous vaccine with respect to the rate of seropositivity.'' There were no serious adverse events attributable to measles vaccination in either group. The study concluded that the aerosolized vaccine was inferior to the subcutaneous injection when measuring ``seropositivity at 91 days in children who were 9.0 to 11.9 months of age.''
+
 
 \subpart \textit{Categorize the study according to Display 1.5.}
 
-asdf
+Since both the participant selection and group allocation were randomized, the study falls into the top-left group in Display 1.5.
 
 \subpart \textit{Determine whether inferential statements are limited to or go beyond the scope allowed in Display 1.5.}
 
-asdf
+The researchers' conclusion makes both a causal inference and an inference to the population, both of which are allowed by the study's placement in Display 1.5.
 
 \end{subparts}
 
@@ -173,7 +179,7 @@ See Figure \ref{fig:3}.
 
 \begin{parts}
 
-\part \textbf{Set up the null and alternative hypotheses to address the research question described.}
+\part \textit{Set up the null and alternative hypotheses to address the research question described.}
 
 \begin{itemize}
 \item Test statistic $t=\bar{A}-\bar{B}$, where $\bar{A}$ and $\bar{B}$ are the average Zinc concentrations in the rats of group A and B, respectively.
@@ -182,11 +188,11 @@ See Figure \ref{fig:3}.
 \end{itemize}
 
 
-\part \textbf{Use 1,000 simulations to perform a randomization test for testing the hypothesis in (a). What is your p-value?}
+\part \textit{Use 1,000 simulations to perform a randomization test for testing the hypothesis in (a). What is your p-value?}
 
 The observed difference between sample averages is $-0.07755$, which, based on the 1,000 simulations in the randomization distribution, corresponds to a two-sided p-value of $0.261$.
 
-\part \textbf{Draw the reference distribution of your test statistic based on 1,000 simulations.}
+\part \textit{Draw the reference distribution of your test statistic based on 1,000 simulations.}
 
 See Figure \ref{fig:4c}.
 
@@ -198,7 +204,7 @@ See Figure \ref{fig:4c}.
 \end{figure}
 
 
-\part \textbf{Write a brief summary of your findings and possible recommendations for the researchers.}
+\part \textit{Write a brief summary of your findings and possible recommendations for the researchers.}
 
 The available data does not provide conclusive evidence that the calcium supplement given to group A, but not to group B, had an effect in blood Zinc concentrations. The p-value, $0.261$, associated with the test statistic indicates that there isn't enough evidence to conclusively reject the null hypothesis.
 
@@ -211,7 +217,65 @@ The available data does not provide conclusive evidence that the calcium supplem
 
 \titledquestion{\ramsey 2.12}
 
-\todo{problem 5 (2.12)}
+\begin{align*}
+& \mu_1 = \text{average birthweight of babies from mothers who used marijuana} \\
+& \mu_2 = \text{average birthweight of babies from mothers who did not use marijuana} \\
+& \mu_2 - \mu_1 = 280 \text{ grams} \\
+& \text{SE}\left(  \mu_2 - \mu_1  \right) = 46.66 \text{ grams, with d.f.} = 1095
+\end{align*}
+
+
+\begin{parts}
+
+\part A 95\% confidence interval for $\mu_2 - \mu_1$ is from $188.4469$ to $371.5531$.
+
+\begin{codeSmall}
+> # Define a fn to calcuate a conf interval for a given mean, std error, df, and conf level
+> MakeConfidenceInterval <- function(mean, se, df, confLevel){
++   sigLevel <- 1 - confLevel
++   error <- qt(p=1-(sigLevel/2), df=df) * se
++   lowerBound <- mean - error
++   upperBound <- mean + error
++   confidenceInterval <- c(lowerBound, upperBound)
++   return(confidenceInterval)
++ }
+> 
+> # define variables for this problem
+> mean_value <- 280
+> std_err <- 46.66
+> df_value <- 1095
+> 
+> MakeConfidenceInterval(mean=mean_value, se=std_err, df=df_value, confLevel=0.95)
+[1] 188.4469 371.5531
+\end{codeSmall}
+
+
+
+\part A 90\% confidence interval for $\mu_2 - \mu_1$ is from $203.1861$ to $356.8139$.
+
+\begin{codeSmall}
+> MakeConfidenceInterval(mean=mean_value, se=std_err, df=df_value, confLevel=0.90)
+[1] 203.1861 356.8139
+\end{codeSmall}
+
+
+
+\part A two-sided p-value for a test of the hypothesis that $\mu_2 - \mu_1 = 0$ is minuscule, at $2.7 \times 10^{-9}$.
+
+\begin{codeSmall}
+> # t-statistic: (mean - hypothesized_mean) / se, for hypothesized_mean=0
+> t_stat <- (mean_value - 0) / std_err
+> t_stat
+[1] 6.000857
+> 
+> # two-sided p-value for this t statistic
+> 2 * pt(q=(-1 * abs(t_stat)), df=df_value)
+[1] 2.664672e-09
+\end{codeSmall}
+
+
+\end{parts}
+
 
 \titledquestion{\ramsey 2.14}
 
@@ -283,6 +347,9 @@ There's very little evidence to suggest that the percentage change in traffic fa
 Performing the t-test on this data generates a one-sided p-value of $0.43495$ and a treatment effect of $0.39428$ in units of percent change (95\% CI from $-4.417753$ to $5.206305$). The treatment effect is mostly driven by three states with extremely large percent increases: Texas (the outlier in Figure \ref{fig:8}), Oklahoma, and Wyoming.
 
 The high p-value indicates that there is nearly no evidence to reject the null hypothesis, which states that the difference in means $\mu_{Inc} - \mu_{Ret}$ is positive.
+
+
+
 
 
 \end{questions}
