@@ -108,7 +108,32 @@ rm(list = ls()) # clear working environment
 
 # Problem 3: Ramsey 3.25 #######################################################################
 
+# load data
+agentOrangeData <- Sleuth3::case0302
 
+# compute group difference, 1-sided p-value, and 95% CI with all observations
+t1 <- t.test(formula=Dioxin~Veteran, data=agentOrangeData,
+       var.equal=TRUE, conf.level=0.95, alternative="less")
+-diff(t1$estimate)[[1]]
+t1$p.value
+t.test(formula=Dioxin~Veteran, data=agentOrangeData,
+       var.equal=TRUE, conf.level=0.95)$conf.int
+
+# compute group difference, 1-sided p-value, and 95% CI without observation 646
+t2 <- t.test(formula=Dioxin~Veteran, data=agentOrangeData[-646, ],
+       var.equal=TRUE, conf.level=0.95, alternative="less")
+-diff(t2$estimate)[[1]]
+t2$p.value
+t.test(formula=Dioxin~Veteran, data=agentOrangeData,
+       var.equal=TRUE, conf.level=0.95)$conf.int
+
+# compute group difference, 1-sided p-value, and 95% CI without observations 646 and 645
+t3 <- t.test(formula=Dioxin~Veteran, data=agentOrangeData[-(645:646), ],
+       var.equal=TRUE, conf.level=0.95, alternative="less")
+-diff(t3$estimate)[[1]]
+t3$p.value
+t.test(formula=Dioxin~Veteran, data=agentOrangeData,
+       var.equal=TRUE, conf.level=0.95)$conf.int
 
 rm(list = ls()) # clear working environment
 
