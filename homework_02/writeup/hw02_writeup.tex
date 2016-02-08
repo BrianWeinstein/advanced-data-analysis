@@ -199,9 +199,80 @@ Since the conclusion of the study depends on which dataset is used, we must eith
 
 \titledquestion{\ramsey 3.32}
 
+\textit{Analyze the data to describe the extent to which:}
+
+\begin{parts}
+\setlength{\parindent}{1em}
+
+\part \textit{public school tuition is more expensive when out-of-state than when in-state.}
+
+Boxplots of out-of-state vs in-state tuition for the 25 public schools (see Figure \ref{fig:5a_twoSample}) reveal (1) that out-of-state tuition has a higher center than in-state tuition, (2) that out-of-state tuition has a higher standard deviation than in-state tution, and (3) that some outliers may be skewing the results.
+\begin{figure}
+	\centering
+	\includegraphics[width=5in]{5a_twoSample.png}
+	\caption{Out-of-state vs in-state tuition costs for 25 public colleges.}
+	\label{fig:5a_twoSample}
+\end{figure}
+The standard error for out-of-state tuition is 4,500.41 USD, which is 1.71 times higher than the standard error for in-state tuition of 2633.68 USD, making the two-sample t-tools unreliable here.
+
+Luckily, the one-sample paired t-tools may be more appropriate in this case, since each \{out-of-state, in-state\} measurement is an observation on a single college. The distribution of the the difference between each \{out-of-state, in-state\} pair is nearly normal, as shown in Figure \ref{fig:5a_paired}.
+\begin{figure}
+	\centering
+	\includegraphics[width=5in]{5a_paired.png}
+	\caption{(Out-of-state) - (in-state) tuition costs for 25 public colleges.}
+	\label{fig:5a_paired}
+\end{figure}
+Using the paired t-test to test the alternative hypothesis that $\left(\text{out-of-state tuition}\right) - \left(\text{in-state tuition}\right) > 0$, we find substantial evidence that the mean difference in the out-of-state tuition and in-state tuition among a random sample of 25 public colleges is positive (one-sided p-value = $3.264\times10^{-13}$). It's estimated that the mean tuition cost is \$9,038.4 more for out-of-state tuition (95\% confidence interval: \$7,687.08 to \$10,389.72).
+
+
+
+\part \textit{in-state tuition is more expensive for private schools than for public schools.}
+
+Boxplots of in-state tuition costs for private vs public colleges (see Figure \ref{fig:5b_original}) reveal that private tuition has both a higher center and significantly higher spread than public tuition, making this dataset a good candidate for a log transformation.
+\begin{figure}
+	\centering
+	\includegraphics[width=5in]{5b_original.png}
+	\caption{In-state tuition costs for private vs public colleges.}
+	\label{fig:5b_original}
+\end{figure}
+The log-transformed data is shown in Figure \ref{fig:5b_log}, where the private tuition has a standard error of 0.495 and the public tuition has a similar standard error of 0.334 (on the log scale). Since the sample sizes in each group are the same, the the difference in standard errors has little effect on the robustness of the t-tools.
+\begin{figure}
+	\centering
+	\includegraphics[width=5in]{5b_log.png}
+	\caption{Log-transformed in-state tuition costs for private vs public colleges.}
+	\label{fig:5b_log}
+\end{figure}
+Using the two-sample t-test on the log-transformed tuitions, we find substantial evidence that private school in-state tuition is greater than public school in-state tuition on the log scale (one-sided p-value: $6.31\times10^{-15}$). Back-transforming the estimate and confidence interval from the log scale to the original scale, it's estimated that the mean tuition cost is 3.692 times higher for out-of-state than in-state (95\% confidence interval: 2.904 to 4.695 times).
+
+
+
+
+\part \textit{out-of-state tuition is more expensive for private schools than for public schools.}
+
+Boxplots of out-of-state tuition costs for private vs public colleges (see Figure \ref{fig:5c_original}) reveal that private tuition has both a higher center and significantly higher spread than public tuition, making this dataset a good candidate for a log transformation.
+\begin{figure}
+	\centering
+	\includegraphics[width=5in]{5c_original.png}
+	\caption{In-state tuition costs for private vs public colleges.}
+	\label{fig:5c_original}
+\end{figure}
+
+The log-transformed data is shown in Figure \ref{fig:5c_log}, where the private tuition has a standard error of 0.495 and the public tuition has a similar standard error of 0.334 (on the log scale). Since the sample sizes in each group are the same, the the difference in standard errors has little effect on the robustness of the t-tools.
+\begin{figure}
+	\centering
+	\includegraphics[width=5in]{5c_log.png}
+	\caption{Log-transformed out-of-state tuition costs for private vs public colleges.}
+	\label{fig:5c_log}
+\end{figure}
+Using the two-sample t-test on the log-transformed tuitions, we find substantial evidence that private school in-state tuition is greater than public school in-state tuition on the log scale (one-sided p-value: $0.0001073$). Back-transforming the estimate and confidence interval from the log scale to the original scale, it's estimated that the mean tuition cost is  1.613 times higher for out-of-state than in-state (95\% confidence interval: 1.269 2.0512 times).
+
+
+\end{parts}
+
 
 \titledquestion{\ramsey 4.19}
 
+asdf
 
 
 

@@ -12,6 +12,7 @@ setwd("~/Documents/advanced-data-analysis/homework_02")
 library(dplyr)
 library(Sleuth3) # Data sets from Ramsey and Schafer's "Statistical Sleuth (3rd ed)"
 library(ggplot2); theme_set(theme_bw())
+library(tidyr)
 
 
 
@@ -148,7 +149,7 @@ sparrowData <- Sleuth3::ex0221
 ggplot(sparrowData, aes(x=Status, y=Humerus)) +
   geom_boxplot() +
   labs(y="Humerus Length (inches)", title="Full dataset")
-ggsave(filename="writeup/4_full.png", width=5, height=3, units="in")
+ggsave(filename="writeup/4_full.png", width=7, height=4, units="in")
 
 # compute group difference, 2-sided p-value, and 95% CI; with all observations
 t.test(formula=Humerus~Status, data=sparrowData,
@@ -165,7 +166,153 @@ rm(list = ls()) # clear working environment
 
 # Problem 5: Ramsey 3.32 #######################################################################
 
+# load data
+tuitionData <- Sleuth3::ex0332
 
+# Part a: Public school tuition (out-of-state > in-state) ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# Subset the data for part a and convert to long format
+tuitionData.a <- tuitionData %>%
+  filter(Type=="Public") %>%
+  gather(key="tuitionType", value="tuition", c(OutOfState, InState), factor_key=TRUE) %>%
+  arrange(College, tuitionType)
+
+# create boxplots
+ggplot(tuitionData.a, aes(x=tuitionType, y=tuition)) +
+  geom_violin(alpha=0.15) +
+  geom_boxplot() + 
+  labs(y="Tuition (USD)", title="(a) Public School Tuition: In-State vs Out-of-State")
+ggsave(filename="writeup/5a_twoSample.png", width=7, height=4, units="in")
+
+# check group standard errors
+tuitionData.a %>%
+  group_by(tuitionType) %>%
+  summarize(sd=sd(tuition))
+
+# group standard errors are sginificantly different, so two-sample t-test is unreliable here
+# since the measurements are each paired, we can try the one-sample paired t-test
+
+# Create a new dataframe with the tuition differences
+tuitionData.a2 <- tuitionData %>%
+  filter(Type=="Public") %>%
+  mutate(diff=OutOfState-InState)
+
+# create boxplot
+ggplot(tuitionData.a2, aes(x=Type, y=diff)) +
+  geom_violin(alpha=0.15) +
+  geom_boxplot() +
+  labs(y="Tuition (USD)", title="(a) Public School Tuition: (Out-of-State) - (In-State)")
+ggsave(filename="writeup/5a_paired.png", width=7, height=4, units="in")
+
+# Perform paired t-test
+t.test(x=tuitionData.a2$OutOfState, y=tuitionData.a2$InState, paired=TRUE,
+       conf.level=0.95, alternative="greater")
+# Perform a two sided paired t-test for the confidence interval
+t.test(x=tuitionData.a2$OutOfState, y=tuitionData.a2$InState, paired=TRUE,
+       conf.level=0.95, alternative="two.sided")$conf.int
+
+# Part b: In-state tutition (private > public) ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# Create dataset for part b
+tuitionData.b <- tuitionData %>%
+  mutate(OutOfState=NULL)
+
+# create boxplots
+ggplot(tuitionData.b, aes(x=Type, y=InState)) +
+  geom_violin(alpha=0.15) +
+  geom_boxplot() + 
+  labs(y="In-State Tuition (USD)", title="(b) In-State Tuition: Private vs Public")
+ggsave(filename="writeup/5b_original.png", width=7, height=4, units="in")
+
+# Create a log-transformed InState tuition column
+tuitionData.b <- tuitionData.b %>%
+  mutate(LogInState=log(InState))
+
+# create boxplots of the log-transformed data
+ggplot(tuitionData.b, aes(x=Type, y=LogInState)) +
+  geom_violin(alpha=0.15) +
+  geom_boxplot() + 
+  labs(y="Log(In-State Tuition (USD))", title="(b) Log(In-State Tuition): Private vs Public")
+ggsave(filename="writeup/5b_log.png", width=7, height=4, units="in")
+
+# check group standard errors
+tuitionData.b %>%
+  group_by(Type) %>%
+  summarize(sd=sd(LogInState))
+
+# Perform a two-sample t-test
+tt.b <- t.test(formula=LogInState~Type, data=tuitionData.b,
+               var.equal=TRUE, conf.level=0.95, alternative="greater")
+tt.b
+
+# take antilog of the estimate
+exp(-diff(tt.b$estimate)[[1]])
+
+# Perform a two sided t-test for the confidence interval and take antilog
+exp(t.test(formula=LogInState~Type, data=tuitionData.b,
+           var.equal=TRUE, conf.level=0.95, alternative="two.sided")$conf.int)
+
+# Part c: Out-of-state tutition (private > public) ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# Create dataset for part c
+tuitionData.c <- tuitionData %>%
+  mutate(InState=NULL)
+
+# create boxplots
+ggplot(tuitionData.c, aes(x=Type, y=OutOfState)) +
+  geom_violin(alpha=0.15) +
+  geom_boxplot() + 
+  labs(y="Out-of-State Tuition (USD)", title="(c) Out-of-State Tuition: Private vs Public")
+ggsave(filename="writeup/5c_original.png", width=7, height=4, units="in")
+
+# Create a log-transformed OutOfState tuition column
+tuitionData.c <- tuitionData.c %>%
+  mutate(LogOutOfState=log(OutOfState))
+
+# create boxplots of the log-transformed data
+ggplot(tuitionData.c, aes(x=Type, y=LogOutOfState)) +
+  geom_violin(alpha=0.15) +
+  geom_boxplot() + 
+  labs(y="Log(Out-ofn-State Tuition (USD))", title="(c) Log(Out-of-State Tuition): Private vs Public")
+ggsave(filename="writeup/5c_log.png", width=7, height=4, units="in")
+
+# check group standard errors
+tuitionData.c %>%
+  group_by(Type) %>%
+  summarize(sd=sd(LogOutOfState))
+
+# Perform a two-sample t-test
+tt.c <- t.test(formula=LogOutOfState~Type, data=tuitionData.c,
+               var.equal=TRUE, conf.level=0.95, alternative="greater")
+tt.c
+
+# take antilog of the estimate
+exp(-diff(tt.c$estimate)[[1]])
+
+# Perform a two sided t-test for the confidence interval and take antilog
+exp(t.test(formula=LogOutOfState~Type, data=tuitionData.c,
+           var.equal=TRUE, conf.level=0.95, alternative="two.sided")$conf.int)
+
+# Check if outliers impace results in part c ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## 
+
+# Create a dataset for part c excluding outliers
+tuitionData.c2 <- tuitionData.c %>%
+  filter(Type=="Private" & LogOutOfState < 11 |
+           Type=="Public" & LogOutOfState < 10 & LogOutOfState > 9)
+
+# Perform a two-sample t-test
+tt.c2 <- t.test(formula=LogOutOfState~Type, data=tuitionData.c,
+               var.equal=TRUE, conf.level=0.95, alternative="greater")
+tt.c2
+
+# take antilog of the estimate
+exp(-diff(tt.c2$estimate)[[1]])
+
+# Perform a two sided t-test for the confidence interval and take antilog
+exp(t.test(formula=LogOutOfState~Type, data=tuitionData.c2,
+           var.equal=TRUE, conf.level=0.95, alternative="two.sided")$conf.int)
+
+# outliers don't impact the conclusion, so we only report the results that included outliers
 
 rm(list = ls()) # clear working environment
 
