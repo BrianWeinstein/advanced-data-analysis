@@ -11,7 +11,7 @@ setwd("~/Documents/advanced-data-analysis/homework_02")
 # load packages
 library(dplyr)
 library(Sleuth3) # Data sets from Ramsey and Schafer's "Statistical Sleuth (3rd ed)"
-# library(ggplot2); theme_set(theme_bw())
+library(ggplot2); theme_set(theme_bw())
 
 
 
@@ -54,7 +54,7 @@ for(trial in 1:1000){
   
   # Check if CI captured true sample variance and increment counter
   numTrialsCapturingTrueVar = numTrialsCapturingTrueVar + ifelse(confInt[1] < variance & confInt[2] > variance, 1, 0)
-
+  
 }
 
 c(numTrialsCapturingTrueVar, trial)
@@ -111,25 +111,25 @@ rm(list = ls()) # clear working environment
 # load data
 agentOrangeData <- Sleuth3::case0302
 
-# compute group difference, 1-sided p-value, and 95% CI with all observations
+# compute group difference, 1-sided p-value, and 95% CI; with all observations
 t1 <- t.test(formula=Dioxin~Veteran, data=agentOrangeData,
-       var.equal=TRUE, conf.level=0.95, alternative="less")
+             var.equal=TRUE, conf.level=0.95, alternative="less")
 -diff(t1$estimate)[[1]]
 t1$p.value
 t.test(formula=Dioxin~Veteran, data=agentOrangeData,
        var.equal=TRUE, conf.level=0.95)$conf.int
 
-# compute group difference, 1-sided p-value, and 95% CI without observation 646
+# compute group difference, 1-sided p-value, and 95% CI; excluding observation 646
 t2 <- t.test(formula=Dioxin~Veteran, data=agentOrangeData[-646, ],
-       var.equal=TRUE, conf.level=0.95, alternative="less")
+             var.equal=TRUE, conf.level=0.95, alternative="less")
 -diff(t2$estimate)[[1]]
 t2$p.value
 t.test(formula=Dioxin~Veteran, data=agentOrangeData,
        var.equal=TRUE, conf.level=0.95)$conf.int
 
-# compute group difference, 1-sided p-value, and 95% CI without observations 646 and 645
+# compute group difference, 1-sided p-value, and 95% CI; excluding observations 646 and 645
 t3 <- t.test(formula=Dioxin~Veteran, data=agentOrangeData[-(645:646), ],
-       var.equal=TRUE, conf.level=0.95, alternative="less")
+             var.equal=TRUE, conf.level=0.95, alternative="less")
 -diff(t3$estimate)[[1]]
 t3$p.value
 t.test(formula=Dioxin~Veteran, data=agentOrangeData,
@@ -141,7 +141,23 @@ rm(list = ls()) # clear working environment
 
 # Problem 4: Ramsey 3.28 #######################################################################
 
+# load data
+sparrowData <- Sleuth3::ex0221
 
+# create boxplots
+ggplot(sparrowData, aes(x=Status, y=Humerus)) +
+  geom_boxplot() +
+  labs(y="Humerus Length (inches)", title="Full dataset")
+ggsave(filename="writeup/4_full.png", width=5, height=3, units="in")
+
+# compute group difference, 2-sided p-value, and 95% CI; with all observations
+t.test(formula=Humerus~Status, data=sparrowData,
+       var.equal=TRUE, conf.level=0.95)
+
+# compute group difference, 2-sided p-value, and 95% CI; excluding the smallest length in the perished group
+t.test(formula=Humerus~Status, data=sparrowData,
+       subset=(!(Humerus==min(sparrowData$Humerus) & Status=="Perished")),
+       var.equal=TRUE, conf.level=0.95)
 
 rm(list = ls()) # clear working environment
 
