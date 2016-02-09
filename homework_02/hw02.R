@@ -346,5 +346,3 @@ sparrowData %>%
             sd=sd(Humerus))
 
 rm(list = ls()) # clear working environment
-
-
