@@ -82,7 +82,6 @@ Therefore, we can construct a $100(1-\alpha)$\% confidence interval for $\sigma^
 
 \begin{align*}
 1-\alpha &= \text{P}\left[    \text{F}_{n-1}\left(\frac{\alpha}{2}\right)  \leq              \frac{(n-1) s^2}{\sigma^2}     \leq  \text{F}_{n-1}\left(1 - \frac{\alpha}{2}\right)   \right] \\
-\\
 &= \text{P}\left[    \frac{1}{\text{F}_{n-1}\left(\frac{\alpha}{2}\right)}   \geq    \frac{\sigma^2}{(n-1)s^2}    \geq    \frac{1}{\text{F}_{n-1}\left(1 - \frac{\alpha}{2}\right)}   \right] \\
 &= \text{P}\left[        \frac{(n-1)s^2}{\text{F}_{n-1}\left(1 - \frac{\alpha}{2}\right)}  \leq \sigma^2  \leq  \frac{(n-1)s^2}{\text{F}_{n-1}\left(\frac{\alpha}{2}\right)}   \right]
 \end{align*}
@@ -109,22 +108,22 @@ See attached code. In my simulation I drew 1000 random samples, with a 95\% conf
 
 \titledquestion{\ramsey 3.22}
 
-\begin{code}
+\begin{codeSmall}
 # Data input
 time26 <- c(5.79, 1579.52, 2323.70)
 time28 <- c(68.8, 108.29, 110.29, 426.07, 1067.60)
-\end{code}
+\end{codeSmall}
 
 \begin{parts}
 
 \part \textit{Form two new variables by taking the logarithms of the breakdown times.}
 
-\begin{code}
+\begin{codeSmall}
 > Y1 <- log(time26) ; Y1
 [1] 1.756132 7.364876 7.750916
 > Y2 <- log(time28) ; Y2
 [1] 4.231204 4.684813 4.703113 6.054604 6.973168
-\end{code}
+\end{codeSmall}
 
 
 \part $\overline{Y}_1 - \overline{Y}_2 = 5.6240 - 5.3294 = 0.2946$
@@ -162,7 +161,7 @@ we find that the breakdown time at 26 kV is estimated to be 1.3426 (from part c)
 
 \titledquestion{\ramsey 3.25}
 
-See attached code. When excluding either (1) no observations, (2) observation 646, or (3) observations 646 and 645, there is no evidence that the mean dioxin level in Vietnam veterans is greater than the mean dioxin level in non-Vietnam veterans. The difference in means non-(veteran minus veteran) (parts per trillion), one-sided p-values, and 95\% confidence intervals for the difference in means (parts per trillion) are:
+See attached code. When excluding either (1) no observations, (2) observation 646, or (3) observations 646 and 645, there is no evidence that the mean dioxin level in Vietnam veterans is greater than the mean dioxin level in non-Vietnam veterans. The difference in means (non-veteran minus veteran) (parts per trillion), one-sided p-values, and 95\% confidence intervals for the difference in means (parts per trillion) are:
 \begin{center}
   \begin{tabular}{| c | c | c | c |}
     \hline
@@ -177,8 +176,9 @@ See attached code. When excluding either (1) no observations, (2) observation 64
 
 
 \titledquestion{\ramsey 3.28}
+\label{ques:ramsey0328}
 
-When including all of the observations, the t-test generates a two-sided p-value of 0.0809:
+Boxplots show in Figure \ref{fig:4}. When including all of the observations, the t-test generates a two-sided p-value of 0.0809:
 \begin{codeSmall}
 > t.test(formula=Humerus~Status, data=sparrowData,
 + var.equal=TRUE, conf.level=0.95)
@@ -218,6 +218,13 @@ With the full dataset, the p-value indicates that the data is suggestive, but is
 
 Since the conclusion of the study depends on which dataset is used, we must either use resistant analysis (Chapter 4) or report the results of both analysis, as done here.
 
+\begin{figure}
+	\centering
+	\includegraphics[width=4.25in]{4_full.png}
+	\caption{Humerus lengths of male sparrows that perished or survived in a winter storm. The smallest length in the Perished group (indicated with a dot) is an extreme outlier and is later excluded from the analysis.}
+	\label{fig:4}
+\end{figure}
+
 
 \titledquestion{\ramsey 3.32}
 
@@ -231,7 +238,7 @@ Since the conclusion of the study depends on which dataset is used, we must eith
 Boxplots of out-of-state vs in-state tuition for the 25 public schools (see Figure \ref{fig:5a_twoSample}) reveal (1) that out-of-state tuition has a higher center than in-state tuition, (2) that out-of-state tuition has a higher standard deviation than in-state tution, and (3) that some outliers may be skewing the results.
 \begin{figure}
 	\centering
-	\includegraphics[width=5in]{5a_twoSample.png}
+	\includegraphics[width=4in]{5a_twoSample.png}
 	\caption{Out-of-state vs in-state tuition costs for 25 public colleges.}
 	\label{fig:5a_twoSample}
 \end{figure}
@@ -240,7 +247,7 @@ The standard error for out-of-state tuition is 4,500.41 USD, which is 1.71 times
 Luckily, the one-sample paired t-tools may be more appropriate in this case, since each \{out-of-state, in-state\} measurement is an observation on a single college. The distribution of the the difference between each \{out-of-state, in-state\} pair is nearly normal, as shown in Figure \ref{fig:5a_paired}.
 \begin{figure}
 	\centering
-	\includegraphics[width=5in]{5a_paired.png}
+	\includegraphics[width=4in]{5a_paired.png}
 	\caption{(Out-of-state) - (in-state) tuition costs for 25 public colleges.}
 	\label{fig:5a_paired}
 \end{figure}
@@ -253,14 +260,14 @@ Using the paired t-test to test the alternative hypothesis that $\left(\text{out
 Boxplots of in-state tuition costs for private vs public colleges (see Figure \ref{fig:5b_original}) reveal that private tuition has both a higher center and significantly higher spread than public tuition, making this dataset a good candidate for a log transformation.
 \begin{figure}
 	\centering
-	\includegraphics[width=5in]{5b_original.png}
+	\includegraphics[width=4in]{5b_original.png}
 	\caption{In-state tuition costs for private vs public colleges.}
 	\label{fig:5b_original}
 \end{figure}
 The log-transformed data is shown in Figure \ref{fig:5b_log}, where the private tuition has a standard error of 0.495 and the public tuition has a similar standard error of 0.334 (on the log scale). Since the sample sizes in each group are the same, the the difference in standard errors has little effect on the robustness of the t-tools.
 \begin{figure}
 	\centering
-	\includegraphics[width=5in]{5b_log.png}
+	\includegraphics[width=4in]{5b_log.png}
 	\caption{Log-transformed in-state tuition costs for private vs public colleges.}
 	\label{fig:5b_log}
 \end{figure}
@@ -274,7 +281,7 @@ Using the two-sample t-test on the log-transformed tuitions, we find substantial
 Boxplots of out-of-state tuition costs for private vs public colleges (see Figure \ref{fig:5c_original}) reveal that private tuition has both a higher center and significantly higher spread than public tuition, making this dataset a good candidate for a log transformation.
 \begin{figure}
 	\centering
-	\includegraphics[width=5in]{5c_original.png}
+	\includegraphics[width=4in]{5c_original.png}
 	\caption{In-state tuition costs for private vs public colleges.}
 	\label{fig:5c_original}
 \end{figure}
@@ -282,7 +289,7 @@ Boxplots of out-of-state tuition costs for private vs public colleges (see Figur
 The log-transformed data is shown in Figure \ref{fig:5c_log}, where the private tuition has a standard error of 0.495 and the public tuition has a similar standard error of 0.334 (on the log scale). Since the sample sizes in each group are the same, the the difference in standard errors has little effect on the robustness of the t-tools.
 \begin{figure}
 	\centering
-	\includegraphics[width=5in]{5c_log.png}
+	\includegraphics[width=4in]{5c_log.png}
 	\caption{Log-transformed out-of-state tuition costs for private vs public colleges.}
 	\label{fig:5c_log}
 \end{figure}
@@ -294,13 +301,62 @@ Using the two-sample t-test on the log-transformed tuitions, we find substantial
 
 \titledquestion{\ramsey 4.19}
 
-asdf
+Using the \texttt{wilcox.test} R function:
+
+\begin{codeSmall}
+> # load data
+> sparrowData <- Sleuth3::ex0221
+> 
+> # perform rank-sum test
+> wilcox.test(formula=Humerus~Status, data=sparrowData,
++             paired=FALSE, # perform rank-sum test
++             correct=TRUE, # apply continuity correction in the normal approx for the p-value
++             conf.int=TRUE, conf.level=0.95)
+
+	Wilcoxon rank sum test with continuity correction
+
+data:  Humerus by Status
+W = 331, p-value = 0.1718
+alternative hypothesis: true location shift is not equal to 0
+95 percent confidence interval:
+ -0.019076357  0.003033795
+sample estimates:
+difference in location 
+          -0.007022596 
+
+Warning messages:
+1: In wilcox.test.default(x = c(0.659, 0.689, 0.703, 0.702, 0.709,  :
+  cannot compute exact p-value with ties
+2: In wilcox.test.default(x = c(0.659, 0.689, 0.703, 0.702, 0.709,  :
+  cannot compute exact confidence intervals with ties
+\end{codeSmall}
 
 
+\begin{parts}
+\setlength{\parindent}{1em}
+
+
+\part The two-sided p-value is 0.1718.
+
+\part From the documentation, by default, when the \texttt{exact} argument isn't specified the \texttt{wilcox.test} function computes an exact p-value only when the combined sample has fewer than 50 values and there are no ties. Otherwise, as is the case here, since our dataset has 59 observations and also has ties, a normal approximation is used.
+
+\part The p-value based on the normal approximation uses a continuity correction to the Z-statistic.
+
+\part The (two-sided) p-value from the rank-sum test (0.1718) is greater than the p-value from the two-sample t-test (0.0809) and slightly smaller than the p-value from the two-sample t-test when the smallest observation is excluded (0.18) in Problem \ref{ques:ramsey0328}.
+
+\part In this case, the (two-sided) p-value obtained from the two-sample t-test when excluding outliers is nearly identical to the p-value obtained in the rank-sum test.
+
+The two-sample t-test assumes nearly normal populations, equal population variances, and independence of samples. All of these assumptions are nearly satisfied both when the outlier is and isn't excluded.
+
+By design, the rank-sum test less efficient when the populations are normal, but is much better at dealing with outliers and makes no assumption about the population distributions. 
+
+Removing the outlier isn't entirely justified here --- there isn't any indication that there were recording errors or that the outlier came from a different population --- so the rank-sum test may be a better choice, since it generates a similar p-value and entirely avoids the issue of excluding outliers.
+
+\end{parts}
 
 
 \end{questions}
 
-\listoftodos
+%\listoftodos
 
 \end{document}

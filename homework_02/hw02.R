@@ -147,9 +147,10 @@ sparrowData <- Sleuth3::ex0221
 
 # create boxplots
 ggplot(sparrowData, aes(x=Status, y=Humerus)) +
+  geom_violin(alpha=0.15) +
   geom_boxplot() +
-  labs(y="Humerus Length (inches)", title="Full dataset")
-ggsave(filename="writeup/4_full.png", width=7, height=4, units="in")
+  labs(y="Humerus Length (inches)", title="Humerus Length: Perished vs Survived")
+ggsave(filename="writeup/4_full.png", width=6.125, height=3.5, units="in")
 
 # compute group difference, 2-sided p-value, and 95% CI; with all observations
 t.test(formula=Humerus~Status, data=sparrowData,
@@ -182,7 +183,7 @@ ggplot(tuitionData.a, aes(x=tuitionType, y=tuition)) +
   geom_violin(alpha=0.15) +
   geom_boxplot() + 
   labs(y="Tuition (USD)", title="(5a) Public School Tuition: In-State vs Out-of-State")
-ggsave(filename="writeup/5a_twoSample.png", width=7, height=4, units="in")
+ggsave(filename="writeup/5a_twoSample.png", width=6.125, height=3.5, units="in")
 
 # check group standard errors
 tuitionData.a %>%
@@ -202,7 +203,7 @@ ggplot(tuitionData.a2, aes(x=Type, y=diff)) +
   geom_violin(alpha=0.15) +
   geom_boxplot() +
   labs(y="Tuition (USD)", title="(5a) Public School Tuition: (Out-of-State) - (In-State)")
-ggsave(filename="writeup/5a_paired.png", width=7, height=4, units="in")
+ggsave(filename="writeup/5a_paired.png", width=6.125, height=3.5, units="in")
 
 # Perform paired t-test
 t.test(x=tuitionData.a2$OutOfState, y=tuitionData.a2$InState, paired=TRUE,
@@ -222,7 +223,7 @@ ggplot(tuitionData.b, aes(x=Type, y=InState)) +
   geom_violin(alpha=0.15) +
   geom_boxplot() + 
   labs(y="In-State Tuition (USD)", title="(5b) In-State Tuition: Private vs Public")
-ggsave(filename="writeup/5b_original.png", width=7, height=4, units="in")
+ggsave(filename="writeup/5b_original.png", width=6.125, height=3.5, units="in")
 
 # Create a log-transformed InState tuition column
 tuitionData.b <- tuitionData.b %>%
@@ -233,7 +234,7 @@ ggplot(tuitionData.b, aes(x=Type, y=LogInState)) +
   geom_violin(alpha=0.15) +
   geom_boxplot() + 
   labs(y="Log(In-State Tuition (USD))", title="(5b) Log(In-State Tuition): Private vs Public")
-ggsave(filename="writeup/5b_log.png", width=7, height=4, units="in")
+ggsave(filename="writeup/5b_log.png", width=6.125, height=3.5, units="in")
 
 # check group standard errors
 tuitionData.b %>%
@@ -263,7 +264,7 @@ ggplot(tuitionData.c, aes(x=Type, y=OutOfState)) +
   geom_violin(alpha=0.15) +
   geom_boxplot() + 
   labs(y="Out-of-State Tuition (USD)", title="(5c) Out-of-State Tuition: Private vs Public")
-ggsave(filename="writeup/5c_original.png", width=7, height=4, units="in")
+ggsave(filename="writeup/5c_original.png", width=6.125, height=3.5, units="in")
 
 # Create a log-transformed OutOfState tuition column
 tuitionData.c <- tuitionData.c %>%
@@ -274,7 +275,7 @@ ggplot(tuitionData.c, aes(x=Type, y=LogOutOfState)) +
   geom_violin(alpha=0.15) +
   geom_boxplot() + 
   labs(y="Log(Out-ofn-State Tuition (USD))", title="(5c) Log(Out-of-State Tuition): Private vs Public")
-ggsave(filename="writeup/5c_log.png", width=7, height=4, units="in")
+ggsave(filename="writeup/5c_log.png", width=6.125, height=3.5, units="in")
 
 # check group standard errors
 tuitionData.c %>%
@@ -320,15 +321,29 @@ rm(list = ls()) # clear working environment
 
 # Problem 6: Ramsey 4.19 #######################################################################
 
+# load data
+sparrowData <- Sleuth3::ex0221
 
+# perform rank-sum test
+wilcox.test(formula=Humerus~Status, data=sparrowData,
+            paired=FALSE, # perform rank-sum test
+            correct=TRUE, # apply continuity correction in the normal approx for the p-value
+            conf.int=TRUE, conf.level=0.95)
 
+# check if group sd are nearly equal
+sparrowData %>%
+  group_by(Status) %>%
+  summarize(count=n(),
+            mean=mean(Humerus),
+            sd=sd(Humerus))
 
-
-
-
-
-
-
+# check if group sd are nearly equal when excluding the outlier
+sparrowData %>%
+  filter(!(Humerus==min(Humerus) & Status=="Perished")) %>%
+  group_by(Status) %>%
+  summarize(count=n(),
+            mean=mean(Humerus),
+            sd=sd(Humerus))
 
 rm(list = ls()) # clear working environment
 
