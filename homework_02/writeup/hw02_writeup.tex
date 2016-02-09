@@ -65,24 +65,46 @@ Code is attached here and also posted at \href{https://github.com/BrianWeinstein
 
 
 \titledquestion{}
-\textit{Suppose that $\{X_1, X_2, \ldots, X_n\}$ is a random sample from N($\mu$, $\sigma^2$). Construct a 95\% confidence interval for $\sigma^2$ under the following scenarios:
+\begin{parts}
+
+\part \textit{Suppose that $\{X_1, X_2, \ldots, X_n\}$ is a random sample from N($\mu$, $\sigma^2$). Construct a 95\% confidence interval for $\sigma^2$ under the following scenarios:
 (a) $\mu$ is known to be 0.
 (b) $\mu$ is unknown.}
 
-\begin{parts}
 
-\part asdf \todo{Problem 1a}
+Since the $X_i$ are normal, the construction
 
-\part asdf \todo{Type up Problem 1b}
+$$\frac{(n-1) s^2}{\sigma^2} \sim \chi^2_{n-1}$$
 
-\end{parts}
+has a Chi-Squared distribution with $(n-1)$ degrees of freedom, where $s^2 = \frac{1}{n-1} \sum_{i=1}^n \left( X_i - \overline{X} \right)^2$ and $\sigma^2 = \frac{1}{n} \sum_{i=1}^n \left( X_i - \mu \right)^2$.
 
-\textit{Fix $n = 10$ and $\sigma = 1$. Run a Monte Carlo simulation to confirm that the confidence interval you constructed under the scenario (a) produces a coverage of 95\%. Report how many random samples were drawn in your simulation and how close your coverage was to 95\%.}
+Therefore, we can construct a $100(1-\alpha)$\% confidence interval for $\sigma^2$ as
+
+\begin{align*}
+1-\alpha &= \text{P}\left[    \text{F}_{n-1}\left(\frac{\alpha}{2}\right)  \leq              \frac{(n-1) s^2}{\sigma^2}     \leq  \text{F}_{n-1}\left(1 - \frac{\alpha}{2}\right)   \right] \\
+\\
+&= \text{P}\left[    \frac{1}{\text{F}_{n-1}\left(\frac{\alpha}{2}\right)}   \geq    \frac{\sigma^2}{(n-1)s^2}    \geq    \frac{1}{\text{F}_{n-1}\left(1 - \frac{\alpha}{2}\right)}   \right] \\
+&= \text{P}\left[        \frac{(n-1)s^2}{\text{F}_{n-1}\left(1 - \frac{\alpha}{2}\right)}  \leq \sigma^2  \leq  \frac{(n-1)s^2}{\text{F}_{n-1}\left(\frac{\alpha}{2}\right)}   \right]
+\end{align*}
+
+where $\text{F}_{n-1}\left(x\right)$ is the cumulative distribution function of $\chi^2_{n-1}$.
+
+Setting $\alpha=0.05$ to construct a 95\% CI, we have
+
+$$0.95 = \text{P}\left[        \frac{(n-1)s^2}{\text{F}_{n-1}\left(0.975\right)}  \leq \sigma^2  \leq  \frac{(n-1)s^2}{\text{F}_{n-1}\left(0.025\right)}   \right] .$$
+
+
+
+
+
+
+\part \textit{Fix $n = 10$ and $\sigma = 1$. Run a Monte Carlo simulation to confirm that the confidence interval you constructed under the scenario (a) produces a coverage of 95\%. Report how many random samples were drawn in your simulation and how close your coverage was to 95\%.}
 
 See attached code. In my simulation I drew 1000 random samples, with a 95\% confidence interval capturing the true variance in 948 of the trials (94.8\% coverage).
 
 
 
+\end{parts}
 
 
 \titledquestion{\ramsey 3.22}
