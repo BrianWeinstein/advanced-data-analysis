@@ -181,7 +181,7 @@ tuitionData.a <- tuitionData %>%
 ggplot(tuitionData.a, aes(x=tuitionType, y=tuition)) +
   geom_violin(alpha=0.15) +
   geom_boxplot() + 
-  labs(y="Tuition (USD)", title="(a) Public School Tuition: In-State vs Out-of-State")
+  labs(y="Tuition (USD)", title="(5a) Public School Tuition: In-State vs Out-of-State")
 ggsave(filename="writeup/5a_twoSample.png", width=7, height=4, units="in")
 
 # check group standard errors
@@ -201,7 +201,7 @@ tuitionData.a2 <- tuitionData %>%
 ggplot(tuitionData.a2, aes(x=Type, y=diff)) +
   geom_violin(alpha=0.15) +
   geom_boxplot() +
-  labs(y="Tuition (USD)", title="(a) Public School Tuition: (Out-of-State) - (In-State)")
+  labs(y="Tuition (USD)", title="(5a) Public School Tuition: (Out-of-State) - (In-State)")
 ggsave(filename="writeup/5a_paired.png", width=7, height=4, units="in")
 
 # Perform paired t-test
@@ -221,7 +221,7 @@ tuitionData.b <- tuitionData %>%
 ggplot(tuitionData.b, aes(x=Type, y=InState)) +
   geom_violin(alpha=0.15) +
   geom_boxplot() + 
-  labs(y="In-State Tuition (USD)", title="(b) In-State Tuition: Private vs Public")
+  labs(y="In-State Tuition (USD)", title="(5b) In-State Tuition: Private vs Public")
 ggsave(filename="writeup/5b_original.png", width=7, height=4, units="in")
 
 # Create a log-transformed InState tuition column
@@ -232,7 +232,7 @@ tuitionData.b <- tuitionData.b %>%
 ggplot(tuitionData.b, aes(x=Type, y=LogInState)) +
   geom_violin(alpha=0.15) +
   geom_boxplot() + 
-  labs(y="Log(In-State Tuition (USD))", title="(b) Log(In-State Tuition): Private vs Public")
+  labs(y="Log(In-State Tuition (USD))", title="(5b) Log(In-State Tuition): Private vs Public")
 ggsave(filename="writeup/5b_log.png", width=7, height=4, units="in")
 
 # check group standard errors
@@ -262,7 +262,7 @@ tuitionData.c <- tuitionData %>%
 ggplot(tuitionData.c, aes(x=Type, y=OutOfState)) +
   geom_violin(alpha=0.15) +
   geom_boxplot() + 
-  labs(y="Out-of-State Tuition (USD)", title="(c) Out-of-State Tuition: Private vs Public")
+  labs(y="Out-of-State Tuition (USD)", title="(5c) Out-of-State Tuition: Private vs Public")
 ggsave(filename="writeup/5c_original.png", width=7, height=4, units="in")
 
 # Create a log-transformed OutOfState tuition column
@@ -273,7 +273,7 @@ tuitionData.c <- tuitionData.c %>%
 ggplot(tuitionData.c, aes(x=Type, y=LogOutOfState)) +
   geom_violin(alpha=0.15) +
   geom_boxplot() + 
-  labs(y="Log(Out-ofn-State Tuition (USD))", title="(c) Log(Out-of-State Tuition): Private vs Public")
+  labs(y="Log(Out-ofn-State Tuition (USD))", title="(5c) Log(Out-of-State Tuition): Private vs Public")
 ggsave(filename="writeup/5c_log.png", width=7, height=4, units="in")
 
 # check group standard errors
