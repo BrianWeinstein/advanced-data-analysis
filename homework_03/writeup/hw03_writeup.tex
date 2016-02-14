@@ -82,6 +82,18 @@ Code is attached here and also posted at \href{https://github.com/BrianWeinstein
 \titledquestion{} % Problem 5
 \textit{Show that the two-sided two sample t-test is equivalent to the anova F-test, if the number of groups is two.}
 
+For $I=2$ groups, the F-statistic is given by
+$$ \text{F-statistic} =  \frac{SS_B / \left[ (n-1) - (n-I) \right]}{SS_W / (n-I)}, $$
+where $n_1$ and $n_2$ are the sizes of samples 1 and 2, respectively, $n=n_1+n_2$ is the total sample size, $SS_B$ is the ``between groups'' sum of squared residuals, and $SS_W$ is the ``within groups'' sum of squared residuals.
+
+Simplifying, we find
+$$\text{F-statistic} =  \frac{SS_B / (I-1) }{SS_W / (n-I)} = \frac{SS_B / (2-1) }{SS_W / (n-2)} = \frac{SS_B / 1 }{SS_W / (n-2)}.$$
+
+If the observations from group 1 are $\sim \text{N}(\mu_1, \sigma^2)$ and the observations from group 2 are $\sim \text{N}(\mu_2, \sigma^2)$, we know that
+$$\text{F-statistic} \sim \text{F}_{1, n-2} \text{ , which is equivalent to }t^2_{n-2}.$$
+i.e., an F distribution with a numerator degrees of freedom of 1 and a denominator degrees of freedom of $n-2$ is equivalent to the square of a t distribution with $n-2$ degrees of freedom. \todo{Finish problem 5}
+
+
 
 \titledquestion{} % Problem 6
 \textit{Consider $X_1,\ldots,X_{10}$ are i.i.d. N($0,\sigma^2$), $Y_1,\ldots,Y_{10}$ are i.i.d. N($\mu,\sigma^2$) and hypothesis testing:}
@@ -101,6 +113,6 @@ H_A &: \mu \neq 0.
 
 \end{questions}
 
-%\listoftodos
+\listoftodos
 
 \end{document}
