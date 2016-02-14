@@ -57,19 +57,15 @@ ssw <- cavityData %>%
   summarize(sumOfSquaresWithin=sum(term))
 ssw
 
-
 # total sum of squares
 sst <- (sum(cavityData$n) - 1) * 0.4962
 sst
-
 
 # sum of squares between
 sst - ssw
 
 # p-value of F-statistic
 pf(q=6.5300, df1=8, df2=285, lower.tail=FALSE)
-
-
 
 # Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
@@ -79,6 +75,8 @@ overallLogMean
 
 # recomopute the sum of squares between
 sum((cavityData$n * (cavityData$logMean)^2 )) - (294 * overallLogMean^2)
+
+
 
 
 rm(list = ls()) # clear working environment
