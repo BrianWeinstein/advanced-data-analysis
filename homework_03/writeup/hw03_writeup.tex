@@ -1,0 +1,106 @@
+
+\documentclass[11pt]{exam} % https://www.ctan.org/pkg/exam?lang=en
+
+\usepackage[lmargin=1.in,rmargin=1.in,tmargin=1.in,bmargin=1in]{geometry}
+\usepackage{setspace}
+\usepackage[pdftex]{graphicx}
+\usepackage{titling}
+\usepackage[
+	pdfauthor={Brian Weinstein},
+	pdftitle={Homework 1},
+	bookmarks=true,
+	colorlinks=true,
+	linkcolor=blue,
+	urlcolor=blue,
+	citecolor=blue,
+	pdftex,
+	linktocpage=true
+	]{hyperref}
+\usepackage[textsize=tiny]{todonotes}
+\usepackage{float}
+\setlength\parindent{0pt}
+\usepackage{lipsum}
+\usepackage{amsmath}
+
+
+\qformat{\textbf{Problem \thequestion: \thequestiontitle}\quad \hfill}
+
+
+\pagestyle{headandfoot}
+\runningheadrule
+\firstpageheader{}{}{}
+\runningheader{\theauthor}{\thetitle}{\thedate}
+\firstpagefooter{}{\thepage}{}
+\runningfooter{}{\thepage}{}
+
+
+\usepackage{xcolor}
+\usepackage{adjustbox}
+\usepackage{verbatim}
+\definecolor{shadecolor}{rgb}{.9, .9, .9}
+
+\newenvironment{code}%
+   {\par\noindent\adjustbox{margin=1ex,bgcolor=shadecolor,margin=0ex \medskipamount}\bgroup\minipage\linewidth\verbatim}%
+   {\endverbatim\endminipage\egroup}
+
+\newenvironment{codeSmall}%
+   {\par\noindent\adjustbox{margin=1ex,bgcolor=shadecolor,margin=0ex \medskipamount}\bgroup\minipage\linewidth\verbatim\footnotesize}%
+   {\endverbatim\endminipage\egroup}
+
+\newcommand{\ramsey}{\href{http://www.statisticalsleuth.com/}{Ramsey }}
+
+
+
+\begin{document}
+
+
+\title{STAT W4201 001, Homework 3}
+\author{Brian Weinstein (bmw2148)}
+\date{Feb 17, 2016}
+\maketitle
+
+Code is attached here and also posted at \href{https://github.com/BrianWeinstein/advanced-data-analysis}{https://github.com/BrianWeinstein/advanced-data-analysis}. Where relevant, code snippets and output are are included in-line.
+
+\begin{questions}
+
+
+\titledquestion{\ramsey 4.30} % Problem 1
+
+
+\titledquestion{\ramsey 4.32} % Problem 2
+
+
+
+\titledquestion{\ramsey 5.19} % Problem 3
+
+
+
+\titledquestion{} % Problem 4
+\textit{Consider the Bumpus’s data in Chapter 2, compute the power of the two-sided two sample t-test of size 0.05 (i.e., reject the null hypothesis if the absolute value the t-statistic is greater than or equal to 2), under the alternative that $\mu_x - \mu_y = \overline{x} - \overline{y} = 0.01$ and $\sigma = s_p = 0.0214$.}
+
+
+\titledquestion{} % Problem 5
+\textit{Show that the two-sided two sample t-test is equivalent to the anova F-test, if the number of groups is two.}
+
+
+\titledquestion{} % Problem 6
+\textit{Consider $X_1,\ldots,X_{10}$ are i.i.d. N($0,\sigma^2$), $Y_1,\ldots,Y_{10}$ are i.i.d. N($\mu,\sigma^2$) and hypothesis testing:}
+\begin{align*}
+H_0 &: \mu = 0\\
+H_A &: \mu \neq 0.
+\end{align*}
+\textit{Compute the power of a two sided two sample t-test of size 0.05 when $\sigma^2 = 1$ and $\mu =$ 0.1, 0.5, 1, and 2. Plot the power as a function of $\mu$. Then, increase the sample size in each group to 20 and draw the power function in the same plot as that of the sample size 10.}
+
+
+
+\titledquestion{} % Problem 7
+\textit{Under the setting of the previous problem, show that, under the null hypothesis, the p-value follows the uniform distribution on the interval [0, 1] and perform simulations to confirm it.}
+
+
+
+
+\end{questions}
+
+%\listoftodos
+
+\end{document}
