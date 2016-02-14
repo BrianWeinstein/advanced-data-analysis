@@ -6,7 +6,7 @@
 # 2016-02-17
 
 # set working directory
-setwd("~/Documents/advanced-data-analysis/homework_02")
+setwd("~/Documents/advanced-data-analysis/homework_03")
 
 # load packages
 library(dplyr)
