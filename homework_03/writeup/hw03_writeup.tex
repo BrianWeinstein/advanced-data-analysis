@@ -73,6 +73,89 @@ Code is attached here and also posted at \href{https://github.com/BrianWeinstein
 
 \titledquestion{\ramsey 5.19} % Problem 3
 
+\begin{parts}
+
+\part The pooled estimate of the variance $s_p^2$ is given by
+
+\begin{equation*}
+\begin{split}
+s_p^2 &= \frac{\sum_{i=1}^{I} (n_i -1 ) s_i^2}{\sum_{i=1}^{I} (n_i -1 )} \\
+&= \frac{   (127-1)(0.4979)^2  +  (44-1)(0.4235)^2  +  (24-1)(0.3955)^2  +  \cdots  }{(127-1) +  (44-1) +  (24-1)  +  \cdots} \\
+& \quad \quad \quad \frac{\cdots + (41-1)(0.3183)^2 + (18-1)(0.3111)^2  +  (16-1)(0.4649)^2 + \cdots}{\cdots + (41-1) + (18-1)  +  (16-1) + \cdots } \\
+& \quad \quad \quad \frac{\cdots  +  (11-1)(0.2963)^2  +  (7-1)(0.3242)^2  +  (6-1)(0.5842)^2  }{\cdots +  (11-1) +  (7-1)  +  (6-1)} \\
+&= 0.1919.
+\end{split}
+\end{equation*}
+
+\part To construct an ANOVA table to test for species differences, we first compute $SS_W$, the sum of squared residuals of the ``within'' group.
+
+\begin{align*}
+SS_W &= \sum_{i=1}^9 \left[ \sum_{j=1}^{n_i} \left( Y_{ij} - \overline{Y_i} \right)^2  \right] = \sum_{i=1}^9 \left[ (n_i - 1) \text{SE}(Y_i)  \right] \\
+&= (127 - 1)(0.4979) + (44 - 1)(0.4235) + \cdots + (6 - 1)(0.5842) \\
+&= 122.8658.
+\end{align*}
+
+Given the sample standard deviation of all 294 observations as one group is $\text{SD}_{Total} = 0.4962$, the total sum of squared residuals $SS_{Total}$ is
+
+\todo{Should SS total be -9 (-I) instead of -1 ?}
+\begin{align*}
+SS_{Total} &= \sum_{i=1}^9 \left[ \sum_{j=1}^{n_i} \left( Y_{ij} - \overline{Y} \right)^2  \right] = (n_1 + n_2 + \cdots + n_9 - 1) (\text{SD}_{Total}) \\
+&= (127 + 44 + \cdots + 6 - 1)(0.4962) =  (293)(0.4962)\\
+&= 145.3866.
+\end{align*}
+
+Therefore, the sum of squared residuals of the ``between'' group, $SS_B$ is:
+$$SS_B = SS_{Total} - SS_W = 145.3866 - 122.8658 = 22.5208.$$
+
+The Total, Within, and Between degrees of freedom are $\text{df}_{Total} = (n-1) = 293$, $\text{df}_W = (n-I)=(294-9) = 285$, and $\text{df}_B = \text{df}_{Total} - \text{df}_W  = 8$, respectively. \\
+
+The Mean Square for the Within and Between groups is the [(Sum of Squares) / df], and the F-statistic is defined as the [(Between Mean Square) / (Within Mean Square)]. \\
+
+Thus the ANOVA table to test for species differences is:
+
+\begin{center}
+  \begin{tabular}{ l c c c c c}
+    Source of Variation & Sum of Squares & d.f. & Mean Square & F-Statistic & p-Value \\ \hline \hline
+    Between Groups & 22.5208 & 8 & 2.8151 & 6.5300 & $8.0551 \times 10^{-8}$ \\
+    Within Groups & 122.8658 & 285 & 0.4311 & & \\ \hline
+    Total & 145.3866 & 293 & & &
+  \end{tabular}
+\end{center}
+
+\quad \linebreak
+Where the p-value for the F-Statistic is given by the CDF of an F distribution with 8 and 285 degrees of freedom.
+\begin{codeSmall}
+> # p-value of F-statistic
+> pf(q=6.5300, df1=8, df2=285, lower.tail=FALSE)
+[1] 8.055137e-08
+\end{codeSmall}
+
+
+
+\part The ANOVA method for calculating $SS_B$ yields the same answer as the formula:
+
+$$ SS_B = \sum_{i=1}^I \left( n_i \overline{Y_i}^2 \right) - n\overline{Y}^2 = \sum_{i=1}^9 \left( n_i \overline{Y_i}^2 \right) - n\overline{Y}^2 .$$
+
+The overall mean $\overline{Y}=7.4746$ is computed as a weighted average of the group means and $n=294$, thus \todo{17.45402 != 22.5208 : maybe my SS total calc is incorrect?}
+\begin{align*}
+SS_B &= \sum_{i=1}^9 \left( n_i \overline{Y_i}^2 \right) - n\overline{Y}^2 \\
+&= (127)(7.347)^2 + (44)(7.368)^2 + (24)(7.418)^2 + (41)(7.487)^2 + (18)(7.563)^2 + \cdots \\
+& \quad \quad \quad \cdots + (16)(7.568)^2 + (11)(8.214)^2 + (7)(8.272)^2 + (6)(8.297)^2 - (294)(7.4746)^2 \\
+&= 17.45402
+\end{align*}
+
+
+\part If the first 6 species have one common mean and the last 3 have another common mean, we find that \todo{finish 3d}
+
+
+
+
+\end{parts}
+
+
+
+
+
 
 
 \titledquestion{} % Problem 4
