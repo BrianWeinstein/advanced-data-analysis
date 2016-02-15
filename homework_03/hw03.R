@@ -60,32 +60,32 @@ rm(list = ls()) # clear working environment
 
 # Problem 2: Ramsey 4.32 #######################################################################
 
-# load data
-marData <- Sleuth3::ex0432 %>%
-  mutate(diff=Marijuana-Placebo)
+# load data and compute treatment differences
+marData <- Sleuth3::ex0432 %>% mutate(diff=Marijuana-Placebo)
 marData
 
-# sign test ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# plot diffs
+ggplot(marData, aes(x="", y=diff)) +
+  geom_boxplot() + 
+  labs(y="Difference in the number of retching episodes\n(Marijuana - Placebo)", x="")
+ggsave(filename="writeup/2.png", width=6.125, height=3.5, units="in")
 
-# number of nonzero observations
-numObs <- sum(marData$diff != 0)
+# perform sign test on hypothesis that Marijuana-Placebo < 0
 
-# compute the number of positive differences
-numPosDiffs <- sum(marData$diff > 0)
+numObs <- sum(marData$diff != 0) # number of nonzero observations
+numPosDiffs <- sum(marData$diff > 0) # compute the number of positive differences
 
-# compute the Z statistic
-zStat <- (numPosDiffs - (numObs/2)) / sqrt(numObs/4)
+zStat <- (numPosDiffs - (numObs/2)) / sqrt(numObs/4) # compute the Z statistic
 zStat
 
-# compute an estimated p-value
+# compute an estimated one-sided p-value
 pnorm(-1 * abs(zStat), mean=0, sd=1)
 
-# compute a 95% CI and find an estimate for the additive treatment effect
-
+# Compute a 95% CI and find an estimate for the additive treatment effect
 # test several hypothesized values for the treatment effect
-# find the smallest and largest deltas that lead to a
-#     two-sided pvalue >= 0.05
-# those are the endpoints of a 95% CI, with midpoint the estimate for delta
+# and find the smallest and largest deltas that lead to a
+# two-sided pvalue >= 0.05. Those are the endpoints of a
+# 95% CI, with the midpoint as the estimate for delta.
 
 # initialize an empty list
 deltaPvalList <- list()
@@ -113,9 +113,6 @@ deltaPvalList <- rbindlist(deltaPvalList) %>% as.data.frame()
 confInt <- deltaPvalList %>% filter(pval >= 0.05) %>% select(delta) %>% range()
 confInt
 mean(confInt)
-
-
-
 
 rm(list = ls()) # clear working environment
 
