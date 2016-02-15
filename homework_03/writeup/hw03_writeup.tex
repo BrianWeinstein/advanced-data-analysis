@@ -65,6 +65,7 @@ Code is attached here and also posted at \href{https://github.com/BrianWeinstein
 
 
 \titledquestion{\ramsey 4.30} % Problem 1
+\todo{Problem 1: done, but maybe shouldn't be using the t test?}
 
 A boxplot of SPF estimates for each subject is shown in Figure \ref{fig:1}, where the SPF estimate is calculated for each subject as the number minutes that a person was able to withstand sunlight before applying sunscreen divided by the number of minutes they were able to withstand after applying sunscreen. The dataset contains paired observations, and the quantity in question has a nearly normal distribution with no outliers, making it a strong candidate for the one-sample paired t-test.
 
@@ -106,6 +107,7 @@ A potentially confounding variable could be the strength of sunlight during the 
 
 
 \titledquestion{\ramsey 4.32} % Problem 2
+\todo{Problem 2: done}
 
 See attached code. A boxplot of the difference in the number of retching episodes while on the marijuana treatment vs the placebo is show in Figure \ref{fig:2}.
 
@@ -123,6 +125,8 @@ The data provides convincing evidence that marijuana reduced the frequency of re
 
 
 \titledquestion{\ramsey 5.19} % Problem 3
+\todo{Problem 3: errors}
+
 
 \begin{parts}
 
@@ -148,7 +152,7 @@ SS_W &= \sum_{i=1}^9 \left[ \sum_{j=1}^{n_i} \left( Y_{ij} - \overline{Y_i} \rig
 
 Given the sample standard deviation of all 294 observations as one group is $\text{SD}_{Total} = 0.4962$, the total sum of squared residuals $SS_{Total}$ is
 
-\todo{Should SS total be -9 (-I) instead of -1 ?}
+\todo{\quad Should SS total be -9 (-I) instead of -1 ?}
 \begin{align*}
 SS_{Total} &= \sum_{i=1}^9 \left[ \sum_{j=1}^{n_i} \left( Y_{ij} - \overline{Y} \right)^2  \right] = (n_1 + n_2 + \cdots + n_9 - 1) (\text{SD}_{Total}) \\
 &= (127 + 44 + \cdots + 6 - 1)(0.4962) =  (293)(0.4962)\\
@@ -187,7 +191,7 @@ Where the p-value for the F-Statistic is given by the CDF of an F distribution w
 
 $$ SS_B = \sum_{i=1}^I \left( n_i \overline{Y_i}^2 \right) - n\overline{Y}^2 = \sum_{i=1}^9 \left( n_i \overline{Y_i}^2 \right) - n\overline{Y}^2 .$$
 
-The overall mean $\overline{Y}=7.4746$ is computed as a weighted average of the group means and $n=294$, thus \todo{17.45402 != 22.5208 : maybe my SS total calc is incorrect?}
+The overall mean $\overline{Y}=7.4746$ is computed as a weighted average of the group means and $n=294$, thus \todo{\quad 17.45402 != 22.5208 : maybe my SS total calc is incorrect?}
 \begin{align*}
 SS_B &= \sum_{i=1}^9 \left( n_i \overline{Y_i}^2 \right) - n\overline{Y}^2 \\
 &= (127)(7.347)^2 + (44)(7.368)^2 + (24)(7.418)^2 + (41)(7.487)^2 + (18)(7.563)^2 + \cdots \\
@@ -196,7 +200,7 @@ SS_B &= \sum_{i=1}^9 \left( n_i \overline{Y_i}^2 \right) - n\overline{Y}^2 \\
 \end{align*}
 
 
-\part If the first 6 species have one common mean and the last 3 have another common mean, we find that \todo{finish 3d}
+\part If the first 6 species have one common mean and the last 3 have another common mean, we find that \todo{\quad finish 3d}
 
 
 
@@ -211,10 +215,14 @@ SS_B &= \sum_{i=1}^9 \left( n_i \overline{Y_i}^2 \right) - n\overline{Y}^2 \\
 
 \titledquestion{} % Problem 4
 \textit{Consider the Bumpus’s data in Chapter 2, compute the power of the two-sided two sample t-test of size 0.05 (i.e., reject the null hypothesis if the absolute value the t-statistic is greater than or equal to 2), under the alternative that $\mu_x - \mu_y = \overline{x} - \overline{y} = 0.01$ and $\sigma = s_p = 0.0214$.}
+\todo{Problem 4: not started}
+
 
 
 \titledquestion{} % Problem 5
 \textit{Show that the two-sided two sample t-test is equivalent to the anova F-test, if the number of groups is two.}
+\todo{Problem 5: incomplete}
+
 
 For $I=2$ groups, the F-statistic is given by
 $$ \text{F-statistic} =  \frac{SS_B / \left[ (n-1) - (n-I) \right]}{SS_W / (n-I)}, $$
@@ -225,7 +233,7 @@ $$\text{F-statistic} =  \frac{SS_B / (I-1) }{SS_W / (n-I)} = \frac{SS_B / (2-1) 
 
 If the observations from group 1 are $\sim \text{N}(\mu_1, \sigma^2)$ and the observations from group 2 are $\sim \text{N}(\mu_2, \sigma^2)$, we know that
 $$\text{F-statistic} \sim \text{F}_{1, n-2} \text{ , which is equivalent to }t^2_{n-2}.$$
-i.e., an F distribution with a numerator degrees of freedom of 1 and a denominator degrees of freedom of $n-2$ is equivalent to the square of a t distribution with $n-2$ degrees of freedom. \todo{Finish problem 5}
+i.e., an F distribution with a numerator degrees of freedom of 1 and a denominator degrees of freedom of $n-2$ is equivalent to the square of a t distribution with $n-2$ degrees of freedom.
 
 
 
@@ -236,11 +244,13 @@ H_0 &: \mu = 0\\
 H_A &: \mu \neq 0.
 \end{align*}
 \textit{Compute the power of a two sided two sample t-test of size 0.05 when $\sigma^2 = 1$ and $\mu =$ 0.1, 0.5, 1, and 2. Plot the power as a function of $\mu$. Then, increase the sample size in each group to 20 and draw the power function in the same plot as that of the sample size 10.}
+\todo{Problem 6: not started}
 
 
 
 \titledquestion{} % Problem 7
 \textit{Under the setting of the previous problem, show that, under the null hypothesis, the p-value follows the uniform distribution on the interval [0, 1] and perform simulations to confirm it.}
+\todo{Problem 7: not started}
 
 
 
