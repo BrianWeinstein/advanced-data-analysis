@@ -17,7 +17,41 @@ library(ggplot2); theme_set(theme_bw())
 
 # Problem 1: Ramsey 4.30  #######################################################################
 
+# load data
+spfData <- Sleuth3::ex0430
 
+# create spfEstimate column
+spfData <- spfData %>%
+  mutate(spfEstimate=Sunscreen/PreTreatment)
+
+ggplot(spfData, aes(x="", y=spfEstimate)) +
+  geom_boxplot() + 
+  labs(y="SPF Estimate (Sunscreen / PreTreatment)", x="")
+ggsave(filename="writeup/1.png", width=6.125, height=3.5, units="in")
+
+# Define a fn to calcuate a conf interval for a given mean, std error, df, and conf level
+MakeConfidenceIntervalForMean <- function(mean, se, df, confLevel){
+  
+  sigLevel <- 1 - confLevel
+  
+  error <- qt(p=1-(sigLevel/2), df=df) * se
+  
+  lowerBound <- mean - error
+  upperBound <- mean + error
+  
+  confidenceInterval <- c(lowerBound, upperBound)
+  
+  return(confidenceInterval)
+  
+}
+
+# define variables for this problem
+mean_value <- mean(spfData$spfEstimate); mean_value
+std_err <- sd(spfData$spfEstimate)/sqrt(nrow(spfData)); std_err
+df_value <- nrow(spfData) - 1; df_value
+
+# 95% and 90% confidence intervals for (mu_2 - mu_1)
+MakeConfidenceIntervalForMean(mean=mean_value, se=std_err, df=df_value, confLevel=0.95)
 
 rm(list = ls()) # clear working environment
 

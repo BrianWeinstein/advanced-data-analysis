@@ -66,6 +66,44 @@ Code is attached here and also posted at \href{https://github.com/BrianWeinstein
 
 \titledquestion{\ramsey 4.30} % Problem 1
 
+A boxplot of SPF estimates for each subject is shown in Figure \ref{fig:1}, where the SPF estimate is calculated for each subject as the number minutes that a person was able to withstand sunlight before applying sunscreen divided by the number of minutes they were able to withstand after applying sunscreen. The dataset contains paired observations, and the quantity in question has a nearly normal distribution with no outliers, making it a strong candidate for the one-sample paired t-test.
+
+\begin{codeSmall}
+   PreTreatment Sunscreen spfEstimate
+1            30       120    4.000000
+2            45       240    5.333333
+3           180       480    2.666667
+4            15       150   10.000000
+5           200       480    2.400000
+6            20       270   13.500000
+7            15       300   20.000000
+8            10       180   18.000000
+9            20       300   15.000000
+10           20       240   12.000000
+11           60       480    8.000000
+12           60       300    5.000000
+13          120       480    4.000000
+\end{codeSmall}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=4.25in]{1.png}
+	\caption{SPF estimates for 13 subjects.}
+	\label{fig:1}
+\end{figure}
+
+The SPF Estimate has a mean of of $9.223$, and the standard error on the mean is $\text{SD}(spfEstimate)/\sqrt{13} = 1.664$. Using a t distribution with $(13-1)=12$ degrees of freedom, a 95\% confidence interval for the mean is
+
+\begin{gather*}
+9.223 \pm t_{12}(1-(0.05/2) \times 1.664 \\
+9.223 \pm (2.179)(1.664) \\
+9.223 \pm 3.626 \\
+\Rightarrow \text{95\% CI for the mean SPF Estimate: } [5.598, 12.848]
+\end{gather*}
+
+
+A potentially confounding variable could be the strength of sunlight during the measurement period for each subjects' data points. For a given participant, if the sunlight strength wasn't constant for both measurements, it likely would have had an impact on the duration for which they were able to withstand the sunlight.
+
 
 \titledquestion{\ramsey 4.32} % Problem 2
 
