@@ -173,8 +173,31 @@ rm(list = ls()) # clear working environment
 # Problem 4 #######################################################################
 
 
+# distrPlotData <- rbind(data.frame(model="null", x=seq(-4,4,0.05), y=dt(seq(-4,4,0.05), df=58)),
+#                        data.frame(model="alternative", x=seq(-4,4,0.05), y=dt(seq(-4,4,0.05), df=58, ncp=1)))
+# ggplot(distrPlotData, aes(x=x, y=y, color=model)) + geom_line()
+
+
+# load data
+sparrowData <- Sleuth3::ex0221
+# 
+# # create boxplots
+# ggplot(sparrowData, aes(x=Status, y=Humerus)) +
+#   geom_violin(alpha=0.15) +
+#   geom_boxplot() +
+#   labs(y="Humerus Length (inches)", title="Humerus Length: Perished vs Survived")
+# 
+# # compute group difference, 2-sided p-value, and 95% CI; with all observations
+# t.test(formula=Humerus~Status, data=sparrowData,
+#        var.equal=TRUE, conf.level=0.95)
+# 
+# # compute group difference, 2-sided p-value, and 95% CI; excluding the smallest length in the perished group
+# t.test(formula=Humerus~Status, data=sparrowData,
+#        subset=(!(Humerus==min(sparrowData$Humerus) & Status=="Perished")),
+#        var.equal=TRUE, conf.level=0.95)
 
 rm(list = ls()) # clear working environment
+
 
 
 
@@ -188,7 +211,49 @@ rm(list = ls()) # clear working environment
 
 # Problem 6 #######################################################################
 
+# Define a function to compute the power of a test
+ComputePower <- function(mu, sigma, n1, n2){
+  
+  tStat <- (0-mu) / (sigma * sqrt((1/n1) + (1/n2)))
+  power <- 1 - pt(q=(qt(p=0.95, df=(n1+n2-2)) - abs(tStat)),
+                  df=(n1+n2-2)) ; power
+  
+}
 
+ComputePower(mu=0, sigma=1, n1=10, n2=10) # should be 0.05
+
+# define list of mu values to test
+muvals <- c(0.1, 0.5, 1, 2)
+
+# initialize an empty list to store power
+powerList <- list()
+
+# test each mu value at sample sizes 10 and 20
+for(i in 1:length(muvals)){
+  
+  mu_value <- muvals[i]
+  tempPowerList <- rbind(data.frame(mu_value=mu_value,
+                                    sample_size=10,
+                                    power=ComputePower(mu=mu_value, sigma=1, n1=10, n2=10)),
+                         data.frame(mu_value=mu_value,
+                                    sample_size=20,
+                                    power=ComputePower(mu=mu_value, sigma=1, n1=20, n2=20)))
+  
+  powerList[[i]] <- tempPowerList
+  rm(tempPowerList)
+  
+}
+
+# put results into dataframe
+powerList <- rbindlist(powerList) %>%
+  mutate(sample_size=as.factor(sample_size))
+
+# plot
+ggplot(powerList, aes(x=mu_value, y=power, color=sample_size)) +
+  geom_line(aes(linetype=sample_size), size=1) +
+  geom_point(aes(shape=sample_size), size=2.5) +
+  xlim(0,2) + ylim(0,1)
+ggsave(filename="writeup/6.png", width=7, height=3.5, units="in")
 
 rm(list = ls()) # clear working environment
 
