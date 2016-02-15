@@ -261,7 +261,41 @@ rm(list = ls()) # clear working environment
 
 # Problem 7 #######################################################################
 
+set.seed(1)
+sigma <- 1
 
+# initialize an empty list to store results
+pvalList <- list()
+
+for(i in 1:20000){
+  
+  # generate random samples
+  nx <- 10
+  x.vals <- rnorm(n=nx, mean=0, sd=sigma)
+  ny <- 10
+  y.vals <- rnorm(n=10, mean=0, sd=sigma)
+  
+  # calculate difference in means
+  diffMean <- mean(x.vals) - mean(y.vals)
+  
+  # calculate the pooled sd
+  sp <- sqrt( ((nx-1)*(sd(x.vals)^2) + (ny-1)*(sd(y.vals)^2)) / (nx + ny -2) )
+  
+  # calculate the t statistic and 2-sided p value
+  tStat <- diffMean / (sp * sqrt((1/nx) + (1/ny)))
+  pval <- 2 * pt(q=-1 * abs(tStat), df=(nx + ny - 2)) # 2-sided pvalue
+  
+  pvalList[[i]] <- data.frame(pval)
+  
+}
+
+pvalList <- rbindlist(pvalList)
+
+# plot a histogram of 2-sided pvalues
+ggplot(pvalList, aes(x=pval)) +
+  geom_histogram(binwidth=0.01) +
+  labs(title=paste0("Distribution of n=", nrow(pvalList), " Two-Sided p-Values"))
+ggsave(filename="writeup/7.png", width=7, height=3.5, units="in")
 
 rm(list = ls()) # clear working environment
 

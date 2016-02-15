@@ -65,7 +65,7 @@ Code is attached here and also posted at \href{https://github.com/BrianWeinstein
 
 
 \titledquestion{\ramsey 4.30} % Problem 1
-\todo{Problem 1: done, but maybe shouldn't be using the t test?}
+\todo{Problem 1: DONE, but maybe shouldn't be using the t test?}
 
 A boxplot of SPF estimates for each subject is shown in Figure \ref{fig:1}, where the SPF estimate is calculated for each subject as the number minutes that a person was able to withstand sunlight before applying sunscreen divided by the number of minutes they were able to withstand after applying sunscreen. The dataset contains paired observations, and the quantity in question has a nearly normal distribution with no outliers, making it a strong candidate for the one-sample paired t-test.
 
@@ -107,7 +107,7 @@ A potentially confounding variable could be the strength of sunlight during the 
 
 
 \titledquestion{\ramsey 4.32} % Problem 2
-\todo{Problem 2: done}
+\todo{Problem 2: DONE}
 
 See attached code. A boxplot of the difference in the number of retching episodes while on the marijuana treatment vs the placebo is show in Figure \ref{fig:2}.
 
@@ -244,7 +244,7 @@ H_0 &: \mu = 0\\
 H_A &: \mu \neq 0.
 \end{align*}
 \textit{Compute the power of a two sided two sample t-test of size 0.05 when $\sigma^2 = 1$ and $\mu =$ 0.1, 0.5, 1, and 2. Plot the power as a function of $\mu$. Then, increase the sample size in each group to 20 and draw the power function in the same plot as that of the sample size 10.}
-\todo{Problem 6: done}
+\todo{Problem 6: DONE}
 
 See attached code. A plot of the power for a two-sided, two-sample t-test of size 0.05, for $\sigma^2 =1$, $\mu = \{0.1, 0.5, 1, 2 \}$, and $(n_1, n_2) = \{(10,10), (20,20)\}$ is shown in Figure \ref{fig:6}.
 
@@ -259,7 +259,65 @@ See attached code. A plot of the power for a two-sided, two-sample t-test of siz
 
 \titledquestion{} % Problem 7
 \textit{Under the setting of the previous problem, show that, under the null hypothesis, the p-value follows the uniform distribution on the interval [0, 1] and perform simulations to confirm it.}
-\todo{Problem 7: not started}
+\todo{Problem 7: DONE}
+
+Under the null hypothesis that $\mu=0$, our t-statistic $t=\frac{\overline{X}-\overline{Y}}{\text{SE}(\overline{X}-\overline{Y})}$ follows a t distribution with $n_x + n_y -2$ degrees of freedom (since X and Y are normally distributed).
+
+The p-value is defined as
+$$p = \text{P}(T \geq t) = 1-\text{P}(T < t) = 1-\text{F}(t),$$
+where $T$ is the general t distribution from which our test-statistic $t$ is a realization, and $\text{F}(t)$ is the cumulative distribution function of the t distribution at $T=t$.
+
+Since $\text{F}(t)$ is a monotonically increasing function between $[0,1]$, we can write
+$$p = \text{P}(T \geq t) = \text{P}(\text{F}(T) \geq \text{F}(t)) = 1 - \text{P}(\text{F}(T) < \text{F}(t)).$$
+
+Equating these, we see that
+\begin{gather*}
+1-\text{F}(t) = 1 - \text{P}(\text{F}(T) < \text{F}(t)) \\
+\Rightarrow \text{F}(t) = \text{P}(\text{F}(T) < \text{F}(t)).
+\end{gather*}
+
+Therefore $\text{F}(T)$, and equivalently $1-\text{F}(T)$, must follow a uniform distribution on $[0,1]$. Since $p=1-\text{F}(T)$, we see that the p-value is also uniformly distributed on $[0,1]$.
+
+The code below generates 20,000 two-sided p-values, simulated under the conditions specified in Problem 6, and the histogram in Figure \ref{fig:7} shows the (nearly uniform) distribution of the 20,000 two-sided p-values.
+
+\begin{codeSmall}
+set.seed(1)
+sigma <- 1
+
+# initialize an empty list to store results
+pvalList <- list()
+
+for(i in 1:20000){
+  
+  # generate random samples
+  nx <- 10
+  x.vals <- rnorm(n=nx, mean=0, sd=sigma)
+  ny <- 10
+  y.vals <- rnorm(n=10, mean=0, sd=sigma)
+  
+  # calculate difference in means
+  diffMean <- mean(x.vals) - mean(y.vals)
+  
+  # calculate the pooled sd
+  sp <- sqrt( ((nx-1)*(sd(x.vals)^2) + (ny-1)*(sd(y.vals)^2)) / (nx + ny -2) )
+  
+  # calculate the t statistic and 2-sided p value
+  tStat <- diffMean / (sp * sqrt((1/nx) + (1/ny)))
+  pval <- 2 * pt(q=-1 * abs(tStat), df=(nx + ny - 2)) # 2-sided pvalue
+  
+  pvalList[[i]] <- data.frame(pval)
+  
+}
+
+pvalList <- rbindlist(pvalList)
+\end{codeSmall}
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=4.25in]{7.png}
+	\caption{A histogram of 20,000 two-sided p-values, simulated under the conditions specified in Problem 6.}
+	\label{fig:7}
+\end{figure}
 
 
 
