@@ -12,6 +12,7 @@ setwd("~/Documents/advanced-data-analysis/homework_03")
 library(dplyr)
 library(Sleuth3) # Data sets from Ramsey and Schafer's "Statistical Sleuth (3rd ed)"
 library(ggplot2); theme_set(theme_bw())
+library(data.table)
 
 
 
@@ -58,6 +59,61 @@ rm(list = ls()) # clear working environment
 
 
 # Problem 2: Ramsey 4.32 #######################################################################
+
+# load data
+marData <- Sleuth3::ex0432 %>%
+  mutate(diff=Marijuana-Placebo)
+marData
+
+# sign test ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# number of nonzero observations
+numObs <- sum(marData$diff != 0)
+
+# compute the number of positive differences
+numPosDiffs <- sum(marData$diff > 0)
+
+# compute the Z statistic
+zStat <- (numPosDiffs - (numObs/2)) / sqrt(numObs/4)
+zStat
+
+# compute an estimated p-value
+pnorm(-1 * abs(zStat), mean=0, sd=1)
+
+# compute a 95% CI and find an estimate for the additive treatment effect
+
+# test several hypothesized values for the treatment effect
+# find the smallest and largest deltas that lead to a
+#     two-sided pvalue >= 0.05
+# those are the endpoints of a 95% CI, with midpoint the estimate for delta
+
+# initialize an empty list
+deltaPvalList <- list()
+
+# get 2 sided pvalues for various hypothetical deltas
+for(i in 1:50){
+  
+  delta <- i
+  marDataNew <- marData %>%
+    mutate(MarijuanaNew=Marijuana+delta,
+           diffNew=MarijuanaNew-Placebo)
+  
+  numObs <- sum(marDataNew$diffNew != 0)
+  numPosDiffs <- sum(marDataNew$diffNew > 0)
+  zStat <- (numPosDiffs - (numObs/2)) / sqrt(numObs/4)
+  pval <- 2 * pnorm(q=(-1 * abs(zStat)), mean=0, sd=1) # 2-sided p-value
+  
+  deltaPvalList[[i]] <- data.frame(delta=delta, pval=pval)
+  
+}
+
+deltaPvalList <- rbindlist(deltaPvalList) %>% as.data.frame()
+
+# find the min and max deltas that lead to a two-sided p-value >= 0.05
+confInt <- deltaPvalList %>% filter(pval >= 0.05) %>% select(delta) %>% range()
+confInt
+mean(confInt)
+
 
 
 
