@@ -145,7 +145,6 @@ ssw <- cavityData %>%
   as.numeric()
 ssw
 
-
 # total sum of squares
 sst <- (sum(cavityData$n) - 1) * (0.4962)^2
 sst
@@ -196,7 +195,6 @@ cavityDataTwoGroups <- cavityData %>%
   as.data.frame()
 cavityDataTwoGroups
 
-
 # sum of squares within for the two-group model
 ssw <- sum(cavityDataTwoGroups$rss)
 ssw
@@ -220,60 +218,22 @@ fstat <- msb/msw ; fstat
 fstat
 pf(q=fstat, df1=8, df2=285, lower.tail=FALSE)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 rm(list = ls()) # clear working environment
 
 
 
 # Problem 4 #######################################################################
 
-
-# distrPlotData <- rbind(data.frame(model="null", x=seq(-4,4,0.05), y=dt(seq(-4,4,0.05), df=58)),
-#                        data.frame(model="alternative", x=seq(-4,4,0.05), y=dt(seq(-4,4,0.05), df=58, ncp=1)))
-# ggplot(distrPlotData, aes(x=x, y=y, color=model)) + geom_line()
-
-
 # load data
 sparrowData <- Sleuth3::ex0221
-# 
-# # create boxplots
-# ggplot(sparrowData, aes(x=Status, y=Humerus)) +
-#   geom_violin(alpha=0.15) +
-#   geom_boxplot() +
-#   labs(y="Humerus Length (inches)", title="Humerus Length: Perished vs Survived")
-# 
-# # compute group difference, 2-sided p-value, and 95% CI; with all observations
-# t.test(formula=Humerus~Status, data=sparrowData,
-#        var.equal=TRUE, conf.level=0.95)
-# 
-# # compute group difference, 2-sided p-value, and 95% CI; excluding the smallest length in the perished group
-# t.test(formula=Humerus~Status, data=sparrowData,
-#        subset=(!(Humerus==min(sparrowData$Humerus) & Status=="Perished")),
-#        var.equal=TRUE, conf.level=0.95)
 
 rm(list = ls()) # clear working environment
-
 
 
 
 # Problem 5 #######################################################################
 
-
-
-rm(list = ls()) # clear working environment
+# no code needed
 
 
 
