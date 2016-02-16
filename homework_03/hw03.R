@@ -140,19 +140,30 @@ pooledVar
 
 # sum of squares within
 ssw <- cavityData %>%
-  mutate(term=((n-1)*logSampleSd)) %>%
-  summarize(sumOfSquaresWithin=sum(term))
+  mutate(term=((n-1)*logSampleSd^2)) %>%
+  summarize(sumOfSquaresWithin=sum(term)) %>%
+  as.numeric()
 ssw
 
+
 # total sum of squares
-sst <- (sum(cavityData$n) - 1) * 0.4962
+sst <- (sum(cavityData$n) - 1) * (0.4962)^2
 sst
 
 # sum of squares between
-sst - ssw
+ssb <- sst - ssw
+ssb
+
+# compute mean squares
+msb <- ssb / 8 ; msb
+msw <- ssw / 285 ; msw
+
+# compute the F-statistic
+fstat <- msb/msw ; fstat
 
 # p-value of F-statistic
-pf(q=6.5300, df1=8, df2=285, lower.tail=FALSE)
+fstat
+pf(q=fstat, df1=8, df2=285, lower.tail=FALSE)
 
 # Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
@@ -161,7 +172,64 @@ overallLogMean <- sum(cavityData$n * cavityData$logMean) / sum(cavityData$n)
 overallLogMean
 
 # recomopute the sum of squares between
-sum((cavityData$n * (cavityData$logMean)^2 )) - (294 * overallLogMean^2)
+sum((cavityData$n * (cavityData$logMean)^2 )) - (sum(cavityData$n) * overallLogMean^2)
+
+rm(list = ls()[ls() != "cavityData"]) # clear working environment, excluding cavityData
+
+# Part d ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# compute group means, pooled SD, and RSS for Group A and Group B
+cavityDataTwoGroups <- cavityData %>%
+  mutate(group=c("A", "A", "A", "A", "A", "A", "B", "B", "B"),
+         tempVal_mean=n*logMean,
+         tempVal_nmin1=(n-1),
+         tempVal_var=((n-1)*logSampleSd^2)) %>%
+  group_by(group) %>%
+  summarise(n=sum(n),
+            tempVal_mean=sum(tempVal_mean),
+            tempVal_nmin1=sum(tempVal_nmin1),
+            tempVal_var=sum(tempVal_var)) %>%
+  mutate(mean=tempVal_mean/n,
+         pooled_sd=sqrt(tempVal_var/tempVal_nmin1)) %>%
+  select(group, n, mean, pooled_sd) %>%
+  mutate(rss=((n-1)*(pooled_sd)^2)) %>%
+  as.data.frame()
+cavityDataTwoGroups
+
+
+# sum of squares within for the two-group model
+ssw <- sum(cavityDataTwoGroups$rss)
+ssw
+
+# total sum of squares
+sst <- (sum(cavityData$n) - 1) * (0.4962)^2
+sst
+
+# sum of squares between
+ssb <- sst - ssw
+ssb
+
+# compute mean squares
+msb <- ssb / 1 ; msb
+msw <- ssw / 292 ; msw
+
+# compute the F-statistic
+fstat <- msb/msw ; fstat
+
+# p-value of F-statistic
+fstat
+pf(q=fstat, df1=8, df2=285, lower.tail=FALSE)
+
+
+
+
+
+
+
+
+
+
+
 
 
 

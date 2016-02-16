@@ -123,8 +123,6 @@ The data provides convincing evidence that marijuana reduced the frequency of re
 
 
 \titledquestion{\ramsey 5.19} % Problem 3
-\todo{Problem 3: errors}
-
 
 \begin{parts}
 
@@ -136,29 +134,28 @@ s_p^2 &= \frac{\sum_{i=1}^{I} (n_i -1 ) s_i^2}{\sum_{i=1}^{I} (n_i -1 )} \\
 &= \frac{   (127-1)(0.4979)^2  +  (44-1)(0.4235)^2  +  (24-1)(0.3955)^2  +  \cdots  }{(127-1) +  (44-1) +  (24-1)  +  \cdots} \\
 & \quad \quad \quad \frac{\cdots + (41-1)(0.3183)^2 + (18-1)(0.3111)^2  +  (16-1)(0.4649)^2 + \cdots}{\cdots + (41-1) + (18-1)  +  (16-1) + \cdots } \\
 & \quad \quad \quad \frac{\cdots  +  (11-1)(0.2963)^2  +  (7-1)(0.3242)^2  +  (6-1)(0.5842)^2  }{\cdots +  (11-1) +  (7-1)  +  (6-1)} \\
-&= 0.1919.
+&= 0.1919322.
 \end{split}
 \end{equation*}
 
 \part To construct an ANOVA table to test for species differences, we first compute $SS_W$, the sum of squared residuals of the ``within'' group.
 
 \begin{align*}
-SS_W &= \sum_{i=1}^9 \left[ \sum_{j=1}^{n_i} \left( Y_{ij} - \overline{Y_i} \right)^2  \right] = \sum_{i=1}^9 \left[ (n_i - 1) \text{SE}(Y_i)  \right] \\
-&= (127 - 1)(0.4979) + (44 - 1)(0.4235) + \cdots + (6 - 1)(0.5842) \\
-&= 122.8658.
+SS_W &= \sum_{i=1}^9 \left[ \sum_{j=1}^{n_i} \left( Y_{ij} - \overline{Y_i} \right)^2  \right] = \sum_{i=1}^9 \left[ (n_i - 1) \cdot \text{SE}(Y_i)^2  \right] \\
+&= (127 - 1)(0.4979)^2 + (44 - 1)(0.4235)^2 + \cdots + (6 - 1)(0.5842)^2 \\
+&= 54.70068.
 \end{align*}
 
 Given that the sample standard deviation of all 294 observations as one group is $\text{SD}_{Total} = 0.4962$, the total sum of squared residuals $SS_{Total}$ is
 
-\todo{\quad Should SS total be -9 (-I) instead of -1 ?}
 \begin{align*}
-SS_{Total} &= \sum_{i=1}^9 \left[ \sum_{j=1}^{n_i} \left( Y_{ij} - \overline{Y} \right)^2  \right] = (n_1 + n_2 + \cdots + n_9 - 1) (\text{SD}_{Total}) \\
-&= (127 + 44 + \cdots + 6 - 1)(0.4962) =  (293)(0.4962)\\
-&= 145.3866.
+SS_{Total} &= \sum_{i=1}^9 \left[ \sum_{j=1}^{n_i} \left( Y_{ij} - \overline{Y} \right)^2  \right] = (n_1 + n_2 + \cdots + n_9 - 1) (\text{SD}_{Total})^2 \\
+&= (127 + 44 + \cdots + 6 - 1)(0.4962)^2 =  (293)(0.4962)^2\\
+&= 72.14083.
 \end{align*}
 
 Therefore, the sum of squared residuals of the ``between'' group, $SS_B$ is:
-$$SS_B = SS_{Total} - SS_W = 145.3866 - 122.8658 = 22.5208.$$
+$$SS_B = SS_{Total} - SS_W = 72.14083 - 54.70068 = 17.44015.$$
 
 The Total, Within, and Between degrees of freedom are $\text{df}_{Total} = (n-1) = 293$, $\text{df}_W = (n-I)=(294-9) = 285$, and $\text{df}_B = \text{df}_{Total} - \text{df}_W  = 8$, respectively. \\
 
@@ -169,9 +166,9 @@ Thus the ANOVA table to test for species differences is:
 \begin{center}
   \begin{tabular}{ l c c c c c}
     Source of Variation & Sum of Squares & d.f. & Mean Square & F-Statistic & p-Value \\ \hline \hline
-    Between Groups & 22.5208 & 8 & 2.8151 & 6.5300 & $8.0551 \times 10^{-8}$ \\
-    Within Groups & 122.8658 & 285 & 0.4311 & & \\ \hline
-    Total & 145.3866 & 293 & & &
+    Between Groups & 17.44015 & 8 & 2.180019 & 11.35828 & $5.6683 \times 10^{-14}$ \\
+    Within Groups & 54.70068 & 285 & 0.1919322 & & \\ \hline
+    Total & 72.14083 & 293 & & &
   \end{tabular}
 \end{center}
 
@@ -179,8 +176,10 @@ Thus the ANOVA table to test for species differences is:
 Where the p-value for the F-Statistic is given by the CDF of an F distribution with 8 and 285 degrees of freedom.
 \begin{codeSmall}
 > # p-value of F-statistic
-> pf(q=6.5300, df1=8, df2=285, lower.tail=FALSE)
-[1] 8.055137e-08
+> fstat
+[1] 11.35828
+> pf(q=fstat, df1=8, df2=285, lower.tail=FALSE)
+[1] 5.6683e-14
 \end{codeSmall}
 
 
@@ -189,19 +188,68 @@ Where the p-value for the F-Statistic is given by the CDF of an F distribution w
 
 $$ SS_B = \sum_{i=1}^I \left( n_i \overline{Y_i}^2 \right) - n\overline{Y}^2 = \sum_{i=1}^9 \left( n_i \overline{Y_i}^2 \right) - n\overline{Y}^2 .$$
 
-The overall mean $\overline{Y}=7.4746$ is computed as a weighted average of the group means, and $n=294$, thus \todo{\quad 17.45402 != 22.5208 : maybe my SS total calc is incorrect?}
+The overall mean $\overline{Y}=7.4746$ is computed as a weighted average of the group means, and $n=294$, thus
 \begin{align*}
 SS_B &= \sum_{i=1}^9 \left( n_i \overline{Y_i}^2 \right) - n\overline{Y}^2 \\
 &= (127)(7.347)^2 + (44)(7.368)^2 + (24)(7.418)^2 + (41)(7.487)^2 + (18)(7.563)^2 + \cdots \\
 & \quad \quad \quad \cdots + (16)(7.568)^2 + (11)(8.214)^2 + (7)(8.272)^2 + (6)(8.297)^2 - (294)(7.4746)^2 \\
-&= 17.45402
+&= 17.45402,
+\end{align*}
+which is the same, to within rounding errors, as the $SS_B$ calculated using the ANOVA method ($17.44015$).
+
+
+\part If the first 6 species (``Group A'') have one common mean and the last 3 species (``Group B'') have another common mean, our full and reduced models are:
+\quad \\
+\begin{center}
+  \begin{tabular}{ l l l l l l l l l l l}
+    Species Number: & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 \\
+    Full model (separate-means): & $\overline{Y_1}$ & $\overline{Y_2}$ & $\overline{Y_3}$ & $\overline{Y_4}$ & $\overline{Y_5}$ & $\overline{Y_6}$ & $\overline{Y_7}$ & $\overline{Y_8}$ & $\overline{Y_9}$ \\
+    Reduced model (two-group): & $\overline{Y_A}$ & $\overline{Y_A}$ & $\overline{Y_A}$ &  $\overline{Y_A}$ & $\overline{Y_A}$ & $\overline{Y_A}$ & $\overline{Y_B}$ & $\overline{Y_B}$ & $\overline{Y_B}$ & 
+  \end{tabular}
+\end{center}
+\quad \\
+
+where $\overline{Y_1}, \overline{Y_2}, \ldots, \overline{Y_9}$ are the group means given in Display 5.23, and $\overline{Y_A}$ and $\overline{Y_B}$ are weighted averages of $\overline{Y_1}, \ldots, \overline{Y_6}$ and $\overline{Y_7}, \ldots, \overline{Y_9}$, respectively, as shown below:
+
+\begin{align*}
+\overline{Y_A} &= \frac{\sum_{i=1}^6 n_i \overline{Y_i}}{\sum_{i=1}^6 n_i} = \frac{(127)(7.347) + \cdots + (16)(7.568)}{127 + \cdots + 16} = 7.405489 \\
+\overline{Y_B} &= \frac{\sum_{i=7}^9 n_i \overline{Y_i}}{\sum_{i=7}^9 n_i} = \frac{(11)(8.214) + \cdots + (6)(8.297)}{11 + \cdots + 6} = 8.251667.
 \end{align*}
 
 
-\part If the first 6 species have one common mean and the last 3 have another common mean, we find that \todo{\quad finish 3d}
+The group Sample Standard Deviations are computed using the pooled standard deviations (from the given Sample Standard Deviation values in Display 5.23):
+
+\begin{align*}
+\text{SD}(Y_A) &= \sqrt{\frac{\sum_{i=1}^6 (n_i - 1) \left( \text{SD}(Y_i)  \right)^2   }{\sum_{i=1}^6 (n_i - 1)}} = 0.4416123 \\
+\text{SD}(Y_B) &= \sqrt{\frac{\sum_{i=7}^9 (n_i - 1) \left( \text{SD}(Y_i)  \right)^2   }{\sum_{i=7}^9 (n_i - 1)}} = 0.3912750.
+\end{align*}
+
+Therefore the RSS for Groups A and B are
+\begin{align*}
+RSS_A &= (n_A - 1)\left( \text{SD}(Y_A)  \right)^2 = (270-1)(0.4416123)^2 = 52.460766\\
+RSS_B &= (n_B - 1)\left( \text{SD}(Y_B)  \right)^2 = (24-1)(0.3912750)^2 = 3.521211.
+\end{align*}
 
 
+These values are summarized in the table below:
+\begin{codeSmall}
+  group   n     mean pooled_sd       rss
+1     A 270 7.405489 0.4416123 52.460766
+2     B  24 8.251667 0.3912750  3.521211
+\end{codeSmall}
 
+The Sum of Squares for the two-group model is just the sum of the RSS for Group A and B (55.98198), with $293$ degree of freedom.
+
+Therefore we can construct a new ANOVA table and perform an F-test: \todo{is this correct?}
+
+\begin{center}
+  \begin{tabular}{ l c c c c c}
+    Source of Variation & Sum of Squares & d.f. & Mean Square & F-Statistic & p-Value \\ \hline \hline
+    Between Groups A and B & 16.15885 & 1 & 16.15885 & 84.28401 & $1.36 \times 10^{-70}$ \\
+    Within Groups A and B & 55.98198 & 292 & 0.1917191 & & \\ \hline
+    Total & 72.14083 & 293 & & &
+  \end{tabular}
+\end{center}
 
 \end{parts}
 
@@ -213,13 +261,12 @@ SS_B &= \sum_{i=1}^9 \left( n_i \overline{Y_i}^2 \right) - n\overline{Y}^2 \\
 
 \titledquestion{} % Problem 4
 \textit{Consider the Bumpus's data in Chapter 2, compute the power of the two-sided two sample t-test of size 0.05 (i.e., reject the null hypothesis if the absolute value the t-statistic is greater than or equal to 2), under the alternative that $\mu_x - \mu_y = \overline{x} - \overline{y} = 0.01$ and $\sigma = s_p = 0.0214$.}
-\todo{Problem 4: not started}
-
+\todo{Problem 4: todo}
 
 
 \titledquestion{} % Problem 5
 \textit{Show that the two-sided two sample t-test is equivalent to the anova F-test, if the number of groups is two.}
-\todo{Problem 5: incomplete}
+\todo{Problem 5: finish}
 
 
 For $I=2$ groups, the F-statistic is given by
