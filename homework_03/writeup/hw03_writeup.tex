@@ -65,9 +65,8 @@ Code is attached here and also posted at \href{https://github.com/BrianWeinstein
 
 
 \titledquestion{\ramsey 4.30} % Problem 1
-\todo{Problem 1: DONE, but maybe shouldn't be using the t test?}
 
-A boxplot of SPF estimates for each subject is shown in Figure \ref{fig:1}, where the SPF estimate is calculated for each subject as the number minutes that a person was able to withstand sunlight before applying sunscreen divided by the number of minutes they were able to withstand after applying sunscreen. The dataset contains paired observations, and the quantity in question has a nearly normal distribution with no outliers, making it a strong candidate for the one-sample paired t-test.
+A boxplot of SPF estimates for each subject is shown in Figure \ref{fig:1}, where the SPF estimate is calculated for each subject as the number minutes that a person was able to withstand sunlight after applying sunscreen divided by the number of minutes they were able to withstand before applying sunscreen. The dataset contains paired observations, and the quantity in question has a nearly normal distribution with no outliers, making it a strong candidate for the one-sample paired t-test.
 
 \begin{codeSmall}
    PreTreatment Sunscreen spfEstimate
@@ -149,7 +148,7 @@ SS_W &= \sum_{i=1}^9 \left[ \sum_{j=1}^{n_i} \left( Y_{ij} - \overline{Y_i} \rig
 &= 122.8658.
 \end{align*}
 
-Given the sample standard deviation of all 294 observations as one group is $\text{SD}_{Total} = 0.4962$, the total sum of squared residuals $SS_{Total}$ is
+Given that the sample standard deviation of all 294 observations as one group is $\text{SD}_{Total} = 0.4962$, the total sum of squared residuals $SS_{Total}$ is
 
 \todo{\quad Should SS total be -9 (-I) instead of -1 ?}
 \begin{align*}
@@ -190,7 +189,7 @@ Where the p-value for the F-Statistic is given by the CDF of an F distribution w
 
 $$ SS_B = \sum_{i=1}^I \left( n_i \overline{Y_i}^2 \right) - n\overline{Y}^2 = \sum_{i=1}^9 \left( n_i \overline{Y_i}^2 \right) - n\overline{Y}^2 .$$
 
-The overall mean $\overline{Y}=7.4746$ is computed as a weighted average of the group means and $n=294$, thus \todo{\quad 17.45402 != 22.5208 : maybe my SS total calc is incorrect?}
+The overall mean $\overline{Y}=7.4746$ is computed as a weighted average of the group means, and $n=294$, thus \todo{\quad 17.45402 != 22.5208 : maybe my SS total calc is incorrect?}
 \begin{align*}
 SS_B &= \sum_{i=1}^9 \left( n_i \overline{Y_i}^2 \right) - n\overline{Y}^2 \\
 &= (127)(7.347)^2 + (44)(7.368)^2 + (24)(7.418)^2 + (41)(7.487)^2 + (18)(7.563)^2 + \cdots \\
