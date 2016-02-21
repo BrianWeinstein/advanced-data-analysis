@@ -278,6 +278,61 @@ Handicap c=( 0.333 0.333 -1 0 0.333 ) 1.180952  0.5039353 2.34346 0.02217534 65 
 
 \titledquestion{\ramsey 6.15}
 
+Test scores for the experimental CAD instruction course are shown below:
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=0.8\textwidth]{4.png}
+	\label{fig:4}
+\end{figure}
+
+\begin{parts}
+
+\part \textit{Compute the pooled estimate of the standard deviation from these summary statistics.}
+
+The pooled estimate of the standard deviation $s_p$ is given by
+\begin{align*}
+s_p &= \sqrt{\frac{\sum_{i=1}^{5} (n_i -1 ) s_i^2}{\sum_{i=1}^{5} (n_i -1 )}} \\
+&= \sqrt{\frac{(9-1)(3.82)^2 + (9-1)(5.26)^2 + (9-1)(4.66)^2 + (9-1)(4.91)^2 + (9-1)(3.53)^2}{(9-1) \cdot 5}} \\
+&=4.484297,
+\end{align*}
+
+and has $\text{d.f.}=9+9+9+9+9-5=40$ degrees of freedom.
+
+
+\part \textit{Determine a set of coefficients that will contrast the methods using programmed text as part of the method (groups 2 and 3) with those that do not use programmed text (1, 4, and 5).}
+
+For groups 1 through 5, respectively, the coefficients $C_i$ contrasting groups 2 and 3 with groups 1, 4, and 5 are
+$$\left(\frac{1}{3}, -\frac{1}{2}, -\frac{1}{2}, \frac{1}{3}, \frac{1}{3}\right).$$
+
+\part \textit{Estimate the contrast in (b) and compute a 95\% confidence interval.}
+
+An estimate of the linear contrast of interest is
+\begin{align*}
+g &= \frac{\overline{Y}_{L+D} + \overline{Y}_{C} + 
+\overline{Y}_{C+L}}{3} - \frac{\overline{Y}_{R} + \overline{Y}_{R+L}}{2} \\
+&= \frac{30.20 + 31.10 + 30.20}{3} - \frac{28.80 + 26.20}{2} \\
+&= 3.
+\end{align*}
+
+The standard error of the estimate is
+\begin{align*}
+\text{SE}(g) &= s_p \sqrt{\sum_{i=1}^5\frac{C_i^2}{n_i}} \\
+&= (4.484297) \sqrt{  \frac{(1/3)^2}{•9}  +  \frac{(-1/2)^2}{•9}  + \frac{(-1/2)^2}{•9}  + \frac{(1/3)^2}{•9}  + \frac{(1/3)^2}{•9}  } \\
+&= 1.364528.
+\end{align*}
+
+A 95\% confidence interval is
+\begin{gather*}
+g \pm t_{40}(0.975) \cdot \text{SE}(g) \\
+3 \pm 2.021075 \cdot 1.364528 \\
+3 \pm 2.757814 \\
+\Rightarrow 0.2421858 \leq g \leq 5.757814.
+\end{gather*}
+
+
+\end{parts}
+
+
 
 
 \titledquestion{\ramsey 6.16}

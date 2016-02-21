@@ -135,8 +135,8 @@ CompareTwoEducGroups <- function(data_frame=incomeEduData, Educ_groups){
                                 alternative="two.sided")$conf.int)
   
   return(unlist(list(oneSidedPVal=pval, estimate=estimateOriginal,
-              confInt_lower=confIntOriginal[1],
-              confInt_upper=confIntOriginal[2])))
+                     confInt_lower=confIntOriginal[1],
+                     confInt_upper=confIntOriginal[2])))
   
 }
 
@@ -185,7 +185,39 @@ rm(list = ls()) # clear working environment
 
 # Problem 4: Ramsey 6.15  #######################################################################
 
+# input data
+testScoresData <- data.frame(group=c(1,2,3,4,5),
+                             logo=c("L+D", "R", "R+L", "C", "C+L"),
+                             method=c("Lecture and discussion",
+                                      "Programmed text",
+                                      "Programmed text with lectures",
+                                      "Computer instruction",
+                                      "Computer instruction with lectures"),
+                             n=c(9, 9, 9, 9, 9),
+                             average=c(30.20, 28.80, 26.20, 31.10, 30.20),
+                             sd=c(3.82, 5.26, 4.66, 4.91, 3.53))
 
+# compute the pooled standard deviation
+sp <- sqrt(
+  sum(((testScoresData$n) - 1) * (testScoresData$sd)^2) / sum(((testScoresData$n) - 1))
+)
+sp
+
+# estimate the linear contrast g
+g <- sum(testScoresData$average[c(1, 4, 5)])/3 - sum(testScoresData$average[c(2, 3)])/2
+g
+
+# compute standard error of the estimate of g
+coefs <- c(1/3, -1/2, -1/2, 1/3, 1/3)
+se <- sp * sqrt(sum(coefs^2 / testScoresData$n))
+se
+
+# compute 0.975 quantile of t distr with df=40
+tquantile <- qt(p=0.975, df=40, lower.tail=TRUE); tquantile
+
+# compute the 95% CI
+g - tquantile * se
+g + tquantile * se
 
 rm(list = ls()) # clear working environment
 
