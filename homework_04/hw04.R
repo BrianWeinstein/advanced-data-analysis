@@ -225,7 +225,32 @@ rm(list = ls()) # clear working environment
 
 # Problem 5: Ramsey 6.16  #######################################################################
 
+# compute degrees of freedom for sp
+df <- (6+6+6+6+6+6)-6; df
 
+# Part a: LSD ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# multiplier for LSD
+qt(p=(1-(0.05/2)), df=30)
+
+# Part b: F-protected LSD ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# no code needed
+
+# Part c: Tukey-Kramer ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# multiplier for Tukey-Kramer
+qtukey(p=(1-0.05), nmeans=6, df=30) / sqrt(2)
+
+# Part d: Bonferroni ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# multiplier for Bonferroni
+qt(p=(1-(0.05/(2*15))), df=30)
+
+# Part e: Scheffe ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# multiplier for Scheffe
+sqrt(5 * qf(p=(1-0.05), df1=5, df2=30))
 
 rm(list = ls()) # clear working environment
 

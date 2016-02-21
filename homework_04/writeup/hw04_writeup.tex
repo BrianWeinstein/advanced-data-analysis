@@ -337,6 +337,70 @@ g \pm t_{40}(0.975) \cdot \text{SE}(g) \\
 
 \titledquestion{\ramsey 6.16}
 
+\textit{A study involving 36 subjects randomly assigned six each to six treatment groups gives an ANOVA F-test with p-value = 0.0850. What multipliers are used to construct 95\% confidence intervals for treatment differences with the following methods:}
+
+\begin{parts}
+
+\part \textbf{LSD}
+
+For the LSD, the multiplier $M$ in the interval half-width is given by the $100(1-\frac{\alpha}{2})$\% critical value in the t-distribution with degrees of freedom equal to those associated with the pooled SD (here, $\text{d.f.}_{s_p} = (6+6+6+6+6+6)-6 = 30$).
+
+Therefore, $M = t_{\text{30}}(1-\frac{0.05}{2}) = t_{30}(0.975) = 2.042272$.
+
+\begin{codeSmall}
+> # multiplier for LSD
+> qt(p=(1-(0.05/2)), df=30)
+[1] 2.042272
+\end{codeSmall}
+
+
+\part \textbf{F-protected LSD}
+
+Since the p-value from the F-test is large ($>$0.05), we can't declare any individual difference significant, and neither the Tuker-Kramer nor the Scheffe multipliers control either the individual or familywise success rate at 95\%.
+
+
+\part \textbf{Tukey–Kramer}
+
+In the Tukey-Kramer procedure, the multiplier $M$ is given by $[q_{I, (n-I)}(1-\alpha)]/\sqrt{2}$, where $[q_{I, (n-I)}(1-\alpha)]$ is the quantile function of the studentized range distribution with $I$ groups and $(n-I)$ degrees of freedom.
+
+Therefore, $M=[q_{6, (36-I6)}(1-0.05)]/\sqrt{2} = 3.041594$.
+
+\begin{codeSmall}
+> # multiplier for Tukey-Kramer
+> qtukey(p=(1-0.05), nmeans=6, df=30) / sqrt(2)
+[1] 3.041594
+\end{codeSmall}
+
+
+\part \textbf{Bonferroni}
+
+In the Bonferroni procedure, the multiplier $M$ is given by $t_{\text{d.f.}}(1-\frac{\alpha}{2k})$, where $k=\frac{I(I-1)}{2}$ is the number of pairs of means to be compared and d.f. is the degrees of freedom associated with the pooled SD.
+
+
+Here, $k=\frac{6(6-1)}{2} = 15$, therefore, $M = t_{30}(1-\frac{0.05}{2 \cdot 15}) = t_{30}(0.9983333) = 3.188806$.
+
+\begin{codeSmall}
+> # multiplier for Bonferroni
+> qt(p=(1-(0.05/(2*15))), df=30)
+[1] 3.188806
+\end{codeSmall}
+
+
+\part \textbf{Scheffe}
+
+In the Scheffe procedure, the multiplier $M$ is given by $\sqrt{(I-1)F_{(I-1), \text{d.f.}}(1-\alpha)}$, where $F_{(I-1), \text{d.f.}}(1-\alpha)$ is the $(1-\alpha)$th percentile of the F-distribution with $(I-1)$ and d.f. degrees of freedom.
+
+Therefore $M=\sqrt{(6-1)F_{(6-1), \text{30}}(1-0.05)} = \sqrt{5 \cdot F_{5, \text{30}}(0.95)} = \sqrt{5 \cdot 2.533555} = 3.559181$.
+
+\begin{codeSmall}
+> # multiplier for Scheffe
+> sqrt(5 * qf(p=(1-0.05), df1=5, df2=30))
+[1] 3.559181
+\end{codeSmall}
+
+
+\end{parts}
+
 
 
 \titledquestion{\ramsey 6.23}
