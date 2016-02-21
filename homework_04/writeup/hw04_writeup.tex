@@ -79,6 +79,7 @@ The ANOVA table testing for a difference in mean oxygen isotopic composition is 
     Total & 9.0383 & 51 & & &
   \end{tabular}
 \end{center}
+\quad \\
 
 \begin{figure}[!h]
 	\centering
@@ -87,10 +88,149 @@ The ANOVA table testing for a difference in mean oxygen isotopic composition is 
 	\label{fig:1}
 \end{figure}
 
-
+\pagebreak
 
 \titledquestion{\ramsey 5.25}
 
+\begin{parts}
+\setlength{\parindent}{1em}
+
+\part \textit{How strong is the evidence that at least one of the five population distributions (corresponding to the different years of education) is different from the others?}
+
+Figure \ref{fig:2a} shows the distribution of income for 5 different ``years of education'' groupings. The boxplots show (1) the presence of severe outliers, and (2) that the group standard deviations increase as the years of education increases.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=4.25in]{2a.png}
+	\caption{Income vs Years of Education for 2,584 observations among 5 ``Years of Education'' groupings.}
+	\label{fig:2a}
+\end{figure}
+
+Examining the dataset, we also see that the group sample sizes are different.
+
+\begin{codeSmall}
+> # check group sample sizes and standard deviations
+> incomeEduData %>%
++   group_by(Educ) %>%
++   summarize(numObs=n(), mean=mean(Income2005),
++             median=median(Income2005), stdev=sd(Income2005))
+Source: local data frame [5 x 5]
+
+    Educ numObs     mean median    stdev
+  (fctr)  (int)    (dbl)  (dbl)    (dbl)
+1    <12    136 28301.45  23500 21021.90
+2     12   1020 36864.90  31000 29369.73
+3  13-15    648 44875.96  38000 33913.54
+4     16    406 69996.97  56500 64256.80
+5    >16    374 76855.46  60500 65428.29
+\end{codeSmall}
+
+The F-tests are not robust to a lack of equal standard deviations and are not resistant to severe outliers. Since the education groups with higher mean incomes also have higher spreads, this dataset is a good candidate for a log transformation.
+
+On the log scale, there are fewer outliers (which are also less-severe) and the standard deviations are nearly equal, as shown in Figure \ref{fig:2b} and in the table below.
+
+\begin{figure}[!h]
+	\centering
+	\includegraphics[width=4.25in]{2b.png}
+	\caption{Log(Income) vs Years of Education for 2,584 observations among 5 ``Years of Education'' groupings.}
+	\label{fig:2b}
+\end{figure}
+
+\begin{codeSmall}
+> # check group sample sizes and standard deviations on log scale
+> incomeEduData %>%
++   group_by(Educ) %>%
++   summarize(numObs=n(), mean=mean(LogIncome2005),
++             median=median(LogIncome2005), stdev=sd(LogIncome2005))
+Source: local data frame [5 x 5]
+
+    Educ numObs     mean   median     stdev
+  (fctr)  (int)    (dbl)    (dbl)     (dbl)
+1    <12    136  9.89934 10.06453 0.9988809
+2     12   1020 10.22721 10.34174 0.8539854
+3  13-15    648 10.39121 10.54534 0.9288173
+4     16    406 10.79709 10.94196 0.9581051
+5    >16    374 10.89790 11.01036 1.0665910
+\end{codeSmall}
+
+Performing the one-way ANOVA F-test on the log-transformed incomes we find overwhelming evidence that at least one of the five population distributions is different from the others. The ANOVA table is shown below.
+
+\begin{center}
+  \begin{tabular}{ l c c c c c}
+    Source of Variation & Sum of Squares & d.f. & Mean Square & F-Statistic & p-Value \\ \hline \hline
+    Between Groups & 217.65 & 4 & 54.413 & 62.87 & $2.2\times 10^{-16}$ \\
+    Within Groups & 2232.12 & 2579 & 0.865 & & \\ \hline
+    Total & 2449.774 & 2583 & & &
+  \end{tabular}
+\end{center}
+\quad \\
+
+Although it isn't entirely justified here (as per Display 3.6), when performing the ANOVA F-test on the dataset excluding outliers\footnote{Here, an outlier is defined as an observation more than 1.5 times the group interquartile range below the first quartile or above the third quartile.} we still find overwhelming evidence that at least one distribution is different from the others, so the results are not included here.
+
+
+
+\part \textit{By how many dollars or by what percent does the mean or median for each of the last four categories exceed that of the next lowest category?}
+
+The \texttt{CompareTwoEducGroups} function (see attached code for function definition) performs a two-sample t-test to test the hypothesis that the mean log income in the first specified ``Years of Education'' (YOE) group is greater than the mean log income in the second specified group. It outputs a one-sided p-value, an estimated value for the multiplicative treatment effect (in USD --- the original scale), and a 95\% confidence interval for the multiplicative treatment effect (also in USD).
+
+\begin{subparts}
+\setlength{\parindent}{1em}
+
+
+\subpart \textbf{($>$16) vs (16)}
+
+\begin{codeSmall}
+> CompareTwoEducGroups(data_frame=incomeEduData, Educ_groups=c(">16", "16"))
+ oneSidedPVal      estimate confInt_lower confInt_upper 
+   0.08238005    1.10607335    0.95934487    1.27524345 
+> CompareTwoEducGroups(data_frame=incomeEduDataExclOutliers, Educ_groups=c(">16", "16"))
+ oneSidedPVal      estimate confInt_lower confInt_upper 
+ 3.968804e-05  1.224599e+00  1.107807e+00  1.353704e+00 
+\end{codeSmall}
+
+The data provides little evidence that the $>$16 YOE population earns a higher income than the 16 YOE population (one-sided p-value $0.08238$; two-sample t-test). A 95\% confidence interval for the number of times by which the $>$16 YOE income exceeds the 16 YEO income is $0.95934$ to $1.27524$ times. 
+
+When excluding outliers, however, the data provides convincing evidence that the $>$16 YEO population earns a higher income than the 16 YOE population (one-sided p-value $3.97 \times 10^{-5}$; two-sample t-test). Income is estimated to be $1.22460$ times greater for the those with $>$16 YOE compared to those with 16 YOE, with a 95\% confidence interval of $1.10781$ to $1.35370$ times (i.e., an estimated 22\% increase; 95\% CI from 11\% to 35\%).
+
+
+
+\subpart \textbf{(16) vs (13--15)}
+
+\begin{codeSmall}
+> CompareTwoEducGroups(data_frame=incomeEduData, Educ_groups=c("16", "13-15"))
+ oneSidedPVal      estimate confInt_lower confInt_upper 
+ 7.649007e-12  1.500615e+00  1.335230e+00  1.686486e+00 
+\end{codeSmall}
+
+The data provides convincing evidence that the 16 YEO population earns a higher income than the 13--15 YOE population (one-sided p-value $7.65 \times 10^{-12}$; two-sample t-test). Income is estimated to be $1.50062$ times greater for the those with 16 YOE compared to those with 13--15 YOE, with a 95\% confidence interval of $1.33523$ to $1.68649$ times (i.e., an estimated 50\% increase; 95\% CI from 34\% to 69\%).
+
+
+\subpart \textbf{(13--15) vs (12)}
+
+\begin{codeSmall}
+> CompareTwoEducGroups(data_frame=incomeEduData, Educ_groups=c("13-15", "12"))
+ oneSidedPVal      estimate confInt_lower confInt_upper 
+ 0.0001140482  1.1782093370  1.0799490482  1.2854099405 
+\end{codeSmall}
+
+The data provides convincing evidence that the 13--15 YEO population earns a higher income than the 12 YOE population (one-sided p-value $0.00011$; two-sample t-test). Income is estimated to be $1.17821$ times greater for the those with 13--15 YOE compared to those with 12 YOE, with a 95\% confidence interval of $1.07995$ to $1.28541$ times (i.e., an estimated 17\% increase; 95\% CI from 8.0\% to 29\%).
+
+
+\subpart \textbf{(12) vs ($<$12)}
+
+
+\begin{codeSmall}
+> CompareTwoEducGroups(data_frame=incomeEduData, Educ_groups=c("12", "<12"))
+ oneSidedPVal      estimate confInt_lower confInt_upper 
+ 0.0000204658  1.3880147741  1.1872749406  1.6226949185 
+\end{codeSmall}
+
+The data provides convincing evidence that the 12 YEO population earns a higher income than the $<$12 YOE population (one-sided p-value $0.00002$; two-sample t-test). Income is estimated to be $1.38801$ times greater for the those with 12 YOE compared to those with $<$12 YOE, with a 95\% confidence interval of $1.18727$ to $1.62269$ times (i.e., an estimated 39\% increase; 95\% CI from 19\% to 62\%).
+
+\end{subparts}
+
+
+\end{parts}
 
 
 \titledquestion{\ramsey 6.12}
