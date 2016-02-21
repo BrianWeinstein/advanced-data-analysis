@@ -14,6 +14,7 @@ library(Sleuth3) # Data sets from Ramsey and Schafer's "Statistical Sleuth (3rd 
 library(ggplot2); theme_set(theme_bw())
 library(scales)
 library(gmodels)
+library(agricolae)
 
 
 
@@ -228,28 +229,20 @@ rm(list = ls()) # clear working environment
 # compute degrees of freedom for sp
 df <- (6+6+6+6+6+6)-6; df
 
-# Part a: LSD ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
-
-# multiplier for LSD
+# Part a: multiplier for LSD
 qt(p=(1-(0.05/2)), df=30)
 
-# Part b: F-protected LSD ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part b: F-protected LSD
 
 # no code needed
 
-# Part c: Tukey-Kramer ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
-
-# multiplier for Tukey-Kramer
+# Part c: multiplier for Tukey-Kramer
 qtukey(p=(1-0.05), nmeans=6, df=30) / sqrt(2)
 
-# Part d: Bonferroni ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
-
-# multiplier for Bonferroni
+# Part d: multiplier for Bonferroni
 qt(p=(1-(0.05/(2*15))), df=30)
 
-# Part e: Scheffe ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
-
-# multiplier for Scheffe
+# Part e: multiplier for Scheffe
 sqrt(5 * qf(p=(1-0.05), df1=5, df2=30))
 
 rm(list = ls()) # clear working environment
@@ -258,9 +251,27 @@ rm(list = ls()) # clear working environment
 
 # Problem 6: Ramsey 6.23  #######################################################################
 
+# load data
+dietData <- Sleuth3::ex0623
 
+# boxplots of weight loss in each group
+ggplot(dietData, aes(x=Group, y=WtLoss24)) +
+  geom_violin(alpha=0.15) +
+  geom_boxplot() +
+  labs(y="Weight Losses (kg)", x="Diet Group")
+ggsave(filename="writeup/6.png", width=6.125, height=3.5, units="in")
+
+# perform a one way ANOVA F-test to check for group differences
+anovaTable <- anova(lm(WtLoss24~Group, data=dietData)); anovaTable
+
+# compute the total sum of squares and the total degrees of freedom
+sum(anovaTable$'Sum Sq')
+sum(anovaTable$Df)
+
+# tukey-kramer procedure
+TukeyHSD(x=aov(lm(WtLoss24 ~ Group, data = dietData)), which="Group",
+         ordered=TRUE, conf.level=0.95)
 
 rm(list = ls()) # clear working environment
-
 
 

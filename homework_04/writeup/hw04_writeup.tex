@@ -405,11 +405,52 @@ Therefore $M=\sqrt{(6-1)F_{(6-1), \text{30}}(1-0.05)} = \sqrt{5 \cdot F_{5, \tex
 
 \titledquestion{\ramsey 6.23}
 
+The data provides moderately strong, but not convincing evidence that there are differences in average weight loss among these diets (a p-value of 0.04086 from a one-way ANOVA F-test). 
+
+The ANOVA table testing for a difference in weight loss after 24 months of dieting is shown below, and a boxplot of these weight losses is shown in Figure \ref{fig:6}.
+
+\begin{center}
+  \begin{tabular}{ l c c c c c}
+    Source of Variation & Sum of Squares & d.f. & Mean Square & F-Statistic & p-Value \\ \hline \hline
+    Between Groups & 216.9 & 2 & 108.430 & 3.2358 & 0.04086 \\
+    Within Groups & 9013.9 & 269 & 33.509 & & \\ \hline
+    Total & 9230.753 & 271 & & &
+  \end{tabular}
+\end{center}
+\quad \\
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{6.png}
+	\caption{Weight losses (in kg) of 272 participants who dieted for two years on one of three different diets.}
+	\label{fig:6}
+\end{figure}
+
+The difference between the average weight loss in the Low-Carbohydrate group and the Low-Fat group is difficult to attribute to chance. The weight loss in the Low-Carbohydrate group is estimated to be 2.1828 kg higher than in the Low-Fat group, with a 95\% confidence interval from 0.1408 to 4.2248 kg based on the Tukey-Kramer procedure.
+
+The difference between the average weight loss in the Mediterranean and Low-Fat groups, and the difference between the average weight loss in the Low-Carbohydrate and Mediterranean groups are not significant.
+
+\begin{codeSmall}
+> TukeyHSD(x=aov(lm(WtLoss24 ~ Group, data = dietData)), which="Group",
++ ordered=TRUE, conf.level=0.95)
+  Tukey multiple comparisons of means
+    95% family-wise confidence level
+    factor levels have been ordered
+
+Fit: aov(formula = lm(WtLoss24 ~ Group, data = dietData))
+
+$Group
+                                    diff        lwr      upr     p adj
+Mediterranean-Low-Fat          1.2978952 -0.6974180 3.293208 0.2771180
+Low-Carbohydrate-Low-Fat       2.1828035  0.1408361 4.224771 0.0329364
+Low-Carbohydrate-Mediterranean 0.8849083 -1.1622656 2.932082 0.5656813
+\end{codeSmall}$
 
 
 
 \end{questions}
 
-\listoftodos
+%\listoftodos
 
 \end{document}
