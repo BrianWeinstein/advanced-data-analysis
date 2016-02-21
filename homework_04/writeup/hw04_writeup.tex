@@ -247,6 +247,33 @@ The data provides convincing evidence that the 12 YEO population earns a higher 
 
 \titledquestion{\ramsey 6.12}
 
+The quantity of interest is the linear combination
+$$\gamma=\frac{\mu_{amputee} + \mu_{crutches} + 
+\mu_{wheelchair}}{3} - \frac{\mu_{hearing}}{1},$$
+
+which we estimate by
+
+$$g=\frac{\overline{Y}_{amputee} + \overline{Y}_{crutches} + 
+\overline{Y}_{wheelchair}}{3} - \frac{\overline{Y}_{hearing}}{1},$$ where the amputee, crutches, and wheelchair groups are handicaps of ``mobility'', and the hearing group is a handicap of ``communication''. Since the coefficients sum to 0, $g$ is a linear contrast.
+
+We're testing whether the average of the mean scores for the mobility group is equal to the mean score of the communication group. That is, $H_0: g=0,\ H_A: g\neq0$.
+
+Using the \texttt{gmodels::fit.contrast} R function, the data provides moderate evidence that the average of the mean scores for the mobility group is not equal to the mean score of the communication group (two-sided p-value 0.02217; two-sample t-test). The score is estimated to be 1.18095 points higher for the mobility group compared to the communication group (95\% confidence interval 0.17452 to 2.18738 points).
+
+\begin{codeSmall}
+> # check the order of Handicap factor levels
+> levels(handicapData$Handicap)
+[1] "Amputee"    "Crutches"   "Hearing"    "None"       "Wheelchair"
+> 
+> # test if the the avg of score means for
+> # amputee/crutches/wheelchair is equal to to hearing
+> fit.contrast(model=lm(Score ~ Handicap, data=handicapData),
++              varname="Handicap", coeff=c(1/3, 1/3, -1, 0, 1/3),
++              conf.int=0.95, df=TRUE)
+                                      Estimate Std. Error t value   Pr(>|t|) DF lower CI upper CI
+Handicap c=( 0.333 0.333 -1 0 0.333 ) 1.180952  0.5039353 2.34346 0.02217534 65 0.174524 2.187381
+\end{codeSmall}$
+
 
 
 \titledquestion{\ramsey 6.15}

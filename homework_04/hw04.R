@@ -13,7 +13,7 @@ library(dplyr)
 library(Sleuth3) # Data sets from Ramsey and Schafer's "Statistical Sleuth (3rd ed)"
 library(ggplot2); theme_set(theme_bw())
 library(scales)
-# library(data.table)
+library(gmodels)
 
 
 
@@ -167,7 +167,17 @@ rm(list = ls()) # clear working environment
 
 # Problem 3: Ramsey 6.12  #######################################################################
 
+# load data
+handicapData <- Sleuth3::case0601
 
+# check the order of Handicap factor levels
+levels(handicapData$Handicap)
+
+# test if the the avg of score means for
+# amputee/crutches/wheelchair is equal to to hearing
+fit.contrast(model=lm(Score ~ Handicap, data=handicapData),
+             varname="Handicap", coeff=c(1/3, 1/3, -1, 0, 1/3),
+             conf.int=0.95, df=TRUE)
 
 rm(list = ls()) # clear working environment
 
