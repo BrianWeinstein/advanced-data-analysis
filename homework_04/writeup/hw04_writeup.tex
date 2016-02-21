@@ -21,6 +21,7 @@
 \setlength\parindent{0pt}
 \usepackage{lipsum}
 \usepackage{amsmath}
+\usepackage{caption}
 
 
 \qformat{\textbf{Problem \thequestion: \thequestiontitle}\quad \hfill}
@@ -83,6 +84,7 @@ The ANOVA table testing for a difference in mean oxygen isotopic composition is 
 
 \begin{figure}[!h]
 	\centering
+	\captionsetup{width=0.8\textwidth}
 	\includegraphics[width=4.25in]{1.png}
 	\caption{Oxygen Isotopic Composition (per mil deviations from SMOW) for twelve bones of a single Tyrannosaurus rex specimen.}
 	\label{fig:1}
@@ -101,6 +103,7 @@ Figure \ref{fig:2a} shows the distribution of income for 5 different ``years of 
 
 \begin{figure}[!h]
 	\centering
+	\captionsetup{width=0.8\textwidth}
 	\includegraphics[width=4.25in]{2a.png}
 	\caption{Income vs Years of Education for 2,584 observations among 5 ``Years of Education'' groupings.}
 	\label{fig:2a}
@@ -131,6 +134,7 @@ On the log scale, there are fewer outliers (which are also less-severe) and the 
 
 \begin{figure}[!h]
 	\centering
+	\captionsetup{width=0.8\textwidth}
 	\includegraphics[width=4.25in]{2b.png}
 	\caption{Log(Income) vs Years of Education for 2,584 observations among 5 ``Years of Education'' groupings.}
 	\label{fig:2b}
@@ -190,7 +194,15 @@ The \texttt{CompareTwoEducGroups} function (see attached code for function defin
 
 The data provides little evidence that the $>$16 YOE population earns a higher income than the 16 YOE population (one-sided p-value $0.08238$; two-sample t-test). A 95\% confidence interval for the number of times by which the $>$16 YOE income exceeds the 16 YEO income is $0.95934$ to $1.27524$ times. 
 
-When excluding outliers, however, the data provides convincing evidence that the $>$16 YEO population earns a higher income than the 16 YOE population (one-sided p-value $3.97 \times 10^{-5}$; two-sample t-test). Income is estimated to be $1.22460$ times greater for the those with $>$16 YOE compared to those with 16 YOE, with a 95\% confidence interval of $1.10781$ to $1.35370$ times (i.e., an estimated 22\% increase; 95\% CI from 11\% to 35\%).
+When excluding outliers, however, (see Figure \ref{fig:2c}) the data provides convincing evidence that the $>$16 YEO population earns a higher income than the 16 YOE population (one-sided p-value $3.97 \times 10^{-5}$; two-sample t-test). Income is estimated to be $1.22460$ times greater for the those with $>$16 YOE compared to those with 16 YOE, with a 95\% confidence interval of $1.10781$ to $1.35370$ times (i.e., an estimated 22\% increase; 95\% CI from 11\% to 35\%).
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{2c.png}
+	\caption{Log(Income) vs Years of Education for 2,432 observations (i.e., excluding 152 outliers) among 5 ``Years of Education'' groupings.}
+	\label{fig:2c}
+\end{figure}
 
 
 

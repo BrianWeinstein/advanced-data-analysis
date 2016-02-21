@@ -144,6 +144,14 @@ CompareTwoEducGroups <- function(data_frame=incomeEduData, Educ_groups){
 CompareTwoEducGroups(data_frame=incomeEduData, Educ_groups=c(">16", "16"))
 CompareTwoEducGroups(data_frame=incomeEduDataExclOutliers, Educ_groups=c(">16", "16"))
 
+# boxplots of LOG(income) by education group
+ggplot(incomeEduDataExclOutliers, aes(x=Educ, y=LogIncome2005)) +
+  geom_violin(alpha=0.15) +
+  geom_boxplot() +
+  scale_y_continuous(labels = comma) + 
+  labs(y="Annual income in 2005, in log(U.S. dollars)", x="Years of education", title="Log Income vs Years of Education, excluding outliers")
+ggsave(filename="writeup/2c.png", width=7, height=4.5, units="in")
+
 # Part b.ii (16 vs 13-15)
 CompareTwoEducGroups(data_frame=incomeEduData, Educ_groups=c("16", "13-15"))
 
