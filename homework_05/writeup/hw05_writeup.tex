@@ -104,7 +104,54 @@ A 95\% prediction confidence interval at 5 hours is given by
 
 \titledquestion{\ramsey 7.24}
 
+\begin{parts}
 
+\part Confirming the estimates and standard errors from Display 7.17:
+
+\begin{subparts}
+
+\subpart Denmark
+\begin{codeSmall}
+> lmDenmark <- lm(formula=Denmark~Year, data=birthData)
+> summary(lmDenmark)$coefficients
+                  Estimate   Std. Error   t value     Pr(>|t|)
+(Intercept)  0.59872329381 0.0408047207 14.672893 2.395722e-18
+Year        -0.00004288538 0.0000206916 -2.072598 4.423828e-02
+\end{codeSmall}$
+
+\subpart The Netherlands
+\begin{codeSmall}
+> lmNetherlands <- lm(formula=Netherlands~Year, data=birthData)
+> summary(lmNetherlands)$coefficients
+                  Estimate   Std. Error   t value     Pr(>|t|)
+(Intercept)  0.67239837505 0.0279195810 24.083398 1.365923e-26
+Year        -0.00008084321 0.0000141577 -5.710196 9.636921e-07
+\end{codeSmall}$
+
+\subpart Canada
+\begin{codeSmall}
+> lmCanada <- lm(formula=Canada~Year, data=birthData)
+> summary(lmCanada)$coefficients
+                 Estimate    Std. Error   t value     Pr(>|t|)
+(Intercept)  0.7337857143 0.05480068278 13.390083 3.983523e-11
+Year        -0.0001111688 0.00002767698 -4.016653 7.375947e-04
+\end{codeSmall}$
+
+\subpart United States
+\begin{codeSmall}
+> lmUsa <- lm(formula=USA~Year, data=birthData)
+> summary(lmUsa)$coefficients
+                  Estimate     Std. Error   t value     Pr(>|t|)
+(Intercept)  0.62008571429 0.018598766807 33.340152 2.523643e-18
+Year        -0.00005428571 0.000009393273 -5.779212 1.439109e-05
+\end{codeSmall}$
+
+\end{subparts}
+
+
+
+
+\end{parts}
 
 \titledquestion{\ramsey 7.28}
 

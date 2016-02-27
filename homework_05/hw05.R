@@ -8,6 +8,9 @@
 # set working directory
 setwd("~/Documents/advanced-data-analysis/homework_05")
 
+# prevent R from printing large numbers in scientific notation
+options(scipen=5)
+
 # load packages
 library(Sleuth3) # Data sets from Ramsey and Schafer's "Statistical Sleuth (3rd ed)"
 # library(ggplot2); theme_set(theme_bw())
@@ -51,6 +54,26 @@ rm(list = ls()) # clear working environment
 
 # Problem 2: Ramsey 7.24  #######################################################################
 
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# load data
+birthData <- Sleuth3::ex0724
+
+# fit a linear model to Denmark ~ Year
+lmDenmark <- lm(formula=Denmark~Year, data=birthData)
+summary(lmDenmark)$coefficients
+
+# fit a linear model to Netherlands ~ Year
+lmNetherlands <- lm(formula=Netherlands~Year, data=birthData)
+summary(lmNetherlands)$coefficients
+
+# fit a linear model to Canada ~ Year
+lmCanada <- lm(formula=Canada~Year, data=birthData)
+summary(lmCanada)$coefficients
+
+# fit a linear model to USA ~ Year
+lmUsa <- lm(formula=USA~Year, data=birthData)
+summary(lmUsa)$coefficients
 
 
 rm(list = ls()) # clear working environment
