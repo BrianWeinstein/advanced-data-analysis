@@ -1,0 +1,98 @@
+
+\documentclass[11pt]{exam} % https://www.ctan.org/pkg/exam?lang=en
+
+\usepackage[lmargin=1.in,rmargin=1.in,tmargin=1.in,bmargin=1in]{geometry}
+\usepackage{setspace}
+\usepackage[pdftex]{graphicx}
+\usepackage{titling}
+\usepackage[
+	pdfauthor={Brian Weinstein},
+	pdftitle={Homework 1},
+	bookmarks=true,
+	colorlinks=true,
+	linkcolor=blue,
+	urlcolor=blue,
+	citecolor=blue,
+	pdftex,
+	linktocpage=true
+	]{hyperref}
+\usepackage[textsize=tiny]{todonotes}
+\usepackage{float}
+\setlength\parindent{0pt}
+\usepackage{lipsum}
+\usepackage{amsmath}
+\usepackage{caption}
+
+
+\qformat{\textbf{Problem \thequestion: \thequestiontitle}\quad \hfill}
+
+
+\pagestyle{headandfoot}
+\runningheadrule
+\firstpageheader{}{}{}
+\runningheader{\theauthor}{\thetitle}{\thedate}
+\firstpagefooter{}{\thepage}{}
+\runningfooter{}{\thepage}{}
+
+
+\usepackage{xcolor}
+\usepackage{adjustbox}
+\usepackage{verbatim}
+\definecolor{shadecolor}{rgb}{.9, .9, .9}
+
+\newenvironment{code}%
+   {\par\noindent\adjustbox{margin=1ex,bgcolor=shadecolor,margin=0ex \medskipamount}\bgroup\minipage\linewidth\verbatim}%
+   {\endverbatim\endminipage\egroup}
+
+\newenvironment{codeSmall}%
+   {\par\noindent\adjustbox{margin=1ex,bgcolor=shadecolor,margin=0ex \medskipamount}\bgroup\minipage\linewidth\verbatim\footnotesize}%
+   {\endverbatim\endminipage\egroup}
+
+\newcommand{\ramsey}{\href{http://www.statisticalsleuth.com/}{Ramsey }}
+
+
+
+\begin{document}
+
+
+\title{STAT W4201 001, Homework 5}
+\author{Brian Weinstein (bmw2148)}
+\date{March 2, 2016}
+\maketitle
+
+Code is attached here and also posted at \href{https://github.com/BrianWeinstein/advanced-data-analysis}{https://github.com/BrianWeinstein/advanced-data-analysis}. Where relevant, code snippets and output are are included in-line.
+
+\begin{questions}
+
+
+\titledquestion{\ramsey 7.18}
+
+
+
+\titledquestion{\ramsey 7.24}
+
+
+
+\titledquestion{\ramsey 7.28}
+
+
+
+\titledquestion{\ramsey 8.17}
+
+
+
+\titledquestion{\ramsey 8.20}
+
+
+
+\titledquestion{\ramsey 9.12}
+
+
+
+
+
+\end{questions}
+
+%\listoftodos
+
+\end{document}
