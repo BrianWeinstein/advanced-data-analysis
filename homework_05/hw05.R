@@ -29,8 +29,12 @@ xBar <- 1.190
 sampleVarX <- 0.6344
 x0 <- log(5)
 
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
 # calculate the standard error of the prediction
 sep <- sigmaHat * sqrt(1 + (1/n) + ((x0 - xBar)^2 /  ((n-1) * sampleVarX))) ; sep
+
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # predicted value at x0=log(5)
 pred <- beta0 + (beta1 * x0) ; pred
