@@ -20,7 +20,26 @@ library(Sleuth3) # Data sets from Ramsey and Schafer's "Statistical Sleuth (3rd 
 
 # Problem 1: Ramsey 7.18  #######################################################################
 
+# define coefficients and constants from Display 7.12
+beta0 <- 6.9836
+beta1 <- -0.7257
+sigmaHat <- 0.08226
+n <- 10
+xBar <- 1.190
+sampleVarX <- 0.6344
+x0 <- log(5)
 
+# calculate the standard error of the prediction
+sep <- sigmaHat * sqrt(1 + (1/n) + ((x0 - xBar)^2 /  ((n-1) * sampleVarX))) ; sep
+
+# predicted value at x0=log(5)
+pred <- beta0 + (beta1 * x0) ; pred
+
+# 95% prediction confidence interval
+t <- qt(p=0.975, df=(n-2)) ; t
+lowerBound <- pred - (t * sep)
+upperBound <- pred + (t * sep)
+c(lowerBound, upperBound)
 
 rm(list = ls()) # clear working environment
 
