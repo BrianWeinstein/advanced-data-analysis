@@ -106,7 +106,9 @@ A 95\% prediction confidence interval at 5 hours is given by
 
 \begin{parts}
 
-\part Confirming the estimates and standard errors from Display 7.17:
+\part \textit{With a statistical computer package and the data in the file ex0724, obtain the least squares fits to the four simple regressions, individually, to confirm the estimates and standard errors presented in Display 7.17.}
+
+Confirming the estimates and standard errors from Display 7.17:
 
 \begin{subparts}
 
@@ -148,7 +150,34 @@ Year        -0.00005428571 0.000009393273 -5.779212 1.439109e-05
 
 \end{subparts}
 
+\part \textit{Obtain the t-statistic for the test that the slopes of the regressions are zero, for each of the four countries. Is there evidence that the proportion of male births is truly declining?}
 
+The t-statistics and associated two-sided p-values are computed and shown in the output of part (a). For the \texttt{Year} variable:
+
+\begin{subparts}
+
+\subpart Denmark
+
+The t-statistic is $-2.0726$, with a one-sided p-value of $0.0221$. The data provides moderate, but not convincing evidence, that the proportion of male births is truly declining in Denmark.
+
+
+\subpart The Netherlands
+
+The t-statistic is $-5.7102$, with a one-sided p-value of $0.000000482$. The data provides overwhelming evidence that the proportion of male births is truly declining in the Netherlands.
+
+
+\subpart Canada
+
+The t-statistic is $-4.0167$, with a one-sided p-value of $0.000369$. The data provides convincing evidence that the proportion of male births is truly declining in Canada.
+
+
+\subpart United States
+
+The t-statistic is $-5.7792$, with a one-sided p-value of $0.00000720$. The data provides overwhelming evidence that the proportion of male births is truly declining in the United States.
+
+
+
+\end{subparts}
 
 
 \end{parts}

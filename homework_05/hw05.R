@@ -54,10 +54,10 @@ rm(list = ls()) # clear working environment
 
 # Problem 2: Ramsey 7.24  #######################################################################
 
-# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
-
 # load data
 birthData <- Sleuth3::ex0724
+
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # fit a linear model to Denmark ~ Year
 lmDenmark <- lm(formula=Denmark~Year, data=birthData)
@@ -74,6 +74,24 @@ summary(lmCanada)$coefficients
 # fit a linear model to USA ~ Year
 lmUsa <- lm(formula=USA~Year, data=birthData)
 summary(lmUsa)$coefficients
+
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# Denmark
+summary(lmDenmark)$coefficients
+c(-2.072598, 4.423828e-02/2)
+
+# Netherlands
+summary(lmNetherlands)$coefficients
+c(-5.710196, 9.636921e-07/2)
+
+# Canada
+summary(lmCanada)$coefficients
+c(-4.016653, 7.375947e-04/2)
+
+# USA
+summary(lmUsa)$coefficients
+c(-5.779212, 1.439109e-05/2)
 
 
 rm(list = ls()) # clear working environment
