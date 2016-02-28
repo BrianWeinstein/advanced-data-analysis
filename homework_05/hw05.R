@@ -93,6 +93,21 @@ c(-4.016653, 7.375947e-04/2)
 summary(lmUsa)$coefficients
 c(-5.779212, 1.439109e-05/2)
 
+# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# no code needed
+
+# Part d ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# calculate the RSS for the USA model
+sum((lmUsa$residuals)^2)
+
+# calculate the RSS for the Canada model
+sum((lmCanada$residuals)^2)
+
+# Part e ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# no code needed
 
 rm(list = ls()) # clear working environment
 

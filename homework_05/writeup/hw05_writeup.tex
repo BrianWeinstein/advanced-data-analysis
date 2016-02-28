@@ -175,12 +175,47 @@ The t-statistic is $-4.0167$, with a one-sided p-value of $0.000369$. The data p
 
 The t-statistic is $-5.7792$, with a one-sided p-value of $0.00000720$. The data provides overwhelming evidence that the proportion of male births is truly declining in the United States.
 
-
-
 \end{subparts}
 
 
+\part \textit{Explain why the United States can have the largest of the four t-statistics (in absolute value) even though its slope is only the third largest (in absolute value).}
+
+In the hypothesis that the slopes of the regressions are zero, the t-statistic is defined as $Estimate/\text{SE}(Estimate)$. So even though the slope is only the third largest (in absolute value), the standard error on the estimate is small enough to make the $Estimate/\text{SE}(Estimate)$ ratio largest for the USA.
+
+\part \textit{Explain why the standard error of the estimated slope is smaller for the United States than for Canada, even though the sample size is the same.}
+
+The standard error of the estimated slope is given by
+$$\text{SE}(\hat{\beta}_1) = \hat{\sigma} \sqrt{\frac{1}{(n-1)s_X^2}},$$
+where $s_X^2$ is the sample variance of the $X$'s.
+
+For the US and Canada, $n$ and $s_X^2$ are the same (it's the same sample size, using the same subset of years), but $\hat{\sigma}$ is different.
+
+$$\hat{\sigma} = \sqrt{\frac{\text{RSS}_j}{\text{Degrees of freedom}}} = \sqrt{\frac{\text{RSS}_j}{n-2}} = \sqrt{\frac{\text{RSS}_j}{19}},$$
+
+where $\text{RSS}_j$ is the sum of squared residuals for group j.
+
+For the US, the RSS is
+\begin{codeSmall}
+> sum((lmUsa$residuals)^2)
+[1] 0.000001290857
+\end{codeSmall}$
+
+and for Canada, the RSS is
+\begin{codeSmall}
+> sum((lmCanada$residuals)^2)
+[1] 0.00001120681
+\end{codeSmall}$
+
+Since the RSS for the US model is an order of magnitude smaller than the RSS for the Canada model (and since all other parameters in $\text{SE}(\hat{\beta}_1)$ are identical) the standard error for the estimated slope is smaller for the US.
+
+\part \textit{Can you think of any reason why the standard deviations about the regression line might be different for the four countries? (Hint: The proportion of males is a kind of average, i.e., the average number of births that are male.)}
+
+There's no reason to think that the standard deviations about the regression lines would be the same for the four countries. These are samples from four different populations, and there's no reason to think their sampling distributions will have identical spreads.
+
+
 \end{parts}
+
+
 
 \titledquestion{\ramsey 7.28}
 
