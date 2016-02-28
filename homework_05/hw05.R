@@ -287,6 +287,10 @@ ggsave(filename="writeup/5b.png", width=6.125, height=3.5, units="in")
 
 
 
+
+
+
+
 # Part d ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 
