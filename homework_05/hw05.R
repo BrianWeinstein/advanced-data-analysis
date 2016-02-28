@@ -125,11 +125,10 @@ brainData <- brainData %>%
   mutate(Group=as.factor(ifelse(Years==0, "control", "player")))
 
 # boxplots of brain activity for each group
-plot.orig <- ggplot(brainData, aes(x=Group, y=Activity)) +
+ggplot(brainData, aes(x=Group, y=Activity)) +
   # geom_violin(alpha=0.15) +
   geom_boxplot() +
   labs(y="Neuronal activity index", x="Group")
-plot.orig
 ggsave(filename="writeup/3_orig.png", width=6.125, height=3.5, units="in")
 
 # create a log(Activity) variable
@@ -137,11 +136,10 @@ brainData <- brainData %>%
   mutate(LogActivity=log(Activity))
 
 # boxplots of brain activity for each group
-plot.log <- ggplot(brainData, aes(x=Group, y=LogActivity)) +
+ggplot(brainData, aes(x=Group, y=LogActivity)) +
   # geom_violin(alpha=0.15) +
   geom_boxplot() +
   labs(y="Neuronal activity index (log scale)", x="Group")
-plot.log
 ggsave(filename="writeup/3_log.png", width=6.125, height=3.5, units="in")
 
 # compare group standard deviations on the original and log scales
