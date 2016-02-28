@@ -296,7 +296,84 @@ The data provides overwhelming evidence that the amount of neuronal activity is 
 
 \titledquestion{\ramsey 8.17}
 
+\begin{parts}
 
+\part \textit{Use scatterplots of the raw data, along with trial and error, to determine transformations of $Y=\text{Ragwort dry mass}$ and of $X=\text{Flea beetle load}$ that will produce an approximate linear relationship.}
+
+Scatterplots of the raw data and 3 log transformations of the data are shown in Figure \ref{fig:4a}. For ease of interpretation, I only examined log-transformed variables.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=\textwidth]{4a.png}
+	\caption{Scatterplots of the raw data and 3 log transformations of the data.}
+	\label{fig:4a}
+\end{figure}
+
+Log-transforming both the response (Mass) and explanatory variables (Load) produces an approximately linear relationship.
+
+\part \textit{Fit a linear regression model on the transformed scale; calculate residuals and fitted values.} \label{prob:0817b}
+Using the \texttt{lm} R function, a linear regression of log(Mass) on log(Load) is shown below.
+
+\begin{codeSmall}
+> lmPest <- lm(formula=LogMass~LogLoad, data=pestData)
+> summary(lmPest)
+
+Call:
+lm(formula = LogMass ~ LogLoad, data = pestData)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-2.54217 -1.04130  0.06406  1.40544  2.24600 
+
+Coefficients:
+            Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)    7.988      1.383   5.774 0.0000645 ***
+LogLoad       -1.685      0.264  -6.383 0.0000241 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 1.646 on 13 degrees of freedom
+Multiple R-squared:  0.7581,	Adjusted R-squared:  0.7395 
+F-statistic: 40.74 on 1 and 13 DF,  p-value: 0.00002407
+\end{codeSmall}
+
+Residuals and fitted values are shown below.
+
+\begin{codeSmall}
+> residuals(lmPest)
+          1           2           3           4           5           6           7 
+-0.87164605 -0.60823442 -1.36047140  0.87704266  0.06405890  1.13328141  2.24600408 
+          8           9          10          11          12          13          14 
+ 0.09207006  1.67760559  1.82962887  2.01739421 -2.50142865 -1.21096053 -0.84217066 
+         15 
+-2.54217409 
+> 
+> fitted(lmPest)
+         1          2          3          4          5          6          7          8 
+ 3.7730676  3.4704353  3.3373263  2.5439574  1.8320606  0.6815433 -0.5954242 -0.7812252 
+         9         10         11         12         13         14         15 
+-2.1702639 -2.2916643 -2.8683655 -2.0084314 -3.2118881 -4.2738252 -3.6724340 
+\end{codeSmall}
+
+
+
+\part \textit{Look at the residual plot. Do you want to try other transformations? What do you suggest?}
+
+The residual plot is shown in Figure \ref{fig:4c}.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{4c.png}
+	\caption{Residual plot for the fitted model from part (\ref{prob:0817b}).}
+	\label{fig:4c}
+\end{figure}
+
+There's no horn-shaped pattern present, but it does appear that even the log-transformed data has some nonlinearity --- the residuals are negative at the extreme values of fitted values, but positive near the center. This suggests that the addition of a $\log(X)^2$ term may be beneficial. The residual plot does not indicate nonconstant variance or the presence of extreme outliers.
+
+
+\end{parts}
 
 
 

@@ -14,6 +14,7 @@ options(scipen=5)
 # load packages
 library(Sleuth3) # Data sets from Ramsey and Schafer's "Statistical Sleuth (3rd ed)"
 library(ggplot2); theme_set(theme_bw())
+library(gridExtra)
 library(dplyr)
 # library(scales)
 # library(gmodels)
@@ -184,7 +185,64 @@ rm(list = ls()) # clear working environment
 
 # Problem 4: Ramsey 8.17  #######################################################################
 
+# load data
+pestData <- Sleuth3::ex0817
 
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# Mass vs Load
+p1 <- ggplot(pestData, aes(x=Load, y=Mass)) +
+  geom_point() +
+  geom_smooth(method=lm) +
+  labs(title="(1) Mass vs Load")
+
+# log(Mass) vs Load
+p2 <- ggplot(pestData, aes(x=Load, y=log(Mass))) +
+  geom_point() +
+  geom_smooth(method=lm) +
+  labs(title="(2) log(Mass) vs Load")
+
+# Mass vs log(Load)
+p3 <- ggplot(pestData, aes(x=log(Load), y=Mass)) +
+  geom_point() +
+  geom_smooth(method=lm) +
+  labs(title="(3) Mass vs log(Load)")
+
+# log(Mass) vs log(Load)
+p4 <- ggplot(pestData, aes(x=log(Load), y=log(Mass))) +
+  geom_point() +
+  geom_smooth(method=lm) +
+  labs(title="(4) log(Mass) vs log(Load)")
+
+# combine all 4 plots
+pGrid <- grid.arrange(p1, p2, p3, p4, nrow=2, ncol=2)
+ggsave(filename="writeup/4a.png", plot=pGrid, width=11, height=5, units="in")
+
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# create log-transformed variables
+pestData <- pestData %>%
+  mutate(LogLoad=log(Load),
+         LogMass=log(Mass))
+
+# create a linear regression model of Activity on Years
+lmPest <- lm(formula=LogMass~LogLoad, data=pestData)
+summary(lmPest)
+
+# residuals
+residuals(lmPest)
+
+# fitted values
+fitted(lmPest)
+
+# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# check the residuals of the fitted model
+ggplot(lmPest, aes(x=.fitted, y=.resid)) +
+  geom_point() +
+  geom_hline(yintercept=0, linetype="dashed") +
+  labs(x="Fitted values", y="Residuals")
+ggsave(filename="writeup/4c.png", width=6.125, height=3.5, units="in")
 
 rm(list = ls()) # clear working environment
 
