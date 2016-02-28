@@ -433,24 +433,65 @@ The linear regression line and a 95\% prediction band are shown in Figure \ref{f
 
 
 \part \textit{(i) Find the prediction and standard error of prediction from this fit if the machine-count percentage is 49.3 (as it is for the disputed election). (ii) How many estimated standard deviations is the observed absentee percentage, 79.0, from this predicted value? (iii) Compare this answer to a t-distribution (with degrees of freedom equal to the residual degrees of freedom in the regression fit) to obtain a p-value.} \label{prob:0820c}
-\todo{Problem 5c}
 
+The predicted value of \texttt{DemPctOfAbsenteeVotes} at \texttt{DemPctOfMachineVotes=49.3} is $46.8866$, with a standard error of prediction of $7.9150$.
 
+\begin{codeSmall}
+> # find the predicted value of DemPctOfAbsenteeVotes at DemPctOfMachineVotes=49.3
+> predDisputed <-  predict(lmVoteExclDisputed, newdata=filter(voteData, Disputed=="yes"),
++                          interval="prediction", se.fit=TRUE)
+> predDisputed
+$fit
+       fit      lwr      upr
+1 46.88664 30.32029 63.45299
 
+$se.fit
+[1] 2.788739
 
+$df
+[1] 19
 
+$residual.scale
+[1] 7.407472
+
+> 
+> # calculate the standard error of the predicted value
+> predDisputedSe <- sqrt((predDisputed$se.fit)^2 + (summary(lmVoteExclDisputed)$sigma)^2)
+> predDisputedSe
+[1] 7.915031
+\end{codeSmall}
+
+The observed value of $79.0$ is $4.0573$ estimated standard errors away from the predicted value of $46.8866$.
+
+\begin{codeSmall}
+> # calculate how many SEs away the observed pct is from the predicted value
+> obs <- voteData[voteData$Disputed=="yes", "DemPctOfAbsenteeVotes"] ; obs
+[1] 79
+> pred <- predDisputed$fit[[1]] ; pred
+[1] 46.88664
+> tstat <- abs(obs-pred)/predDisputedSe ; tstat
+[1] 4.057263
+\end{codeSmall}
+
+Using a t-distribution with 19 degrees of freedom (the residual degrees of freedom in the regression fit), this t-statistic corresponds to a two-sided p-value of $0.0006723$.
+
+\begin{codeSmall}
+> # calculate the 2-sided p-value
+> pval <- 2 * pt(q=(-1 * abs(tstat)), df=summary(lmVoteExclDisputed)$df[[2]]) ; pval
+[1] 0.0006722554
+\end{codeSmall}$
 
 
 
 \part \textit{Outliers and data snooping. The p-value in (\ref{prob:0820c}) makes sense if the investigation into the 1993 election was prompted by some other reason. Since it was prompted because the absentee percentage seemed too high, however, the p-value in (\ref{prob:0820c}) should be adjusted for data snooping. Adjust the p-value with a Bonferroni correction to account for all 22 residuals that could have been similarly considered.}
 
-\todo{Problem 5d}
+An adjusted p-value with a Bonferroni correction (to account for all 22 residuals that could have been chosen), is $0.01479$. Although this isn't nearly as convincing as the unadjusted p-value, it still indicates there's moderate evidence of this data point being an outlier.
 
-
-
-
-
-
+\begin{codeSmall}
+> # adjusting the pvalue with the Bonferroni correction
+> p.adjust(p=pval, method="bonferroni", n=22)
+[1] 0.01478962
+\end{codeSmall}
 
 
 \end{parts}

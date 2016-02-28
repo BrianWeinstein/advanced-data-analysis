@@ -271,7 +271,7 @@ summary(lmVoteExclDisputed)
 
 # compute the prediction interval band
 predVoteExclDisputed <- cbind(filter(voteData, Disputed=="no"),
-                              predict(lmVoteExclDisputed, interval = "prediction"))
+                              predict(lmVoteExclDisputed, interval="prediction"))
 
 # plot the scatterplot and prediciton interval
 ggplot(predVoteExclDisputed, aes(x=DemPctOfMachineVotes, y=DemPctOfAbsenteeVotes)) +
@@ -285,15 +285,27 @@ ggsave(filename="writeup/5b.png", width=6.125, height=3.5, units="in")
 
 # Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
+# find the predicted value of DemPctOfAbsenteeVotes at DemPctOfMachineVotes=49.3
+predDisputed <-  predict(lmVoteExclDisputed, newdata=filter(voteData, Disputed=="yes"),
+                         interval="prediction", se.fit=TRUE)
+predDisputed
 
+# calculate the standard error of the predicted value
+predDisputedSe <- sqrt((predDisputed$se.fit)^2 + (summary(lmVoteExclDisputed)$sigma)^2)
+predDisputedSe
 
+# calculate how many SEs away the observed pct is from the predicted value
+obs <- voteData[voteData$Disputed=="yes", "DemPctOfAbsenteeVotes"] ; obs
+pred <- predDisputed$fit[[1]] ; pred
+tstat <- abs(obs-pred)/predDisputedSe ; tstat
 
-
-
+# calculate the 2-sided p-value
+pval <- 2 * pt(q=(-1 * abs(tstat)), df=summary(lmVoteExclDisputed)$df[[2]]) ; pval
 
 # Part d ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
-
+# adjusting the pvalue with the Bonferroni correction
+p.adjust(p=pval, method="bonferroni", n=22)
 
 rm(list = ls()) # clear working environment
 
