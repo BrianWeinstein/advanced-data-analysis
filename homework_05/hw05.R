@@ -250,6 +250,45 @@ rm(list = ls()) # clear working environment
 
 # Problem 5: Ramsey 8.20  #######################################################################
 
+# load data
+voteData <- Sleuth3::ex0820
+
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# plot DemPctOfAbsenteeVotes vs DemPctOfMachineVotes
+plot.all <- ggplot(voteData, aes(x=DemPctOfMachineVotes, y=DemPctOfAbsenteeVotes)) +
+  geom_point(aes(shape=Disputed, color=Disputed), size=2.5)
+plot.all
+ggsave(filename="writeup/5a.png", width=6.125, height=3.5, units="in")
+
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# create a linear regression model of DemPctOfAbsenteeVotes on
+# DemPctOfMachineVotes, excluding the disputed election
+lmVoteExclDisputed <- lm(formula=DemPctOfAbsenteeVotes~DemPctOfMachineVotes,
+                         data=voteData, subset=(Disputed=="no"))
+summary(lmVoteExclDisputed)
+
+# compute the prediction interval band
+predVoteExclDisputed <- cbind(filter(voteData, Disputed=="no"),
+                              predict(lmVoteExclDisputed, interval = "prediction"))
+
+# plot the scatterplot and prediciton interval
+ggplot(predVoteExclDisputed, aes(x=DemPctOfMachineVotes, y=DemPctOfAbsenteeVotes)) +
+  geom_point(data=voteData, aes(shape=Disputed, color=Disputed), size=2.5) +
+  geom_ribbon(aes(ymin=lwr, ymax=upr), fill="darkgray", alpha=0.4) +
+  geom_smooth(method=lm) +
+  labs(title='Linear Regression of
+       DemPctOfAbsenteeVotes on DemPctOfMachineVotes
+       (model excludes the Disputed=="yes" observation)', size=10)
+ggsave(filename="writeup/5b.png", width=6.125, height=3.5, units="in")
+
+# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+
+
+# Part d ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
 
 
 rm(list = ls()) # clear working environment

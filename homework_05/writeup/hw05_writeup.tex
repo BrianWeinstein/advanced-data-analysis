@@ -372,28 +372,98 @@ The residual plot is shown in Figure \ref{fig:4c}.
 
 There's no horn-shaped pattern present, but it does appear that even the log-transformed data has some nonlinearity --- the residuals are negative at the extreme values of fitted values, but positive near the center. This suggests that the addition of a $\log(X)^2$ term may be beneficial. The residual plot does not indicate nonconstant variance or the presence of extreme outliers.
 
-
 \end{parts}
-
-
-
-
-
-
 
 
 \titledquestion{\ramsey 8.20}
 
+\begin{parts}
+
+\part \textit{Draw a scatterplot of Democratic percentage of absentee ballots versus Democratic percentage of machine-counted ballots. Use a separate plotting symbol to highlight the disputed election.}
+
+A scatterplot of Democratic percentage of absentee ballots versus Democratic percentage of machine-counted ballots is shown in Figure \ref{fig:5a}.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{5a.png}
+	\caption{Scatterplot of Democratic percentage of absentee ballots versus Democratic percentage of machine-counted ballots. The disputed election is indicated with a blue triangle.}
+	\label{fig:5a}
+\end{figure}
+
+
+\part \textit{(i) Fit the simple linear regression of absentee percentage on machine-count percentage, excluding the disputed election. (ii) Draw this line on the scatterplot. Also include a 95\% prediction band. (iii) What does this plot reveal about the unusualness of the absentee percentage in the disputed election?}
+
+A summary of the fitted linear regression on the data excluding the disputed election is shown below.
+
+\begin{codeSmall}
+> lmVoteExclDisputed <- lm(formula=DemPctOfAbsenteeVotes~DemPctOfMachineVotes,
++                          data=voteData, subset=(Disputed=="no"))
+> summary(lmVoteExclDisputed)
+
+Call:
+lm(formula = DemPctOfAbsenteeVotes ~ DemPctOfMachineVotes, data = voteData, 
+    subset = (Disputed == "no"))
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-17.988  -5.090   0.459   7.621   9.405 
+
+Coefficients:
+                     Estimate Std. Error t value   Pr(>|t|)    
+(Intercept)            5.5339     7.7678   0.712      0.485    
+DemPctOfMachineVotes   0.8388     0.1080   7.765 0.00000026 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 7.407 on 19 degrees of freedom
+Multiple R-squared:  0.7604,	Adjusted R-squared:  0.7478 
+F-statistic:  60.3 on 1 and 19 DF,  p-value: 0.00000026
+\end{codeSmall}
+
+The linear regression line and a 95\% prediction band are shown in Figure \ref{fig:5b}. The disputed election is far outside the 95\% prediction band, and the plot reveals that the results in the disputed election are fairly unlikely, given other historical election results.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{5b.png}
+	\caption{Scatterplot of Democratic percentage of absentee ballots versus Democratic percentage of machine-counted ballots. The linear model is constructed using only the undisputed elections. The 95\% prediction band is in light gray, and the 95\% confidence band is in dark gray.}
+	\label{fig:5b}
+\end{figure}
+
+
+\part \textit{(i) Find the prediction and standard error of prediction from this fit if the machine-count percentage is 49.3 (as it is for the disputed election). (ii) How many estimated standard deviations is the observed absentee percentage, 79.0, from this predicted value? (iii) Compare this answer to a t-distribution (with degrees of freedom equal to the residual degrees of freedom in the regression fit) to obtain a p-value.} \label{prob:0820c}
+\todo{Problem 5c}
+
+
+
+
+
+
+
+
+\part \textit{Outliers and data snooping. The p-value in (\ref{prob:0820c}) makes sense if the investigation into the 1993 election was prompted by some other reason. Since it was prompted because the absentee percentage seemed too high, however, the p-value in (\ref{prob:0820c}) should be adjusted for data snooping. Adjust the p-value with a Bonferroni correction to account for all 22 residuals that could have been similarly considered.}
+
+\todo{Problem 5d}
+
+
+
+
+
+
+
+
+\end{parts}
 
 
 \titledquestion{\ramsey 9.12}
-
+\todo{Problem 6}
 
 
 
 
 \end{questions}
 
-%\listoftodos
+\listoftodos
 
 \end{document}
