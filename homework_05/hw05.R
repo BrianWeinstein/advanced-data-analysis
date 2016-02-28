@@ -180,15 +180,6 @@ ggplot(lmBrain, aes(x=.fitted, y=.resid)) +
   labs(x="Fitted values", y="Residuals")
 ggsave(filename="writeup/3b_resid.png", width=6.125, height=3.5, units="in")
 
-
-
-
-
-
-
-
-
-
 rm(list = ls()) # clear working environment
 
 
