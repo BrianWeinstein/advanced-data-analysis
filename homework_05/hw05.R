@@ -13,8 +13,8 @@ options(scipen=5)
 
 # load packages
 library(Sleuth3) # Data sets from Ramsey and Schafer's "Statistical Sleuth (3rd ed)"
-# library(ggplot2); theme_set(theme_bw())
-# library(dplyr)
+library(ggplot2); theme_set(theme_bw())
+library(dplyr)
 # library(scales)
 # library(gmodels)
 # library(agricolae)
@@ -114,6 +114,71 @@ rm(list = ls()) # clear working environment
 
 
 # Problem 3: Ramsey 7.28  #######################################################################
+
+# load data
+brainData <- Sleuth3::ex0728
+
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# create a variable groupin the subjects into "control" and "player" groups
+brainData <- brainData %>%
+  mutate(Group=as.factor(ifelse(Years==0, "control", "player")))
+
+# boxplots of brain activity for each group
+plot.orig <- ggplot(brainData, aes(x=Group, y=Activity)) +
+  # geom_violin(alpha=0.15) +
+  geom_boxplot() +
+  labs(y="Neuronal activity index", x="Group")
+plot.orig
+ggsave(filename="writeup/3_orig.png", width=6.125, height=3.5, units="in")
+
+# create a log(Activity) variable
+brainData <- brainData %>%
+  mutate(LogActivity=log(Activity))
+
+# boxplots of brain activity for each group
+plot.log <- ggplot(brainData, aes(x=Group, y=LogActivity)) +
+  # geom_violin(alpha=0.15) +
+  geom_boxplot() +
+  labs(y="Neuronal activity index (log scale)", x="Group")
+plot.log
+ggsave(filename="writeup/3_log.png", width=6.125, height=3.5, units="in")
+
+# compare group standard deviations on the original and log scales
+brainData %>%
+  group_by(Group) %>%
+  summarize(sd(Activity), sd(LogActivity)) %>%
+  as.data.frame()
+
+# Perform a two-sample t-test
+tt <- t.test(formula=LogActivity~Group, data=brainData,
+             var.equal=TRUE, conf.level=0.95, alternative="two.sided")
+tt
+
+# take antilog of the estimate
+exp(diff(tt$estimate)[[1]])
+
+# Perform a two sided t-test for the confidence interval and take antilog
+exp(-tt$conf.int)
+
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+ggplot(brainData, aes(x=Years, y=Activity)) +
+  geom_point() +
+  geom_smooth(method=lm)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

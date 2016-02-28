@@ -219,6 +219,60 @@ There's no reason to think that the standard deviations about the regression lin
 
 \titledquestion{\ramsey 7.28}
 
+\begin{parts}
+
+\part \textit{Is the neuron activity different in the stringed musicians and the controls?}
+
+A boxplot of the neuronal activity index for the two groups is shown in Figure \ref{fig:3_orig}.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{3_orig.png}
+	\caption{Boxplots of neuronal activity index (D5 dipole strength, in nA-m) for a groups of string players (player) and a group of non-string players (control).}
+	\label{fig:3_orig}
+\end{figure}
+
+The two groups have unequal variances. On the log scale, however, the variances are nearly equal, as shown below and in Figure \ref{fig:3_log}.
+
+\begin{codeSmall}
+> # compare group standard deviations on the original and log scales
+> brainData %>%
++   group_by(Group) %>%
++   summarize(sd(Activity), sd(LogActivity)) %>%
++   as.data.frame()
+    Group sd(Activity) sd(LogActivity)
+1 control     2.258318       0.2983304
+2  player     5.588928       0.2976929
+\end{codeSmall}
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{3_log.png}
+	\caption{Boxplots of neuronal activity index (D5 dipole strength, in log(nA-m)) for a groups of string players (player) and a group of non-string players (control).}
+	\label{fig:3_log}
+\end{figure}
+
+
+Using a two-sample t-test on the log-transformed neuronal activity index, we find overwhelming evidence that mean log activities are not equal in the two groups on the log scale (two-sided p-value: $0.00004312$). Back-transforming the estimate and confidence interval from the log scale to the original scale, it's estimated that the mean neuronal activity index is $2.5731$ times higher for the group of string players than the group of non-string players (95\% confidence interval: $1.8329$ to $3.6123$ times).
+
+
+\part \textit{Is the amount of activity associated with the number of years the individual has been playing the instrument?}
+
+
+
+
+
+
+
+
+
+
+
+
+\end{parts}
+
 
 
 \titledquestion{\ramsey 8.17}
