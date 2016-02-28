@@ -260,13 +260,34 @@ Using a two-sample t-test on the log-transformed neuronal activity index, we fin
 
 \part \textit{Is the amount of activity associated with the number of years the individual has been playing the instrument?}
 
+This is equivalent to testing if $\hat{\beta}_1 \neq 0$ in the linear regression of $\hat{\mu}\{Y|X\}=\hat{\beta}_0 + \hat{\beta}_1 X$, where $Y$ is the neuronal activity index and $X$ is the number of years an individual has been playing the instrument. The coefficients of the linear regression are shown below, and a plot of Years vs Activity is shown in Figure \ref{fig:3b_fit}. The residual plot of the fitted model is shown in Figure \ref{fig:3b_resid}.
 
 
+\begin{codeSmall}
+> lmBrain <- lm(formula=Activity~Years, data=brainData)
+> summary(lmBrain)$coefficients
+             Estimate Std. Error  t value        Pr(>|t|)
+(Intercept) 8.3872549  1.1148871 7.522963 0.0000043546830
+Years       0.9971405  0.1110454 8.979574 0.0000006178311
+\end{codeSmall}$
 
+The data provides overwhelming evidence that the amount of neuronal activity is associated with the number of years the individual has been playing the instrument. The slope of the regression line is estimated to be $\hat{\beta}_1 = 0.9971$, with a two-sided p-value (for the test that $\beta_1 = 0$) of $6.178 \times 10^{-7}$.
 
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{3b_fit.png}
+	\caption{Scatterplot and linear regression of Activity vs Years. A 95\% confidence band for the entire regression line is shown in gray.}
+	\label{fig:3b_fit}
+\end{figure}
 
-
-
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{3b_resid.png}
+	\caption{Residual plot for the fitted model from Figure \ref{fig:3b_fit}.}
+	\label{fig:3b_resid}
+\end{figure}
 
 
 

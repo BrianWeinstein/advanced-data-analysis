@@ -163,15 +163,22 @@ exp(-tt$conf.int)
 
 # Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
+# plot Activity vs Years
 ggplot(brainData, aes(x=Years, y=Activity)) +
   geom_point() +
   geom_smooth(method=lm)
+ggsave(filename="writeup/3b_fit.png", width=6.125, height=3.5, units="in")
 
+# create a linear regression model of Activity on Years
+lmBrain <- lm(formula=Activity~Years, data=brainData)
+summary(lmBrain)$coefficients
 
-
-
-
-
+# check the residuals of the fitted model
+ggplot(lmBrain, aes(x=.fitted, y=.resid)) +
+  geom_point() +
+  geom_hline(yintercept=0, linetype="dashed") +
+  labs(x="Fitted values", y="Residuals")
+ggsave(filename="writeup/3b_resid.png", width=6.125, height=3.5, units="in")
 
 
 
