@@ -17,9 +17,6 @@ library(ggplot2); theme_set(theme_bw())
 library(gridExtra)
 library(GGally)
 library(dplyr)
-# library(scales)
-# library(gmodels)
-# library(agricolae)
 
 
 
