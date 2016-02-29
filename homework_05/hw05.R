@@ -341,9 +341,14 @@ dev.off()
 lmMammal <- lm(formula=LogBrain ~ LogBody + LogGestation + LogLitter, data=mammalData)
 summary(lmMammal)$coefficients
 
+# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
-
-
-
+# plot a matrix of pairwise scatterplots (log scale, except Litter)
+plot.pairsLogExceptLitter <- ggpairs(data=select(mammalData,
+                                                 LogBody, LogGestation, Litter, LogBrain),
+                                     lower=list(continuous=wrap("points", size=0.7)))
+png(filename="writeup/6c.png", width=11, height=9, units="in", res=300)
+print(plot.pairsLogExceptLitter)
+dev.off()
 
 rm(list = ls()) # clear working environment

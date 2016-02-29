@@ -498,11 +498,10 @@ An adjusted p-value with a Bonferroni correction (to account for all 22 residual
 
 
 \titledquestion{\ramsey 9.12}
-\todo{Problem 6}
 
 \begin{parts}
 
-\part \textit{Draw a matrix of scatterplots for the mammal brain weight data (Display 9.4) with all variables transformed to their logarithms (to reproduce Display 9.11).}
+\part \textit{Draw a matrix of scatterplots for the mammal brain weight data (Display 9.4) with all variables transformed to their logarithms (to reproduce Display 9.11).} \label{prob:0912a}
 
 A matrix of pairwise scatterplots (of the log-transformed variables) is shown in Figure \ref{fig:6a}.
 
@@ -530,16 +529,24 @@ LogLitter    -0.3100712 0.11592709 -2.674708 8.852076e-03
 \end{codeSmall}$
 
 
+\part \textit{Draw a matrix of scatterplots as in (\ref{prob:0912a}) but with litter size on its natural scale (untransformed). Does the relationship between log brain weight and litter size appear to be any better or any worse (more like a straight line) than the relationship between log brain weight and log litter size?}
+
+A matrix of pairwise scatterplots (of log brain weight, log body weight, log gestation, and (untransformed) litter size) is shown in Figure \ref{fig:6c}. The relationship between log brain weight and litter size doesn't appear to be any more linear than the relationship between log brain weight and log litter size. The correlation for each of these pairs of variables (measuring the degree of linear association between the variables in each pair) supports this: The correlation between log brain weight and litter size is $-0.612$, and the correlation between log brain weight and log litter size is almost identical, at $-0.643$.
 
 
-
-
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=\textwidth]{6c.png}
+	\caption{Pairwise scatterplots of log brain weight, log body weight, log gestation, and (untransformed) litter size.}
+	\label{fig:6c}
+\end{figure}
 
 
 \end{parts}
 
 \end{questions}
 
-\listoftodos
+%\listoftodos
 
 \end{document}
