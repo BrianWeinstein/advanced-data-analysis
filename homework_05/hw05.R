@@ -15,6 +15,7 @@ options(scipen=5)
 library(Sleuth3) # Data sets from Ramsey and Schafer's "Statistical Sleuth (3rd ed)"
 library(ggplot2); theme_set(theme_bw())
 library(gridExtra)
+library(GGally)
 library(dplyr)
 # library(scales)
 # library(gmodels)
@@ -312,6 +313,36 @@ rm(list = ls()) # clear working environment
 
 
 # Problem 6: Ramsey 9.12  #######################################################################
+
+# load data
+mammalData <- Sleuth3::case0902
+
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# define logged variables
+mammalData <- mammalData %>%
+  mutate(LogBrain=log(Brain),
+         LogBody=log(Body),
+         LogGestation=log(Gestation),
+         LogLitter=log(Litter))
+
+# plot a matrix of pairwise scatterplots (log scale)
+plot.pairsLog <- ggpairs(data=select(mammalData,
+                                     LogBody, LogGestation, LogLitter, LogBrain),
+                         lower=list(continuous=wrap("points", size=0.7)))
+png(filename="writeup/6a.png", width=11, height=9, units="in", res=300)
+print(plot.pairsLog)
+dev.off()
+
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# fit a multiple linear regression of log brain weight
+# on log body weight, log gestation, and log litter size
+lmMammal <- lm(formula=LogBrain ~ LogBody + LogGestation + LogLitter, data=mammalData)
+summary(lmMammal)$coefficients
+
+
+
 
 
 

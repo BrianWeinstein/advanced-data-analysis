@@ -500,8 +500,43 @@ An adjusted p-value with a Bonferroni correction (to account for all 22 residual
 \titledquestion{\ramsey 9.12}
 \todo{Problem 6}
 
+\begin{parts}
+
+\part \textit{Draw a matrix of scatterplots for the mammal brain weight data (Display 9.4) with all variables transformed to their logarithms (to reproduce Display 9.11).}
+
+A matrix of pairwise scatterplots (of the log-transformed variables) is shown in Figure \ref{fig:6a}.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=\textwidth]{6a.png}
+	\caption{Pairwise scatterplots of the log-transformed variables in the mammal brain weight dataset.}
+	\label{fig:6a}
+\end{figure}
 
 
+\part \textit{Fit the multiple linear regression of log brain weight on log body weight, log gestation, and log litter size, to confirm the estimates in Display 9.15.}
+
+A linear regression of log brain weight on log body weight, log gestation, and log litter size is shown below, and matches what is shown in Display 9.15.
+
+\begin{codeSmall}
+> lmMammal <- lm(formula=LogBrain ~ LogBody + LogGestation + LogLitter, data=mammalData)
+> summary(lmMammal)$coefficients
+               Estimate Std. Error   t value     Pr(>|t|)
+(Intercept)   0.8548219 0.66167247  1.291911 1.996239e-01
+LogBody       0.5750714 0.03258789 17.646784 2.777551e-31
+LogGestation  0.4179421 0.14078249  2.968708 3.812593e-03
+LogLitter    -0.3100712 0.11592709 -2.674708 8.852076e-03
+\end{codeSmall}$
+
+
+
+
+
+
+
+
+\end{parts}
 
 \end{questions}
 
