@@ -116,6 +116,29 @@ rm(list = ls()) # clear working environment
 
 # Problem 3: Ramsey 9.18  #######################################################################
 
+# load data
+wingData <- Sleuth3::ex0918
+
+# convert data to long format
+wingDataLong <- wingData %>%
+  tidyr::gather(data=., key=Sex, value=Avg_WingSize, c(Females, Males)) %>%
+  mutate(SE_WingSize=ifelse(Sex=="Females", SE_Females, SE_Males),
+         Ratio=ifelse(Sex=="Females", Ratio, NA),
+         SE_Ratio=ifelse(Sex=="Females", SE_Ratio, NA)) %>%
+  select(Continent, Latitude, Sex, Avg_WingSize, SE_WingSize, Ratio, SE_Ratio)
+
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# scatterplot of Avg_WingSize vs Latitude, by Continent and Sex
+ggplot(wingDataLong, aes(x=Latitude, y=Avg_WingSize,
+                         color=interaction(Continent, Sex),
+                         shape=interaction(Continent, Sex))) +
+  geom_point(size=2.5) +
+  scale_shape_manual(values=c(16, 17, 15, 18))
+ggsave(filename="writeup/3a.png", width=6.125, height=3.5, units="in")
+
+
+
 
 rm(list = ls()) # clear working environment
 
