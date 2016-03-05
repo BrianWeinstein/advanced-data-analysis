@@ -156,6 +156,45 @@ rm(list = ls()) # clear working environment
 
 # Problem 4: Ramsey 9.20  #######################################################################
 
+# load data
+derbyData <- Sleuth3::ex0920
+
+# create a Year^2 variable
+derbyData <- derbyData %>%
+  mutate(Year2=Year^2)
+
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# plot (Time vs Year) and (Speed vs Year)
+ggplot(derbyData, aes(x=Year, y=Time)) + geom_point()
+ggplot(derbyData, aes(x=Year, y=Speed)) + geom_point()
+ggsave(filename="writeup/4a.png", width=6.125, height=3.5, units="in")
+
+# compare the linear models with Time as the response vs with Speed as the response
+lmDerbyTime <- lm(formula=Time ~ Year + Year2, data=derbyData)
+summary(lmDerbyTime)
+lmDerbySpeed <- lm(formula=Speed ~ Year + Year2, data=derbyData)
+summary(lmDerbySpeed) # higher R-squared
+
+rm(lmDerbyTime, lmDerbySpeed)
+
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# create a linear regression model of Speed on Year + Year2 + Conditions
+lmDerbyB <- lm(formula=Speed ~ Year + Year2 + Conditions, data=derbyData)
+summary(lmDerbyB)$coefficients
+
+# get 95% CIs for the coefficients in lmDerbyB
+confint(lmDerbyB, level = 0.95)
+
+# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# create a linear regression model of Speed on Year + Year2 + Conditions * Starters
+lmDerbyC <- lm(formula=Speed ~ Year + Year2 + Conditions * Starters, data=derbyData)
+summary(lmDerbyC)$coefficients
+
+# get 95% CIs for the coefficients in lmDerbyC
+confint(lmDerbyC, level = 0.95)
 
 rm(list = ls()) # clear working environment
 

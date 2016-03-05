@@ -68,6 +68,8 @@ Code is attached here and also posted at \href{https://github.com/BrianWeinstein
 \titledquestion{\ramsey 9.14}
 
 \begin{parts}
+\setlength{\parindent}{1em}
+
 
 \part \textit{Draw a matrix of scatterplots of the four variables. Construct it so that the bottom row of plots all have heart on the vertical axis. If you do not have this facility, draw scatterplots of heart versus each of the other variables individually.}
 
@@ -138,6 +140,7 @@ The estimated equation is:
 \titledquestion{\ramsey 9.16}
 
 \begin{parts}
+\setlength{\parindent}{1em}
 
 \part \textit{Draw a coded scatterplot of proportion of pollen removed versus duration of visit; use different symbols or letters as the plotting codes for queens and workers. Does it appear that the relationship between proportion removed and duration is a straight line?}
 
@@ -216,6 +219,7 @@ In this model, the indicator variable \texttt{BeeTypeWorker} has a different mea
 \titledquestion{\ramsey 9.18}
 
 \begin{parts}
+\setlength{\parindent}{1em}
 
 \part \textit{Construct a scatterplot of average wing size against latitude, in which the four groups defined by continent and sex are coded differently. Do these suggest that the wing sizes of the NA flies have evolved toward the same cline as in EU?}
 
@@ -262,8 +266,84 @@ The coefficient estimate on:
 
 \titledquestion{\ramsey 9.20}
 
+\begin{parts}
+\setlength{\parindent}{1em}
+
+\part \textit{Find a model for describing the mean of either winning time or winning speed as a function of year, whichever works better.}
+
+Scatterplots of Speed vs Year (see Figure \ref{fig:1a}) or Time vs Year reveal a likely quadratic component to both regressions. The regression of Speed on Year and Year$^2$ has a slightly lower R-squared coefficient than the regression of Time on Year and Year$^2$.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{4a.png}
+	\caption{Scatterplot of Speed vs Year.}
+	\label{fig:4a}
+\end{figure}
+
+\begin{codeSmall}
+> lmDerbySpeed <- lm(formula=Speed ~ Year + Year2, data=derbyData)
+> summary(lmDerbySpeed) # higher R-squared
+
+Call:
+lm(formula = Speed ~ Year + Year2, data = derbyData)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.77397 -0.29516  0.02933  0.31150  1.15734 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept) -1.048e+03  1.912e+02  -5.481 2.61e-07 ***
+Year         1.090e+00  1.957e-01   5.569 1.75e-07 ***
+Year2       -2.740e-04  5.010e-05  -5.468 2.76e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.5411 on 113 degrees of freedom
+Multiple R-squared:  0.6442,	Adjusted R-squared:  0.6379 
+F-statistic: 102.3 on 2 and 113 DF,  p-value: < 2.2e-16
+\end{codeSmall}
 
 
+\part \textit{Quantify the amount (in seconds or miles per hour) by which the mean winning time or speed on fast tracks exceeds the mean on slow tracks (using the two-category variable Conditions), after accounting for the effect of year.}
+
+To find the quantity of interest, we perform a regression of Speed on Year, Year$^2$, and Conditions.
+
+\begin{codeSmall}
+> lmDerbyB <- lm(formula=Speed ~ Year + Year2 + Conditions, data=derbyData)
+> summary(lmDerbyB)$coefficients
+                    Estimate   Std. Error   t value     Pr(>|t|)
+(Intercept)    -9.790546e+02 1.398940e+02 -6.998548 2.011183e-10
+Year            1.023034e+00 1.432383e-01  7.142178 9.834271e-11
+Year2          -2.575253e-04 3.665742e-05 -7.025188 1.761928e-10
+ConditionsSlow -9.861089e-01 9.885919e-02 -9.974884 3.757866e-17
+\end{codeSmall}$
+
+After accounting for the effect of year, there is overwhelming evidence that the mean winning speed on fast tracks is greater than the mean on slow tracks. On average, the winning speed on fast tracks is $0.9861$ miles/hour greater than the winning speed on slow tracks (95\% confidence interval $0.7902$ to $1.1820$ miles/hour; two sided p-value = $3.76 \times 10^{-17}$ for a test that the \texttt{ConditionsSlow} coefficient is zero).
+
+\part \textit{After accounting for the effects of year and track conditions, is there any evidence that the mean winning time or speed depends on number of horses in the race (Starters)? Is there any evidence of an interactive effect of Starters and Conditions; that is, does the effect of number of horses on the response depend on whether the track was fast or slow? Describe the effect of number of horses on mean winning time or speed.}
+
+To find the quantities of interest, we perform a regression of Speed on Year, Year$^2$, Conditions, Starters, and the interaction between Conditions and Starters.
+
+\begin{codeSmall}
+> lmDerbyC <- lm(formula=Speed ~ Year + Year2 + Conditions * Starters, data=derbyData)
+> summary(lmDerbyC)$coefficients
+                             Estimate   Std. Error    t value     Pr(>|t|)
+(Intercept)             -1.027755e+03 1.418196e+02 -7.2469146 6.234836e-11
+Year                     1.071109e+00 1.450714e-01  7.3833237 3.148597e-11
+Year2                   -2.692808e-04 3.708723e-05 -7.2607403 5.818773e-11
+ConditionsSlow          -1.175438e+00 2.541940e-01 -4.6241775 1.031213e-05
+Starters                -2.495694e-02 1.084907e-02 -2.3003754 2.331292e-02
+ConditionsSlow:Starters  1.621581e-02 1.826900e-02  0.8876137 3.766852e-01
+\end{codeSmall}$
+
+After accounting for the effects of year and track conditions, there is moderate evidence that the mean winning speed depends on the number of horses in the race. On average, for each additional horse in a race, the winning speed decreases by $0.0250$ miles/hour (95\% confidence interval $0.0035$ to $0.0465$ miles/hour; two sided p-value = $0.0233$ for a test that the \texttt{ConditionsSlow} coefficient is zero).
+
+There is no evidence that the effect of number of horses on speed depends on whether the track was fast or slow. The interaction term between Conditions and Starters has a two sided p-value of $0.3766$ for a test that the \texttt{ConditionsSlow:Starters} coefficient is zero.
+
+
+\end{parts}
 
 \titledquestion{\ramsey 10.19}
 
