@@ -13,15 +13,47 @@ setwd("~/Documents/advanced-data-analysis/homework_06")
 
 # load packages
 library(Sleuth3) # Data sets from Ramsey and Schafer's "Statistical Sleuth (3rd ed)"
-# library(ggplot2); theme_set(theme_bw())
+library(ggplot2); theme_set(theme_bw())
 # library(gridExtra)
-# library(GGally)
+library(GGally)
 # library(dplyr)
 
 
 
 # Problem 1: Ramsey 9.14  #######################################################################
 
+# load data
+paceData <- Sleuth3::ex0914
+
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# plot a matrix of pairwise scatterplots
+plot.pairs <- ggpairs(data=paceData,
+                      lower=list(continuous=wrap("points", size=0.7)))
+plot.pairs
+png(filename="writeup/1a.png", width=11, height=9, units="in", res=300)
+print(plot.pairs)
+dev.off()
+
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# least squares fit of lin reg of Heart on Bank, Walk, Talk
+lm1 <- lm(Heart ~ Bank + Walk + Talk, data=paceData)
+summary(lm1)
+
+# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# check the residuals of the fitted model
+ggplot(lm1, aes(x=.fitted, y=.resid)) +
+  geom_point() +
+  geom_hline(yintercept=0, linetype="dashed") +
+  labs(x="Fitted values", y="Residuals")
+ggsave(filename="writeup/1c.png", width=6.125, height=3.5, units="in")
+
+# Part d ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# get 95% CIs for the coefficients in lm1
+confint(lm1, level = 0.95)
 
 rm(list = ls()) # clear working environment
 
