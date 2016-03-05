@@ -84,8 +84,8 @@ A matrix of pairwise scatterplots is shown in Figure \ref{fig:1a}.
 \part \textit{Obtain the least squares fit to the linear regression of heart on bank, walk, and talk.} \label{prob:0914b}
 
 \begin{codeSmall}
-> lm1 <- lm(Heart ~ Bank + Walk + Talk, data=paceData)
-> summary(lm1)
+> lmPace <- lm(formula=Heart ~ Bank + Walk + Talk, data=paceData)
+> summary(lmPace)
 
 Call:
 lm(formula = Heart ~ Bank + Walk + Talk, data = paceData)
@@ -125,14 +125,88 @@ The residual plot is shown in Figure \ref{fig:1c}. There does not seem to be evi
 Under the parallel lines regression model, the age-adjusted death rate due to heart disease (\texttt{Heart}) increases by $0.4052$ for every one unit increase in the bank clerk speed (\texttt{Bank}) (95\% confidence interval from $0.0037$ to $0.8067$). Similarly, \texttt{Heart} increases by $.4516$ for every one unit increase in the pedestrian walking speed (\texttt{Walk}) (95\% confidence interval from $0.0424$ to $0.8608$). The data provides no evidence that \texttt{Heart} is associated with postal clerk talking speed (\texttt{Talk}) (two sided p-value = $0.4249$ for a test that the \texttt{Talk} coefficient is zero).
 
 
-
 \end{parts}
+
+
 
 
 \titledquestion{\ramsey 9.16}
 
+\begin{parts}
+
+\part \textit{Draw a coded scatterplot of proportion of pollen removed versus duration of visit; use different symbols or letters as the plotting codes for queens and workers. Does it appear that the relationship between proportion removed and duration is a straight line?}
+
+A scatterplot of proportion of pollen removed versus duration of visit, by bee type is shown in Figure \ref{fig:2a}. It does not appear that the relationship between proportion removed and duration is a straight line.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{2a.png}
+	\caption{Scatterplot of pollen removed versus duration of visit, by bee type.}
+	\label{fig:2a}
+\end{figure}
+
+\part \textit{The logit transformation is often useful for proportions between 0 and 1. If p is the proportion then the logit is $\log[p/(1-p)]$. This is the log of the ratio of the amount of pollen removed to the amount not removed. Draw a coded scatterplot of the logit versus duration.}
+
+A scatterplot of the logit of proportion of pollen removed versus duration of visit, by bee type is shown in Figure \ref{fig:2b}.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{2b.png}
+	\caption{Scatterplot of the logit of pollen removed versus duration of visit, by bee type.}
+	\label{fig:2b}
+\end{figure}
 
 
+\part \textit{Draw a coded scatterplot of the logit versus log duration. From the three plots, which transformations appear to be worthy of pursuing with a regression model?}
+
+A scatterplot of the logit of proportion of pollen removed versus the log duration of visit, by bee type is shown in Figure \ref{fig:2c}. The Logit(PollenRemoved) vs Log(DurationOfVisit) transformations produce the most linear relationship, and is worthy of pursuing with a regression model.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{2c.png}
+	\caption{Scatterplot of the logit of pollen removed versus the log duration of visit, by bee type.}
+	\label{fig:2c}
+\end{figure}
+
+
+
+\part \textit{Fit the multiple linear regression of the logit of the proportion of pollen removed on (i) log duration, (ii) an indicator variable for whether the bee is a queen or a worker, and (iii) a product term for the interaction of the first two explanatory variables. By examining the p-value of the interaction term, determine whether there is any evidence that the proportion of pollen depends on duration of visit differently for queens than for workers.}
+
+The large p-value ($0.342$) of the interaction term (\texttt{LogDurationOfVisit:BeeTypeWorker}) indicates there is little evidence to suggest that the proportion of pollen removed depends on the duration of visit differently for queens than it does for workers.
+
+\begin{codeSmall}
+> lmPollen <- lm(formula=LogitPollenRemoved ~ LogDurationOfVisit * BeeType,
++                data=pollenData)
+> summary(lmPollen)$coefficients
+                                   Estimate Std. Error    t value     Pr(>|t|)
+(Intercept)                      -3.0389525  0.5114996 -5.9412613 4.451040e-07
+LogDurationOfVisit                1.0120846  0.1902043  5.3210408 3.515776e-06
+BeeTypeWorker                     1.3770009  0.8721766  1.5788096 1.217089e-01
+LogDurationOfVisit:BeeTypeWorker -0.2708987  0.2816798 -0.9617256 3.415647e-01
+\end{codeSmall}$
+
+
+\part \textit{Refit the multiple regression but without the interaction term. Is there evidence that, after accounting for the amount of time on the flower, queens tend to remove a smaller proportion of pollen than workers? Why is the p-value for the significance of the indicator variable so different in this model than in the one with the interaction term?}
+
+After accounting for the amount of time on the flower, there is moderate evidence that queen bees tend to remove a smaller proportion of pollen than worker bees. On average, worker bees remove $0.5697$ more pollen (on the logit scale) than queen bees after accounting for time on the flower (95\% confidence interval $0.0932$ to $1.0462$; two sided p-value = $0.0202$ for a test that the \texttt{BeeTypeWorker} coefficient is zero).
+
+\begin{codeSmall}
+> lmPollenNoInt <- lm(formula=LogitPollenRemoved ~ LogDurationOfVisit + BeeType,
++                data=pollenData)
+> summary(lmPollenNoInt)$coefficients
+                     Estimate Std. Error   t value     Pr(>|t|)
+(Intercept)        -2.7145967  0.3842293 -7.065043 9.179776e-09
+LogDurationOfVisit  0.8885650  0.1401728  6.339068 1.070189e-07
+BeeTypeWorker       0.5696676  0.2364278  2.409478 2.022607e-02
+\end{codeSmall}$
+
+In this model, the indicator variable \texttt{BeeTypeWorker} has a different meaning than in the model that included the interaction term. Without the interaction term, the coefficient on \texttt{BeeTypeWorker} measures how much more pollen a worker bee extracts from a flower than a queen bee. When the interaction term is included, though, the coefficient on \texttt{BeeTypeWorker} still measures how much more pollen a worker bee extracts from a flower than a queen bee, but must account for the fact that difference can now depend on the duration. Since there's little evidence to suggest that duration has an impact on the proportion of pollen removed, the inclusion of that interaction term decreases the strength of the model. The p-value for the significance of \texttt{BeeTypeWorker} is thus lower in this model than it is in the model that includes the interaction term.
+
+
+\end{parts}
 
 \titledquestion{\ramsey 9.18}
 

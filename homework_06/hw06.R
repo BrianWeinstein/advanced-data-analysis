@@ -14,9 +14,9 @@ setwd("~/Documents/advanced-data-analysis/homework_06")
 # load packages
 library(Sleuth3) # Data sets from Ramsey and Schafer's "Statistical Sleuth (3rd ed)"
 library(ggplot2); theme_set(theme_bw())
-# library(gridExtra)
 library(GGally)
-# library(dplyr)
+library(dplyr)
+# library(gridExtra)
 
 
 
@@ -38,13 +38,13 @@ dev.off()
 # Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # least squares fit of lin reg of Heart on Bank, Walk, Talk
-lm1 <- lm(Heart ~ Bank + Walk + Talk, data=paceData)
-summary(lm1)
+lmPace <- lm(formula=Heart ~ Bank + Walk + Talk, data=paceData)
+summary(lmPace)
 
 # Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # check the residuals of the fitted model
-ggplot(lm1, aes(x=.fitted, y=.resid)) +
+ggplot(lmPace, aes(x=.fitted, y=.resid)) +
   geom_point() +
   geom_hline(yintercept=0, linetype="dashed") +
   labs(x="Fitted values", y="Residuals")
@@ -52,8 +52,8 @@ ggsave(filename="writeup/1c.png", width=6.125, height=3.5, units="in")
 
 # Part d ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
-# get 95% CIs for the coefficients in lm1
-confint(lm1, level = 0.95)
+# get 95% CIs for the coefficients in lmPace
+confint(lmPace, level = 0.95)
 
 rm(list = ls()) # clear working environment
 
@@ -61,9 +61,54 @@ rm(list = ls()) # clear working environment
 
 # Problem 2: Ramsey 9.16  #######################################################################
 
+# load data
+pollenData <- Sleuth3::ex0327
+
 # Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
+# scatterplot of pollen vs duration, by bee type
+ggplot(pollenData, aes(x=DurationOfVisit, y=PollenRemoved, color=BeeType, shape=BeeType)) +
+  geom_point(size=2.5)
+ggsave(filename="writeup/2a.png", width=6.125, height=3.5, units="in")
 
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# create a logit-transformed "proportion of pollen" variable
+pollenData <- pollenData %>%
+  mutate(LogitPollenRemoved=log(PollenRemoved/(1-PollenRemoved)))
+
+# scatterplot of proportion of pollen pollen vs duration, by bee type
+ggplot(pollenData, aes(x=DurationOfVisit, y=LogitPollenRemoved, color=BeeType, shape=BeeType)) +
+  geom_point(size=2.5)
+ggsave(filename="writeup/2b.png", width=6.125, height=3.5, units="in")
+
+# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# create a log-transformed duration variable
+pollenData <- pollenData %>%
+  mutate(LogDurationOfVisit=log(DurationOfVisit))
+
+# scatterplot of proportion of pollen pollen vs duration, by bee type
+ggplot(pollenData, aes(x=LogDurationOfVisit, y=LogitPollenRemoved, color=BeeType, shape=BeeType)) +
+  geom_point(size=2.5)
+ggsave(filename="writeup/2c.png", width=6.125, height=3.5, units="in")
+
+# Part d ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# create a linear regression model of LogitPollenRemoved on LogDurationOfVisit * BeeType
+lmPollen <- lm(formula=LogitPollenRemoved ~ LogDurationOfVisit * BeeType,
+               data=pollenData)
+summary(lmPollen)$coefficients
+
+# Part e ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# create a linear regression model of LogitPollenRemoved on LogDurationOfVisit + BeeType
+lmPollenNoInt <- lm(formula=LogitPollenRemoved ~ LogDurationOfVisit + BeeType,
+               data=pollenData)
+summary(lmPollenNoInt)$coefficients
+
+# get 95% CIs for the coefficients in lmPollenNoInt
+confint(lmPollenNoInt, level = 0.95)
 
 rm(list = ls()) # clear working environment
 
