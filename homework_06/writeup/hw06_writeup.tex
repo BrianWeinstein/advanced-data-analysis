@@ -124,6 +124,11 @@ The residual plot is shown in Figure \ref{fig:1c}. There does not seem to be evi
 
 Under the parallel lines regression model, the age-adjusted death rate due to heart disease (\texttt{Heart}) increases by $0.4052$ for every one unit increase in the bank clerk speed (\texttt{Bank}) (95\% confidence interval from $0.0037$ to $0.8067$). Similarly, \texttt{Heart} increases by $.4516$ for every one unit increase in the pedestrian walking speed (\texttt{Walk}) (95\% confidence interval from $0.0424$ to $0.8608$). The data provides no evidence that \texttt{Heart} is associated with postal clerk talking speed (\texttt{Talk}) (two sided p-value = $0.4249$ for a test that the \texttt{Talk} coefficient is zero).
 
+The estimated equation is:
+\begin{align*}
+\mu\{\texttt{Heart}|\texttt{Bank}, \texttt{Walk}, \texttt{Talk}\} = &3.1787 + &&0.4052 \cdot \texttt{Bank} + &&0.4516 \cdot \texttt{Walk} + &&(-0.1796) \cdot \texttt{Talk} \\
+&(6.3369) &&(0.1971) &&(0.2009) &&(0.2222)
+\end{align*}
 
 \end{parts}
 
