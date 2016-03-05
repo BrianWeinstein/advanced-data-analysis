@@ -219,7 +219,7 @@ In this model, the indicator variable \texttt{BeeTypeWorker} has a different mea
 
 \part \textit{Construct a scatterplot of average wing size against latitude, in which the four groups defined by continent and sex are coded differently. Do these suggest that the wing sizes of the NA flies have evolved toward the same cline as in EU?}
 
-A scatterplot of average wing size vs latitude, by continent and sex is shown in Figure \ref{fig:3a}. From the scatterplot, it does appear that the wing sizes of the NA flies have evolved toward a similar cline as in the EU.
+A scatterplot of average wing size vs latitude, by continent and sex is shown in Figure \ref{fig:3a}. From the scatterplot, it appears that the wing sizes of the NA flies have evolved toward a similar cline as in the EU.
 
 \begin{figure}[!h]
 	\centering
@@ -231,12 +231,31 @@ A scatterplot of average wing size vs latitude, by continent and sex is shown in
 
 
 
-\part \textit{Construct a multiple linear regression model with wing size as the response, with latitude as a linear explanatory variable, and with indicator variables to distinguish the sexes and continents. As there are four groups, you will want to have three indicator variables: the continent indicator, the sex indicator, and the product of the two. Construct the model in such a way that one parameter measures the difference between the slopes of the wing size versus latitude regressions of NA and EU for males, one measures the difference between the NA–EU slope difference for females and that for males, one measures the difference between the intercepts of the regressions of NA and EU for males, and one measures the difference between the NA–EU intercepts' difference for females and that for males.} \todo{part b}
+\part \textit{Construct a multiple linear regression model with wing size as the response, with latitude as a linear explanatory variable, and with indicator variables to distinguish the sexes and continents. As there are four groups, you will want to have three indicator variables: the continent indicator, the sex indicator, and the product of the two. Construct the model in such a way that one parameter measures the difference between the slopes of the wing size versus latitude regressions of NA and EU for males, one measures the difference between the NA-EU slope difference for females and that for males, one measures the difference between the intercepts of the regressions of NA and EU for males, and one measures the difference between the NA-EU intercepts' difference for females and that for males.}
 
+The separate lines linear regression model is shown below:
+\begin{codeSmall}
+> lmWing <- lm(formula=Avg_WingSize ~ Latitude + Sex * Continent + Latitude * Sex * Continent,
++                     data=wingDataLong)
+> summary(lmWing)$coefficients
+                                   Estimate Std. Error    t value     Pr(>|t|)
+(Intercept)                     706.9255278 28.0447861 25.2070215 1.387507e-23
+Latitude                          2.4608836  0.6045445  4.0706410 2.643406e-04
+SexFemales                      129.2648702 39.6613169  3.2592178 2.539391e-03
+ContinentNA                      72.9386446 40.1512790  1.8165958 7.810402e-02
+SexFemales:ContinentNA          -89.8325160 56.7824834 -1.5820463 1.228981e-01
+Latitude:SexFemales              -0.6770556  0.8549550 -0.7919196 4.338982e-01
+Latitude:ContinentNA             -1.7544085  0.8943897 -1.9615706 5.804243e-02
+Latitude:SexFemales:ContinentNA   2.0653489  1.2648580  1.6328702 1.117246e-01
+\end{codeSmall}$
 
-
-
-
+The coefficient estimate on:
+\begin{itemize}
+\item \texttt{Latitude:ContinentNA} measures the difference between the slopes of the wing size versus latitude regressions of NA and EU for males,
+\item \texttt{Latitude:SexFemales:ContinentNA} measures the difference between the NA-EU slope difference for females and that for males,
+\item \texttt{ContinentNA} measures the difference between the intercepts of the regressions of NA and EU for males, and
+\item \texttt{SexFemales:ContinentNA} measures the difference between the NA-EU intercepts' difference for females and that for males.
+\end{itemize}
 
 \end{parts}
 

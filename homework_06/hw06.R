@@ -139,8 +139,16 @@ ggplot(wingDataLong, aes(x=Latitude, y=Avg_WingSize,
   scale_shape_manual(values=c(16, 17, 15, 18))
 ggsave(filename="writeup/3a.png", width=6.125, height=3.5, units="in")
 
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
+# relevel the sex variable
+wingDataLong$Sex <- relevel(wingDataLong$Sex, "Males")
 
+# create a linear regression model of Avg_WingSize
+# on Latitude + Sex * Continent + Latitude * Sex * Continent
+lmWing <- lm(formula=Avg_WingSize ~ Latitude + Sex * Continent + Latitude * Sex * Continent,
+                    data=wingDataLong)
+summary(lmWing)$coefficients
 
 rm(list = ls()) # clear working environment
 
