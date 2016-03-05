@@ -16,6 +16,7 @@ library(Sleuth3) # Data sets from Ramsey and Schafer's "Statistical Sleuth (3rd 
 library(ggplot2); theme_set(theme_bw())
 library(GGally)
 library(dplyr)
+library(tidyr)
 # library(gridExtra)
 
 
@@ -121,11 +122,12 @@ wingData <- Sleuth3::ex0918
 
 # convert data to long format
 wingDataLong <- wingData %>%
-  tidyr::gather(data=., key=Sex, value=Avg_WingSize, c(Females, Males)) %>%
+  gather(data=., key=Sex, value=Avg_WingSize, c(Females, Males)) %>%
   mutate(SE_WingSize=ifelse(Sex=="Females", SE_Females, SE_Males),
          Ratio=ifelse(Sex=="Females", Ratio, NA),
          SE_Ratio=ifelse(Sex=="Females", SE_Ratio, NA)) %>%
-  select(Continent, Latitude, Sex, Avg_WingSize, SE_WingSize, Ratio, SE_Ratio)
+  select(Continent, Latitude, Sex, Avg_WingSize, SE_WingSize, Ratio, SE_Ratio) %>%
+  mutate(Sex=as.factor(Sex))
 
 # Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
