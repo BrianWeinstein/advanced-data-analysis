@@ -27,7 +27,7 @@ library(gridExtra)
 # load data
 paceData <- Sleuth3::ex0914
 
-# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # plot a matrix of pairwise scatterplots
 plot.pairs <- ggpairs(data=paceData,
@@ -37,13 +37,13 @@ png(filename="writeup/1a.png", width=11, height=9, units="in", res=300)
 print(plot.pairs)
 dev.off()
 
-# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # least squares fit of lin reg of Heart on Bank, Walk, Talk
 lmPace <- lm(formula=Heart ~ Bank + Walk + Talk, data=paceData)
 summary(lmPace)
 
-# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # check the residuals of the fitted model
 ggplot(lmPace, aes(x=.fitted, y=.resid)) +
@@ -52,7 +52,7 @@ ggplot(lmPace, aes(x=.fitted, y=.resid)) +
   labs(x="Fitted values", y="Residuals")
 ggsave(filename="writeup/1c.png", width=6.125, height=3.5, units="in")
 
-# Part d ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part d ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # get 95% CIs for the coefficients in lmPace
 confint(lmPace, level = 0.95)
@@ -66,14 +66,14 @@ rm(list = ls()) # clear working environment
 # load data
 pollenData <- Sleuth3::ex0327
 
-# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # scatterplot of pollen vs duration, by bee type
 ggplot(pollenData, aes(x=DurationOfVisit, y=PollenRemoved, color=BeeType, shape=BeeType)) +
   geom_point(size=2.5)
 ggsave(filename="writeup/2a.png", width=6.125, height=3.5, units="in")
 
-# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # create a logit-transformed "proportion of pollen" variable
 pollenData <- pollenData %>%
@@ -84,7 +84,7 @@ ggplot(pollenData, aes(x=DurationOfVisit, y=LogitPollenRemoved, color=BeeType, s
   geom_point(size=2.5)
 ggsave(filename="writeup/2b.png", width=6.125, height=3.5, units="in")
 
-# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # create a log-transformed duration variable
 pollenData <- pollenData %>%
@@ -95,14 +95,14 @@ ggplot(pollenData, aes(x=LogDurationOfVisit, y=LogitPollenRemoved, color=BeeType
   geom_point(size=2.5)
 ggsave(filename="writeup/2c.png", width=6.125, height=3.5, units="in")
 
-# Part d ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part d ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # create a linear regression model of LogitPollenRemoved on LogDurationOfVisit * BeeType
 lmPollen <- lm(formula=LogitPollenRemoved ~ LogDurationOfVisit * BeeType,
                data=pollenData)
 summary(lmPollen)$coefficients
 
-# Part e ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part e ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # create a linear regression model of LogitPollenRemoved on LogDurationOfVisit + BeeType
 lmPollenNoInt <- lm(formula=LogitPollenRemoved ~ LogDurationOfVisit + BeeType,
@@ -130,7 +130,7 @@ wingDataLong <- wingData %>%
   select(Continent, Latitude, Sex, Avg_WingSize, SE_WingSize, Ratio, SE_Ratio) %>%
   mutate(Sex=as.factor(Sex))
 
-# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # scatterplot of Avg_WingSize vs Latitude, by Continent and Sex
 ggplot(wingDataLong, aes(x=Latitude, y=Avg_WingSize,
@@ -140,7 +140,7 @@ ggplot(wingDataLong, aes(x=Latitude, y=Avg_WingSize,
   scale_shape_manual(values=c(16, 17, 15, 18))
 ggsave(filename="writeup/3a.png", width=6.125, height=3.5, units="in")
 
-# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # relevel the sex variable
 wingDataLong$Sex <- relevel(wingDataLong$Sex, "Males")
@@ -164,7 +164,7 @@ derbyData <- Sleuth3::ex0920
 derbyData <- derbyData %>%
   mutate(Year2=Year^2)
 
-# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # plot (Time vs Year) and (Speed vs Year)
 ggplot(derbyData, aes(x=Year, y=Time)) + geom_point()
@@ -179,7 +179,7 @@ summary(lmDerbySpeed) # higher R-squared
 
 rm(lmDerbyTime, lmDerbySpeed)
 
-# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # create a linear regression model of Speed on Year + Year2 + Conditions
 lmDerbyB <- lm(formula=Speed ~ Year + Year2 + Conditions, data=derbyData)
@@ -188,7 +188,7 @@ summary(lmDerbyB)$coefficients
 # get 95% CIs for the coefficients in lmDerbyB
 confint(lmDerbyB, level = 0.95)
 
-# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # create a linear regression model of Speed on Year + Year2 + Conditions * Starters
 lmDerbyC <- lm(formula=Speed ~ Year + Year2 + Conditions * Starters, data=derbyData)
@@ -211,21 +211,21 @@ meadowData <- Sleuth3::case0901
 meadowData <- meadowData %>%
   mutate(Time24=factor(ifelse(Time==2, 1, 0), levels=c(1, 0)))
 
-# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # create a linear regression model and anova table
 # for Flowers on Intensity + Time24
 lmMeadowA <- lm(formula=Flowers ~ Intensity + Time24, data=meadowData)
 anovaA <- anova(lmMeadowA); anovaA
 
-# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # create a linear regression model and anova table
 # for Flowers on factor(Intensity) * Time24
 lmMeadowB <- lm(formula=Flowers ~ factor(Intensity) * Time24, data=meadowData)
 anovaB <- anova(lmMeadowB); anovaB
 
-# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # lmMeadowB (full) and lmMeadowA (reduced)
 
@@ -267,7 +267,7 @@ png(filename="writeup/6_pairs.png", width=11, height=9, units="in", res=300)
 print(plot.pairs)
 dev.off()
 
-# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # create a linear regression model of Storms on Temperature * WestAfrica
 lmNinoA1 <- lm(formula=Storms ~ Temperature * WestAfrica, data=ninoData)
@@ -312,7 +312,7 @@ ggsave(filename="writeup/6a2_resid_serial.png", plot=plot.A2.grid, width=11, hei
 # get 95% CIs for the coefficients in lmNinoA2
 confint(lmNinoA2, level = 0.95)
 
-# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # create a linear regression model of Hurricanes on Temperature * WestAfrica
 lmNinoB1 <- lm(formula=Hurricanes ~ Temperature * WestAfrica, data=ninoData)
@@ -337,7 +337,7 @@ ggsave(filename="writeup/6b1_resid_serial.png", plot=plot.B1.grid, width=11, hei
 # get 95% CIs for the coefficients in lmNinoB1
 confint(lmNinoB1, level = 0.95)
 
-# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # create a linear regression model of StormIndex on Temperature * WestAfrica
 lmNinoC1 <- lm(formula=StormIndex ~ Temperature * WestAfrica, data=ninoData)
