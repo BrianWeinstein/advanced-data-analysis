@@ -105,7 +105,7 @@ summary(lmPollen)$coefficients
 
 # create a linear regression model of LogitPollenRemoved on LogDurationOfVisit + BeeType
 lmPollenNoInt <- lm(formula=LogitPollenRemoved ~ LogDurationOfVisit + BeeType,
-               data=pollenData)
+                    data=pollenData)
 summary(lmPollenNoInt)$coefficients
 
 # get 95% CIs for the coefficients in lmPollenNoInt
@@ -147,7 +147,7 @@ wingDataLong$Sex <- relevel(wingDataLong$Sex, "Males")
 # create a linear regression model of Avg_WingSize
 # on Latitude + Sex * Continent + Latitude * Sex * Continent
 lmWing <- lm(formula=Avg_WingSize ~ Latitude + Sex * Continent + Latitude * Sex * Continent,
-                    data=wingDataLong)
+             data=wingDataLong)
 summary(lmWing)$coefficients
 
 rm(list = ls()) # clear working environment
@@ -202,6 +202,50 @@ rm(list = ls()) # clear working environment
 
 # Problem 5: Ramsey 10.19  #######################################################################
 
+# load data
+meadowData <- Sleuth3::case0901
+# Time==2: 24 days before; Time==1: 0 days before
+
+# transform data
+meadowData <- meadowData %>%
+  mutate(Time24=factor(ifelse(Time==2, 1, 0), levels=c(1, 0)))
+
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# create a linear regression model and anova table
+# for Flowers on Intensity + Time24
+lmMeadowA <- lm(formula=Flowers ~ Intensity + Time24, data=meadowData)
+anovaA <- anova(lmMeadowA); anovaA
+
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# create a linear regression model and anova table
+# for Flowers on factor(Intensity) * Time24
+lmMeadowB <- lm(formula=Flowers ~ factor(Intensity) * Time24, data=meadowData)
+anovaB <- anova(lmMeadowB); anovaB
+
+# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# lmMeadowB (full) and lmMeadowA (reduced)
+
+# compute the extra sum of squares
+esos <- anovaA$`Sum Sq`[3] - anovaB$`Sum Sq`[4]
+
+# define the numerator and denominator degrees of freedom
+dfn <- anovaA$Df[3] - anovaB$Df[4]
+dfd <- summary(lmMeadowB)$df[2]
+
+# compute the f stat
+fstat <- (esos / (length(lmMeadowB$coefficients) - length(lmMeadowA$coefficients)) ) /
+  (summary(lmMeadowB)$sigma)^2
+fstat
+
+# compute the pvalue
+pval <- 1 - pf(q=fstat, df1=dfn, df2=dfd); pval
+
+# verify the result by using anova to perform extra sum of
+# squares F test comparing lmMeadowB (full) and lmMeadowA (reduced)
+anova(lmMeadowB, lmMeadowA)
 
 rm(list = ls()) # clear working environment
 

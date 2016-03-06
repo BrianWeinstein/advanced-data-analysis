@@ -347,7 +347,81 @@ There is no evidence that the effect of number of horses on speed depends on whe
 
 \titledquestion{\ramsey 10.19}
 
+\textit{Carry out a lack-of-fit F-test for the regression of number of flowers on light intensity and an indicator variable for time, using the data in Display 9.2 (data file case0901).}
 
+\begin{parts}
+\setlength{\parindent}{1em}
+
+\part \textit{Fit the regression of flowers on light and an indicator variable for $time = 24$, and obtain the analysis of variance table.} \label{prob:1019a}
+
+\begin{codeSmall}
+> lmMeadowA <- lm(formula=Flowers ~ Intensity + Time24, data=meadowData)
+> anovaA <- anova(lmMeadowA); anovaA
+Analysis of Variance Table
+
+Response: Flowers
+          Df  Sum Sq Mean Sq F value    Pr(>F)    
+Intensity  1 2579.75 2579.75  62.181 1.037e-07 ***
+Time24     1  886.95  886.95  21.379 0.0001464 ***
+Residuals 21  871.24   41.49                      
+\end{codeSmall}
+
+
+\part \textit{Fit the same regression except with light treated as a factor (using 5 indicator variables to distinguish the 6 groups), and with the interaction of these two factors, and obtain the analysis of variance table.} \label{prob:1019b}
+
+
+\begin{codeSmall}
+> lmMeadowB <- lm(formula=Flowers ~ factor(Intensity) * Time24, data=meadowData)
+> anovaB <- anova(lmMeadowB); anovaB
+Analysis of Variance Table
+
+Response: Flowers
+                         Df  Sum Sq Mean Sq F value    Pr(>F)    
+factor(Intensity)         5 2683.51  536.70  9.8189 0.0006388 ***
+Time24                    1  886.95  886.95 16.2266 0.0016745 ** 
+factor(Intensity):Time24  5  111.55   22.31  0.4081 0.8341569    
+Residuals                12  655.92   54.66                      
+\end{codeSmall}
+
+
+\part \textit{Perform an extra-sum-of-squares F -test comparing the full model in part (\ref{prob:1019b}) to the reduced model in part (\ref{prob:1019a}). (Note: The full model contains 12 parameters, which is equivalent to the model in which a separate mean exists for each of the 12 groups. No pattern is implied in this model. See Displays 9.7 and 9.8 for help.}
+
+Using the results from the full model in part (\ref{prob:1019b}) and the reduced model in part (\ref{prob:1019a}), the data provides no evidence that the association between the average number of flowers per plant (\texttt{Flowers}) and timing (\texttt{Time24}) differs with light intensity (\texttt{Intensity}) (p-value $= 0.8894$; extra sum of squares F-test).
+
+\begin{codeSmall}
+> # compute the extra sum of squares
+> esos <- anovaA$`Sum Sq`[3] - anovaB$`Sum Sq`[4]
+> 
+> # define the numerator and denominator degrees of freedom
+> dfn <- anovaA$Df[3] - anovaB$Df[4]
+> dfd <- summary(lmMeadowB)$df[2]
+> 
+> # compute the f stat
+> fstat <- (esos / (length(lmMeadowB$coefficients) - length(lmMeadowA$coefficients)) ) /
++   (summary(lmMeadowB)$sigma)^2
+> fstat
+[1] 0.4376736
+> 
+> # compute the pvalue
+> pval <- 1 - pf(q=fstat, df1=dfn, df2=dfd); pval
+[1] 0.8893576
+\end{codeSmall}
+
+We can verify this result using the \texttt{anova} function.
+\begin{codeSmall}
+> anova(lmMeadowB, lmMeadowA)
+Analysis of Variance Table
+
+Model 1: Flowers ~ factor(Intensity) * Time24
+Model 2: Flowers ~ Intensity + Time24
+  Res.Df    RSS Df Sum of Sq      F Pr(>F)
+1     12 655.92                           
+2     21 871.24 -9   -215.31 0.4377 0.8894
+\end{codeSmall}
+
+
+
+\end{parts}
 
 
 \titledquestion{\ramsey 10.28}
