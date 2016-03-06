@@ -424,25 +424,154 @@ Model 2: Flowers ~ Intensity + Time24
 
 
 \titledquestion{\ramsey 10.28}
+\setlength{\parindent}{1em}
 
-\textit{Analyze the data to describe the effect of El Nino on (a) the number of tropical storms, (b) the number of hurricanes, and (c) the storm index after accounting for the effects of West African wetness and for any time trends, if appropriate.} \todo{Problem 6}
+\textit{Analyze the data to describe the effect of El Nino on (a) the number of tropical storms, (b) the number of hurricanes, and (c) the storm index after accounting for the effects of West African wetness and for any time trends, if appropriate.}
 
+A matrix of pairwise scatterplots is shown in Figure \ref{fig:6_pairs}.
+\\
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=\textwidth]{6_pairs.png}
+	\caption{Pairwise scatterplots of the relevant variables in the ``El Nino and Hurricanes'' dataset.}
+	\label{fig:6_pairs}
+\end{figure}
 
 \begin{parts}
 \setlength{\parindent}{1em}
 
 \part \textit{the number of tropical storms} \label{prob:1028a}
 
+We first test a model that describes the effect of \texttt{Temperature} (an ordinal-equivalent variable of \texttt{ElNino}), \texttt{WestAfrica}, and their interaction, on the number of tropical storms (\texttt{Storms}).
+
+\begin{codeSmall}
+> lmNinoA1 <- lm(formula=Storms ~ Temperature * WestAfrica, data=ninoData)
+> summary(lmNinoA1)$coefficients
+                         Estimate Std. Error    t value     Pr(>|t|)
+(Intercept)             8.9270633  0.5276111 16.9197788 7.045836e-21
+Temperature            -1.9731286  0.6629759 -2.9761693 4.728831e-03
+WestAfrica              1.5486123  0.9026445  1.7156392 9.326290e-02
+Temperature:WestAfrica  0.7677232  1.0873067  0.7060778 4.838618e-01
+\end{codeSmall}$
+
+A plot of the residuals vs fitted values reveals a horn-shaped pattern, and a plot of the residuals vs year indicates the presence of serial correlation (here, a likely (quadratic) association between \texttt{Year} and \texttt{Storms}). Both plots are shown in Figure \ref{fig:6a1_resid_serial}.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=5.5in]{6a1_resid_serial.png}
+	\caption{Model A1: (Left) A plot of residuals vs fitted values. (Right) A plot of residuals vs \texttt{Year}.}
+	\label{fig:6a1_resid_serial}
+\end{figure}
+
+Incorporating a quadratic association between \texttt{Storms} and \texttt{Year}, another model is shown below.
+
+\begin{codeSmall}
+> lmNinoA2 <- lm(formula=Storms ~ Temperature * WestAfrica + Year + I(Year^2), data=ninoData)
+> summary(lmNinoA2)$coefficients
+                            Estimate   Std. Error   t value     Pr(>|t|)
+(Intercept)             1.935330e+04 9.125963e+03  2.120686 0.0398956685
+Temperature            -2.500296e+00 6.560643e-01 -3.811053 0.0004457422
+WestAfrica              1.797312e+00 1.021008e+00  1.760332 0.0856326798
+Year                   -1.965294e+01 9.245902e+00 -2.125583 0.0394617401
+I(Year^2)               4.991337e-03 2.341799e-03  2.131411 0.0389508103
+Temperature:WestAfrica  1.618917e+00 1.088058e+00  1.487895 0.1442487103
+\end{codeSmall}$
+
+The plots of residuals vs fitted values and of residuals vs year shown in Figure \ref{fig:6a2_resid_serial} indicates that the inclusion of the \texttt{Year} terms has resolved both the horn-shaped pattern and much of the serial correlation issue.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=5.5in]{6a2_resid_serial.png}
+	\caption{Model A2: (Left) A plot of residuals vs fitted values. (Right) A plot of residuals vs \texttt{Year}.}
+	\label{fig:6a2_resid_serial}
+\end{figure}
+
+After accounting for the effect of year: There is overwhelming evidence that the mean number of storms is associated with temperature (two sided p-value = $0.000446$ for a test that the \texttt{Temperature} coefficient is zero). On average, cold El Nino years (\texttt{Temperature==-1}) have 2.5 additional storms/year than neutral El Nino years (\texttt{Temperature==0}), which have 2.5 additional storms/year than warm El Nino years (\texttt{Temperature==1}) (95\% confidence interval $1.1763$ to $3.8243$ additional storms/year). There is suggestive, but inconclusive evidence that wet years in West Africa (\texttt{WestAfrica==1}) are associated with $1.797$ additional storms per year (two sided p-value = $0.0856$ for a test that the \texttt{WestAfrica} coefficient is zero; 95\% confidence interval $-0.2632$ to $3.8578$ additional storms/year). There is no evidence that the effect of temperature on the number of storms depends on whether it was a wet or dry year in West Africa (two sided p-value = $0.1442$ for a test that the \texttt{Temperature:WestAfrica} coefficient is zero).
+
 
 
 
 \part \textit{the number of hurricanes} \label{prob:1028b}
 
+We first fit a model that describes the effect of \texttt{Temperature}, \texttt{WestAfrica}, and their interaction, on the number of hurricanes (\texttt{Hurricanes}).
+
+\begin{codeSmall}
+> lmNinoB1 <- lm(formula=Hurricanes ~ Temperature * WestAfrica, data=ninoData)
+> summary(lmNinoB1)$coefficients
+                         Estimate Std. Error   t value     Pr(>|t|)
+(Intercept)             5.2552783  0.3811964 13.786275 1.417450e-17
+Temperature            -1.0940499  0.4789968 -2.284044 2.725047e-02
+WestAfrica              1.1771541  0.6521561  1.805019 7.791770e-02
+Temperature:WestAfrica -0.3654096  0.7855737 -0.465150 6.441181e-01
+\end{codeSmall}$
+
+A plot of the residuals vs fitted values reveals no issues with the model, and a plot of the residuals vs year does not reveal any serial correlation, as it did in part (a). Both plots are shown in Figure \ref{fig:6b1_resid_serial}.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=5.5in]{6b1_resid_serial.png}
+	\caption{Model B1: (Left) A plot of residuals vs fitted values. (Right) A plot of residuals vs \texttt{Year}.}
+	\label{fig:6b1_resid_serial}
+\end{figure}
 
 
+There is moderate evidence that the mean number of hurricanes is associated with temperature (two sided p-value = $0.0273$ for a test that the \texttt{Temperature} coefficient is zero). On average, cold El Nino years (\texttt{Temperature==-1}) have 1.0940 additional hurricanes/year than neutral El Nino years (\texttt{Temperature==0}), which have 1.0940 additional hurricanes/year than warm El Nino years (\texttt{Temperature==1}) (95\% confidence interval $0.1287$ to $2.0594$ additional hurricanes/year). There is suggestive, but inconclusive evidence that wet years in West Africa (\texttt{WestAfrica==1}) are associated with $1.1772$ additional hurricanes per year (two sided p-value = $0.0779$ for a test that the \texttt{WestAfrica} coefficient is zero; 95\% confidence interval $-0.1372$ to $2.4915$ additional hurricanes/year). There is no evidence that the effect of temperature on the number of hurricanes depends on whether it was a wet or dry year in West Africa (two sided p-value = $0.6441$ for a test that the \texttt{Temperature:WestAfrica} coefficient is zero).
 
-\part \textit{the storm index} \label{prob:1028a}
 
+\part \textit{the storm index} \label{prob:1028c}
+
+We first test a model that describes the effect of \texttt{Temperature}, \texttt{WestAfrica}, and their interaction, on the storm index (\texttt{StormIndex}).
+
+\begin{codeSmall}
+> lmNinoC1 <- lm(formula=StormIndex ~ Temperature * WestAfrica, data=ninoData)
+> summary(lmNinoC1)$coefficients
+                        Estimate Std. Error    t value     Pr(>|t|)
+(Intercept)             82.85413   7.581316 10.9287267 4.024245e-14
+Temperature            -24.94626   9.526391 -2.6186472 1.206303e-02
+WestAfrica              43.91344  12.970221  3.3857125 1.503487e-03
+Temperature:WestAfrica -10.79428  15.623658 -0.6908935 4.932615e-01
+\end{codeSmall}$
+
+A plot of the residuals vs fitted values reveals a moderate horn-shaped pattern, and a plot of the residuals vs year indicates the presence of serial correlation (here, a likely (quadratic) association between \texttt{Year} and \texttt{StormIndex}). Both plots are shown in Figure \ref{fig:6c1_resid_serial}.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=5.5in]{6c1_resid_serial.png}
+	\caption{Model C1: (Left) A plot of residuals vs fitted values. (Right) A plot of residuals vs \texttt{Year}.}
+	\label{fig:6c1_resid_serial}
+\end{figure}
+
+Incorporating a quadratic association between \texttt{StormIndex} and \texttt{Year}, another model is shown below.
+
+\begin{codeSmall}
+> lmNinoC2 <- lm(formula=StormIndex ~ Temperature * WestAfrica + Year + I(Year^2), data=ninoData)
+> summary(lmNinoC2)$coefficients
+                            Estimate   Std. Error    t value    Pr(>|t|)
+(Intercept)             3.880408e+05 1.288285e+05  3.0120726 0.004381156
+Temperature            -3.145612e+01 9.261465e+00 -3.3964518 0.001503348
+WestAfrica              3.180147e+01 1.441326e+01  2.2064029 0.032877636
+Year                   -3.930155e+02 1.305217e+02 -3.0111130 0.004392527
+I(Year^2)               9.953118e-02 3.305848e-02  3.0107607 0.004396709
+Temperature:WestAfrica -5.193898e+00 1.535979e+01 -0.3381489 0.736935479
+\end{codeSmall}$
+
+The plots of residuals vs fitted values and of residuals vs year shown in Figure \ref{fig:6c2_resid_serial} indicates that the inclusion of the \texttt{Year} terms has resolved both the horn-shaped pattern and much of the serial correlation issue.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=5.5in]{6c2_resid_serial.png}
+	\caption{Model C2: (Left) A plot of residuals vs fitted values. (Right) A plot of residuals vs \texttt{Year}.}
+	\label{fig:6c2_resid_serial}
+\end{figure}
+
+After accounting for the effect of year: There is overwhelming evidence that the mean storm index is associated with temperature (two sided p-value = $0.00150$ for a test that the \texttt{Temperature} coefficient is zero). On average, cold El Nino years (\texttt{Temperature==-1}) have a storm index of 31.46 points higher than neutral El Nino years (\texttt{Temperature==0}), which have a storm index of 31.46 points higher than warm El Nino years (\texttt{Temperature==1}) (95\% confidence interval $12.76$ to $50.15$ points higher). There is moderate evidence that wet years in West Africa (\texttt{WestAfrica==1}) are associated with a storm index $31.80$ points higher than dry years (two sided p-value = $0.03288$ for a test that the \texttt{WestAfrica} coefficient is zero; 95\% confidence interval $2.714$ to $60.89$ points). There is no evidence that the effect of temperature on storm index depends on whether it was a wet or dry year in West Africa (two sided p-value = $0.73694$ for a test that the \texttt{Temperature:WestAfrica} coefficient is zero).
 
 
 \end{parts}
@@ -450,6 +579,6 @@ Model 2: Flowers ~ Intensity + Time24
 
 \end{questions}
 
-\listoftodos
+%\listoftodos
 
 \end{document}

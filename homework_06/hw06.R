@@ -17,7 +17,8 @@ library(ggplot2); theme_set(theme_bw())
 library(GGally)
 library(dplyr)
 library(tidyr)
-# library(gridExtra)
+library(formula.tools)
+library(gridExtra)
 
 
 
@@ -256,16 +257,129 @@ rm(list = ls()) # clear working environment
 # load data
 ninoData <- Sleuth3::ex1028
 
+# plot a matrix of pairwise scatterplots
+plot.pairs <- ggpairs(data=select(ninoData,
+                                  Year, Temperature, WestAfrica,
+                                  Storms, Hurricanes, StormIndex),
+                      lower=list(continuous=wrap("points", size=0.7)))
+plot.pairs
+png(filename="writeup/6_pairs.png", width=11, height=9, units="in", res=300)
+print(plot.pairs)
+dev.off()
+
 # Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
+# create a linear regression model of Storms on Temperature * WestAfrica
+lmNinoA1 <- lm(formula=Storms ~ Temperature * WestAfrica, data=ninoData)
+summary(lmNinoA1)$coefficients
 
+# check the residuals of the fitted model
+plot.A1.resid <- ggplot(lmNinoA1, aes(x=.fitted, y=.resid)) +
+  geom_point() +
+  geom_hline(yintercept=0, linetype="dashed") +
+  labs(x="Fitted values", y="Residuals", title=as.character(formula(lmNinoA1)))
+
+# check for serial correlation
+plot.A1.serial <- ggplot(ninoData, aes(x=ninoData$Year, y=lmNinoA1$residuals)) +
+  geom_point() +
+  geom_hline(yintercept=0, linetype="dashed") +
+  labs(x="Year", y="Residuals", title=as.character(formula(lmNinoA1)))
+
+# combine both plots
+plot.A1.grid <- grid.arrange(plot.A1.resid, plot.A1.serial, nrow=1, ncol=2)
+ggsave(filename="writeup/6a1_resid_serial.png", plot=plot.A1.grid, width=11, height=4.5, units="in")
+
+# create a linear regression model of Storms on Temperature * WestAfrica + Year + I(Year^2)
+lmNinoA2 <- lm(formula=Storms ~ Temperature * WestAfrica + Year + I(Year^2), data=ninoData)
+summary(lmNinoA2)$coefficients
+
+# check the residuals of the fitted model
+plot.A2.resid <- ggplot(lmNinoA2, aes(x=.fitted, y=.resid)) +
+  geom_point() +
+  geom_hline(yintercept=0, linetype="dashed") +
+  labs(x="Fitted values", y="Residuals", title=as.character(formula(lmNinoA2)))
+
+# check for serial correlation
+plot.A2.serial <- ggplot(ninoData, aes(x=ninoData$Year, y=lmNinoA2$residuals)) +
+  geom_point() +
+  geom_hline(yintercept=0, linetype="dashed") +
+  labs(x="Year", y="Residuals", title=as.character(formula(lmNinoA2)))
+
+# combine both plots
+plot.A2.grid <- grid.arrange(plot.A2.resid, plot.A2.serial, nrow=1, ncol=2)
+ggsave(filename="writeup/6a2_resid_serial.png", plot=plot.A2.grid, width=11, height=4.5, units="in")
+
+# get 95% CIs for the coefficients in lmNinoA2
+confint(lmNinoA2, level = 0.95)
 
 # Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
+# create a linear regression model of Hurricanes on Temperature * WestAfrica
+lmNinoB1 <- lm(formula=Hurricanes ~ Temperature * WestAfrica, data=ninoData)
+summary(lmNinoB1)$coefficients
 
+# check the residuals of the fitted model
+plot.B1.resid <- ggplot(lmNinoB1, aes(x=.fitted, y=.resid)) +
+  geom_point() +
+  geom_hline(yintercept=0, linetype="dashed") +
+  labs(x="Fitted values", y="Residuals", title=as.character(formula(lmNinoB1)))
+
+# check for serial correlation
+plot.B1.serial <- ggplot(ninoData, aes(x=ninoData$Year, y=lmNinoB1$residuals)) +
+  geom_point() +
+  geom_hline(yintercept=0, linetype="dashed") +
+  labs(x="Year", y="Residuals", title=as.character(formula(lmNinoB1)))
+
+# combine both plots
+plot.B1.grid <- grid.arrange(plot.B1.resid, plot.B1.serial, nrow=1, ncol=2)
+ggsave(filename="writeup/6b1_resid_serial.png", plot=plot.B1.grid, width=11, height=4.5, units="in")
+
+# get 95% CIs for the coefficients in lmNinoB1
+confint(lmNinoB1, level = 0.95)
 
 # Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
+# create a linear regression model of StormIndex on Temperature * WestAfrica
+lmNinoC1 <- lm(formula=StormIndex ~ Temperature * WestAfrica, data=ninoData)
+summary(lmNinoC1)$coefficients
 
+# check the residuals of the fitted model
+plot.C1.resid <- ggplot(lmNinoC1, aes(x=.fitted, y=.resid)) +
+  geom_point() +
+  geom_hline(yintercept=0, linetype="dashed") +
+  labs(x="Fitted values", y="Residuals", title=as.character(formula(lmNinoC1)))
+
+# check for serial correlation
+plot.C1.serial <- ggplot(ninoData, aes(x=ninoData$Year, y=lmNinoC1$residuals)) +
+  geom_point() +
+  geom_hline(yintercept=0, linetype="dashed") +
+  labs(x="Year", y="Residuals", title=as.character(formula(lmNinoC1)))
+
+# combine both plots
+plot.C1.grid <- grid.arrange(plot.C1.resid, plot.C1.serial, nrow=1, ncol=2)
+ggsave(filename="writeup/6c1_resid_serial.png", plot=plot.C1.grid, width=11, height=4.5, units="in")
+
+# create a linear regression model of StormIndex on Temperature * WestAfrica + Year + I(Year^2)
+lmNinoC2 <- lm(formula=StormIndex ~ Temperature * WestAfrica + Year + I(Year^2), data=ninoData)
+summary(lmNinoC2)$coefficients
+
+# check the residuals of the fitted model
+plot.C2.resid <- ggplot(lmNinoC2, aes(x=.fitted, y=.resid)) +
+  geom_point() +
+  geom_hline(yintercept=0, linetype="dashed") +
+  labs(x="Fitted values", y="Residuals", title=as.character(formula(lmNinoC2)))
+
+# check for serial correlation
+plot.C2.serial <- ggplot(ninoData, aes(x=ninoData$Year, y=lmNinoC2$residuals)) +
+  geom_point() +
+  geom_hline(yintercept=0, linetype="dashed") +
+  labs(x="Year", y="Residuals", title=as.character(formula(lmNinoC2)))
+
+# combine both plots
+plot.C2.grid <- grid.arrange(plot.C2.resid, plot.C2.serial, nrow=1, ncol=2)
+ggsave(filename="writeup/6c2_resid_serial.png", plot=plot.A2.grid, width=11, height=4.5, units="in")
+
+# get 95% CIs for the coefficients in lmNinoA2
+confint(lmNinoC2, level = 0.95)
 
 rm(list = ls()) # clear working environment
