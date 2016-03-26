@@ -15,7 +15,9 @@ options(scipen=5)
 library(Sleuth3) # Data sets from Ramsey and Schafer's "Statistical Sleuth (3rd ed)"
 library(ggplot2); theme_set(theme_bw())
 library(GGally)
+library(ggrepel)
 library(dplyr)
+library(MASS)
 # library(tidyr)
 # library(formula.tools)
 # library(gridExtra)
@@ -43,7 +45,7 @@ ozoneData <- Sleuth3::ex1026
 ozoneData <- ozoneData %>%
   mutate(Surface = as.integer(ifelse(Surface=="Surface", 1, 0)))
 
-# plot a Inhibit vs UVB
+# plot of Inhibit vs UVB
 ggplot(ozoneData, aes(x=UVB, y=Inhibit,
                       color=factor(Surface), shape=factor(Surface))) +
   geom_point(size=2)
@@ -80,6 +82,8 @@ data_b <- rbind(data_b, data.frame(x=7.5, y=7.55))
 ggplot(data_b, aes(x=x, y=y)) + geom_point()
 ggsave(filename="writeup/4b.png", width=6.125, height=3.5, units="in")
 
+# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
 # create a dataset with a high-leverage, high-influence obs
 set.seed(1)
 data_c <- data.frame(x=runif(n = 14, min = 0, max = 5)) %>%
@@ -88,14 +92,37 @@ data_c <- rbind(data_c, data.frame(x=7.5, y=1.8))
 
 # plot
 ggplot(data_c, aes(x=x, y=y)) + geom_point()
-ggsave(filename="writeup/4b.png", width=6.125, height=3.5, units="in")
-
+ggsave(filename="writeup/4c.png", width=6.125, height=3.5, units="in")
 
 rm(list = ls()) # clear working environment
 
 
 
 # Problem 5: Ramsey 11.16  #######################################################################
+
+# load data
+fpmData <- Sleuth3::case1101
+
+# fit a linear model of Metabol on Gastric*Sex
+lmFpm <- lm(formula = Metabol ~ Gastric*Sex, data = fpmData)
+summary(lmFpm)$coefficients
+
+# plot of Metabol vs Gastric
+ggplot(fpmData, aes(x=Gastric, y=Metabol, color=Sex, shape=Sex, label = Subject)) +
+  geom_point(size=2) +
+  geom_text(data=filter(fpmData, Subject==32), nudge_x = 0.10, hjust = 0, show.legend = FALSE) +
+  theme(legend.position = c(0.85, 0.2))
+ggsave(filename="writeup/5.png", width=6.125, height=3.5, units="in")
+
+# calculate leverage for case 32
+hatvalues(lmFpm)[32]
+
+# calculate the studentized residual for case 32
+studres(lmFpm)[32]
+
+# calculate Cook's Distance for case 32
+cooks.distance(lmFpm)[32]
+
 
 
 

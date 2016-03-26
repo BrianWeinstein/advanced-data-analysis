@@ -252,25 +252,25 @@ This, however, does not mean that all high-leverage observations are influential
 
 \part \textit{Draw a hypothetical scatterplot of Y versus a single X, where one observation has a high leverage but is not influential.}
 
-A scatterplot with an observation with high-leverage, but low-influence is shown in Figure \ref{fig:4b}.
+A scatterplot with a high-leverage, low-influence observation is shown in Figure \ref{fig:4b}.
 
 \begin{figure}[!h]
 	\centering
 	\captionsetup{width=0.8\textwidth}
-	\includegraphics[width=4.25in]{4b.png}
-	\caption{A scatterplot with an observation with high-leverage, but low-influence.}
+	\includegraphics[width=4in]{4b.png}
+	\caption{A scatterplot with a high-leverage, low-influence observation.}
 	\label{fig:4b}
 \end{figure}
 
 \part \textit{Draw a hypothetical scatterplot of Y versus a single X, where one observation has a high leverage and is influential.}
 
-A scatterplot with an observation with high-leverage and high-influence is shown in Figure \ref{fig:4c}.
+A scatterplot with a high-leverage, high-influence observation is shown in Figure \ref{fig:4c}.
 
 \begin{figure}[!h]
 	\centering
 	\captionsetup{width=0.8\textwidth}
-	\includegraphics[width=4.25in]{4c.png}
-	\caption{A scatterplot with an observation with high-leverage and high-influence.}
+	\includegraphics[width=4in]{4c.png}
+	\caption{A scatterplot with a high-leverage, high-influence observation.}
 	\label{fig:4c}
 \end{figure}
 
@@ -278,6 +278,43 @@ A scatterplot with an observation with high-leverage and high-influence is shown
 
 \titledquestion{\ramsey 11.16}
 
+\textit{Calculate the leverage, the studentized residual, and Cook’s Distance for the 32nd case. Use the model with gastric activity, a sex indicator variable, and the interaction of these two.}
+
+The regression of \texttt{Metabol} on \texttt{Gastric}, \texttt{Sex}, and their interaction is shown below, and a coded scatterplot is shown in Figure \ref{fig:5}.
+
+\begin{codeSmall}
+> lmFpm <- lm(formula = Metabol ~ Gastric*Sex, data = fpmData)
+> summary(lmFpm)$coefficients
+                  Estimate Std. Error    t value   Pr(>|t|)
+(Intercept)     -0.1972691  0.8022017 -0.2459096 0.80754593
+Gastric          0.8369478  0.4838925  1.7296153 0.09471027
+SexMale         -0.9884969  1.0723910 -0.9217691 0.36452374
+Gastric:SexMale  1.5069236  0.5591376  2.6950856 0.01176490
+\end{codeSmall}$
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{5.png}
+	\caption{Coded scatterplot of \texttt{Metabol} vs \texttt{Gastric}.}
+	\label{fig:5}
+\end{figure}
+
+The leverage, studentized residual, and Cook's Distance for case 32 are shown below.
+\begin{codeSmall}
+> # calculate leverage for case 32
+> hatvalues(lmFpm)[32]
+       32 
+0.2528749 
+> # calculate the studentized residual for case 32
+> studres(lmFpm)[32]
+      32 
+5.120516 
+> # calculate Cook's Distance for case 32
+> cooks.distance(lmFpm)[32]
+      32 
+1.167255 
+\end{codeSmall}
 
 
 \titledquestion{\ramsey 11.20}
