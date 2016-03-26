@@ -177,16 +177,104 @@ where each $\sum$ indicates summation over all cases ($i = 1, 2, \ldots, n$).
 As long as $\mathbf{X}^T \mathbf{X}$ is invertible, the least squares solution is $\mathbf{b} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{Y}$. By the invertible matrix theorem, $\mathbf{X}^T \mathbf{X}$ is invertible whenever the columns of $\mathbf{X}$ are linearly independent.
 
 \titledquestion{\ramsey 10.22}
-
+\todo{Problem 2: 10.22}
 
 
 \titledquestion{\ramsey 10.26}
+\textit{Does the effect of UVB exposure on the distribution of percentage inhibition differ at the surface and in the deep? How much difference is there? Analyze the data, and write a summary of statistical findings and a section of details documenting those findings.}
 
+A sample of the dataset is shown below, and a coded scatterplot of the \texttt{Inhibit} vs \texttt{UVB} is shown in Figure \ref{fig:3_eda}.
 
+\begin{codeSmall}
+   Inhibit  UVB Surface
+1      0.0 0.00       0
+2      1.0 0.00       0
+3      6.0 0.01       0
+4      7.0 0.01       1
+...
+14    21.0 0.04       1
+15    25.0 0.02       0
+16    39.0 0.03       0
+17    59.0 0.03       0
+\end{codeSmall}
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{3_eda.png}
+	\caption{Coded scatterplot of \texttt{Inhibit} vs \texttt{UVB}. \texttt{Surface} = 1 indicates a measurement close to the surface, and \texttt{Surface} = 0 in deep water.}
+	\label{fig:3_eda}
+\end{figure}
+
+First, we fit a linear model on the full dataset, including an interaction term between \texttt{UVB} and \texttt{Surface}.
+
+\begin{codeSmall}
+> lmFull <- lm(Inhibit ~ Surface*UVB, data=ozoneData)
+> summary(lmFull)$coefficients
+               Estimate Std. Error    t value     Pr(>|t|)
+(Intercept)    1.180556   4.292122  0.2750517 0.7875994449
+Surface        1.277778  11.065902  0.1154698 0.9098372976
+UVB         1226.388889 232.772995  5.2686047 0.0001518894
+Surface:UVB -939.930556 409.839150 -2.2934133 0.0391340538
+\end{codeSmall}$
+
+In this model, the p-value on the intercept term indicates that the data provides no evidence to suggest that the intercept is non-zero. Based on the dataset, we also know the intercept should be nearly 0 for both the surface-level and deep water measurements. We fit a second model, forcing the intercept term to 0.
+
+\begin{codeSmall}
+> lmZeroInt <- lm(Inhibit ~ 0 + Surface*UVB, data=ozoneData)
+> summary(lmZeroInt)$coefficients
+               Estimate Std. Error    t value      Pr(>|t|)
+Surface        2.458333   9.857139  0.2493962 0.80667620946
+UVB         1275.000000 146.400333  8.7089966 0.00000050281
+Surface:UVB -988.541667 357.358785 -2.7662442 0.01515365491
+\end{codeSmall}$
+
+Although the model with 0-intercept has a slightly higher RMSE, the difference is negligible (8.537, vs 8.833 in the full model), and the significance of the coefficients is unchanged.
+
+Based on the full model, the data provides moderate evidence that the effect of UVB exposure on the distribution of percentage inhibition differs at the surface and in the deep (two sided p-value of $0.03913$, from a test that the \texttt{Surface:UVB} coefficient estimate is 0; estimated value $-939.9$, 95\% CI from -1825 to -54.53). In deep water, for each 0.01 unit increase in UVB exposure, the percent inhibition increases by 12.26 percentage points. Near the surface, however, for each 0.01 unit increase in UVB exposure, the percent inhibition increases by only 2.861 percentage points.
+
+The regression equations for this ``separate lines'' model are shown below
+\begin{itemize}
+\item Near the surface ($\texttt{Surface} = 1$): $\texttt{Inhibit} = 3.084 + 286.1 \times \texttt{UVB}$,
+\item and in deep water ($\texttt{Surface} = 0$): $\texttt{Inhibit} = 1.806 + 1226 \times \texttt{UVB}$.
+\end{itemize}
 
 \titledquestion{\ramsey 11.8}
 
+\begin{parts}
 
+\part \textit{Why does a case with large leverage have the potential to be influential? Why is it not necessarily influential?}
+
+An observation with large leverage $h_i$ has a residual with low variability
+$$\text{SD}(\text{Residual}_i) = \sigma \sqrt{1-h_i}.$$ A high-leverage observation's explanatory variable values are abnormally high or low, as compared to the other observations in the dataset. As such, the high-leverage observation determines the value of the regression in the surrounding region.
+
+This, however, does not mean that all high-leverage observations are influential. If the observation happens to fall close to the regression surface that is fit only to the other observations (i.e., excluding the high-leverage observation), then the high-leverage observation has little impact on the overall regression surface.
+
+\part \textit{Draw a hypothetical scatterplot of Y versus a single X, where one observation has a high leverage but is not influential.}
+
+A scatterplot with an observation with high-leverage, but low-influence is shown in Figure \ref{fig:4b}.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{4b.png}
+	\caption{A scatterplot with an observation with high-leverage, but low-influence.}
+	\label{fig:4b}
+\end{figure}
+
+\part \textit{Draw a hypothetical scatterplot of Y versus a single X, where one observation has a high leverage and is influential.}
+
+A scatterplot with an observation with high-leverage and high-influence is shown in Figure \ref{fig:4c}.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{4c.png}
+	\caption{A scatterplot with an observation with high-leverage and high-influence.}
+	\label{fig:4c}
+\end{figure}
+
+\end{parts}
 
 \titledquestion{\ramsey 11.16}
 
@@ -198,6 +286,6 @@ As long as $\mathbf{X}^T \mathbf{X}$ is invertible, the least squares solution i
 
 \end{questions}
 
-%\listoftodos
+\listoftodos
 
 \end{document}

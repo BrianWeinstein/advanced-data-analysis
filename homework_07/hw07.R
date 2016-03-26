@@ -13,9 +13,9 @@ options(scipen=5)
 
 # load packages
 library(Sleuth3) # Data sets from Ramsey and Schafer's "Statistical Sleuth (3rd ed)"
-# library(ggplot2); theme_set(theme_bw())
-# library(GGally)
-# library(dplyr)
+library(ggplot2); theme_set(theme_bw())
+library(GGally)
+library(dplyr)
 # library(tidyr)
 # library(formula.tools)
 # library(gridExtra)
@@ -24,23 +24,39 @@ library(Sleuth3) # Data sets from Ramsey and Schafer's "Statistical Sleuth (3rd 
 
 # Problem 1: Ramsey 10.21  #######################################################################
 
-
-
-rm(list = ls()) # clear working environment
+# no code needed
 
 
 
 # Problem 2: Ramsey 10.22  #######################################################################
 
-
-
-rm(list = ls()) # clear working environment
+# no code needed
 
 
 
 # Problem 3: Ramsey 10.26  #######################################################################
 
+# load data
+ozoneData <- Sleuth3::ex1026
 
+# convert Surface to an indicator variable (lets us force the lm intercept to 0)
+ozoneData <- ozoneData %>%
+  mutate(Surface = as.integer(ifelse(Surface=="Surface", 1, 0)))
+
+# plot a Inhibit vs UVB
+ggplot(ozoneData, aes(x=UVB, y=Inhibit,
+                      color=factor(Surface), shape=factor(Surface))) +
+  geom_point(size=2)
+ggsave(filename="writeup/3_eda.png", width=6.125, height=3.5, units="in")
+
+# fit a linear model
+lmFull <- lm(Inhibit ~ Surface*UVB, data=ozoneData)
+summary(lmFull)$coefficients
+confint(lmFull, level = 0.95)
+
+# fit a linear model that forces the intercept to 0
+lmZeroInt <- lm(Inhibit ~ 0 + Surface*UVB, data=ozoneData)
+summary(lmZeroInt)$coefficients
 
 rm(list = ls()) # clear working environment
 
@@ -48,6 +64,31 @@ rm(list = ls()) # clear working environment
 
 # Problem 4: Ramsey 11.8  #######################################################################
 
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# no code needed
+
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# create a dataset with a high-leverage, low-influence obs
+set.seed(1)
+data_b <- data.frame(x=runif(n = 14, min = 0, max = 5)) %>%
+  mutate(y= x + rnorm(n = 14, mean = 0, sd = 0.25))
+data_b <- rbind(data_b, data.frame(x=7.5, y=7.55))
+
+# plot
+ggplot(data_b, aes(x=x, y=y)) + geom_point()
+ggsave(filename="writeup/4b.png", width=6.125, height=3.5, units="in")
+
+# create a dataset with a high-leverage, high-influence obs
+set.seed(1)
+data_c <- data.frame(x=runif(n = 14, min = 0, max = 5)) %>%
+  mutate(y= x + rnorm(n = 14, mean = 0, sd = 0.25))
+data_c <- rbind(data_c, data.frame(x=7.5, y=1.8))
+
+# plot
+ggplot(data_c, aes(x=x, y=y)) + geom_point()
+ggsave(filename="writeup/4b.png", width=6.125, height=3.5, units="in")
 
 
 rm(list = ls()) # clear working environment
