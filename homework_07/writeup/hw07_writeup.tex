@@ -180,7 +180,7 @@ As long as $\mathbf{X}^T \mathbf{X}$ is invertible, the least squares solution i
 \titledquestion{\ramsey 10.22}
 \setlength{\parindent}{1em}
 
-\textit{Continuing Exercise 21, statistical theory says that the means of the estimates in the vector $\mathbf{A} \mathbf{Y}$, where $\mathbf{A}$ is a matrix, are the elements of the vector $\mathbf{A} \mu \{\mathbf{Y}\}$; and the matrix of covariances of these estimates is $\mathbf{A} \text{Cov}(\mathbf{Y})\mathbf{A}^T$.}
+\textit{Continuing Exercise 21, statistical theory says that the means of the estimates in the vector $\mathbf{A} \mathbf{Y}$, where $\mathbf{A}$ is a matrix, are the elements of the vector $\mathbf{A} \mu \{\mathbf{Y}\}$; and the matrix of covariances of these estimates $\text{Cov}(\mathbf{A}\mathbf{Y}) = \mathbf{A} \text{Cov}(\mathbf{Y})\mathbf{A}^T$.}
 
 \begin{parts}
 
@@ -198,7 +198,16 @@ As long as $\mathbf{X}^T \mathbf{X}$ is invertible, the least squares solution i
 
 \part \textit{Then show that the matrix of covariances is $\text{Cov}\{\mathbf{b}\} = \sigma^2 (\mathbf{X}^T \mathbf{X})^{-1}$.}
 
-
+\begin{align*}
+\text{Cov}\{ \mathbf{b} \} &= \text{Cov}\{ (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{Y} \} \\
+&= \left[ (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \right] \text{Cov}(\mathbf{Y}) \left[ (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \right]^T         \text{\quad \ \  [since } \text{Cov}(\mathbf{A}\mathbf{Y}) = \mathbf{A} \text{Cov}(\mathbf{Y})\mathbf{A}^T \text{]} \\
+&= \left[ (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \right] \text{Cov}(\mathbf{Y}) \left[\mathbf{X}^T\right]^T \left[(\mathbf{X}^T \mathbf{X})^{-1} \right]^T \\
+&= \left[ (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \right] \text{Cov}(\mathbf{Y}) \left[\mathbf{X}\right] \left[(\mathbf{X}^T \mathbf{X})^{-1}\right] \\
+&= \left[ (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \right]    \sigma^2 \mathbf{I} \left[\mathbf{X}\right] \left[(\mathbf{X}^T \mathbf{X})^{-1}\right] \\
+&= \sigma^2 \left[ (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \right] \left[\mathbf{X}\right] \left[(\mathbf{X}^T \mathbf{X})^{-1}\right] \\
+&= \sigma^2 (\mathbf{X}^T \mathbf{X})^{-1} (\mathbf{X}^T  \mathbf{X}) (\mathbf{X}^T \mathbf{X})^{-1} \\
+&= \sigma^2 (\mathbf{X}^T \mathbf{X})^{-1}
+\end{align*}
 
 
 
@@ -484,6 +493,6 @@ As noted in parts (c) and (e), both Case 1 and Case 2 have high influence over t
 
 \end{questions}
 
-\listoftodos
+%\listoftodos
 
 \end{document}
