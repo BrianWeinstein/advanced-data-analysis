@@ -179,8 +179,33 @@ As long as $\mathbf{X}^T \mathbf{X}$ is invertible, the least squares solution i
 
 \titledquestion{\ramsey 10.22}
 \setlength{\parindent}{1em}
-\todo{Problem 2: 10.22}
 
+\textit{Continuing Exercise 21, statistical theory says that the means of the estimates in the vector $\mathbf{A} \mathbf{Y}$, where $\mathbf{A}$ is a matrix, are the elements of the vector $\mathbf{A} \mu \{\mathbf{Y}\}$; and the matrix of covariances of these estimates is $\mathbf{A} \text{Cov}(\mathbf{Y})\mathbf{A}^T$.}
+
+\begin{parts}
+
+\part \textit{Use the theory and the model $\mu \{\mathbf{Y}\} = \mathbf{X} \beta$; $\text{Cov}(\mathbf{Y}) = \sigma^2 \mathbf{I}$ (where $\mathbf{I}$ is an $n \times n$ identity matrix) to show that the mean in the sampling distributions of the least squares estimate $\mathbf{b}$ is $\beta$.}
+
+\begin{align*}
+\text{E}\left[ \mathbf{b} \right] &= \text{E}\left[ (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T (\mathbf{Y}) \right] \\
+&= \text{E}\left[ (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T (\mathbf{X} \beta) \right] \\
+&= \text{E}\left[ (\mathbf{X}^T \mathbf{X})^{-1} (\mathbf{X}^T \mathbf{X}) \beta \right] \\
+&= \text{E}\left[ \mathbf{I} \beta \right] \\
+&= \text{E}\left[ \beta \right] \\
+&= \beta
+\end{align*}
+
+
+\part \textit{Then show that the matrix of covariances is $\text{Cov}\{\mathbf{b}\} = \sigma^2 (\mathbf{X}^T \mathbf{X})^{-1}$.}
+
+
+
+
+
+
+
+
+\end{parts}
 
 \titledquestion{\ramsey 10.26}
 \setlength{\parindent}{1em}
