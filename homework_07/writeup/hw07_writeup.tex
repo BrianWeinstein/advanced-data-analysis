@@ -66,6 +66,7 @@ Code is attached here and also posted at \href{https://github.com/BrianWeinstein
 
 
 \titledquestion{\ramsey 10.21}
+\setlength{\parindent}{1em}
 
 Let
 
@@ -177,10 +178,13 @@ where each $\sum$ indicates summation over all cases ($i = 1, 2, \ldots, n$).
 As long as $\mathbf{X}^T \mathbf{X}$ is invertible, the least squares solution is $\mathbf{b} = (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{Y}$. By the invertible matrix theorem, $\mathbf{X}^T \mathbf{X}$ is invertible whenever the columns of $\mathbf{X}$ are linearly independent.
 
 \titledquestion{\ramsey 10.22}
+\setlength{\parindent}{1em}
 \todo{Problem 2: 10.22}
 
 
 \titledquestion{\ramsey 10.26}
+\setlength{\parindent}{1em}
+
 \textit{Does the effect of UVB exposure on the distribution of percentage inhibition differ at the surface and in the deep? How much difference is there? Analyze the data, and write a summary of statistical findings and a section of details documenting those findings.}
 
 A sample of the dataset is shown below, and a coded scatterplot of the \texttt{Inhibit} vs \texttt{UVB} is shown in Figure \ref{fig:3_eda}.
@@ -240,8 +244,10 @@ The regression equations for this ``separate lines'' model are shown below
 \end{itemize}
 
 \titledquestion{\ramsey 11.8}
+\setlength{\parindent}{1em}
 
 \begin{parts}
+\setlength{\parindent}{1em}
 
 \part \textit{Why does a case with large leverage have the potential to be influential? Why is it not necessarily influential?}
 
@@ -277,6 +283,8 @@ A scatterplot with a high-leverage, high-influence observation is shown in Figur
 \end{parts}
 
 \titledquestion{\ramsey 11.16}
+\setlength{\parindent}{1em}
+
 
 \textit{Calculate the leverage, the studentized residual, and Cook’s Distance for the 32nd case. Use the model with gastric activity, a sex indicator variable, and the interaction of these two.}
 
@@ -318,8 +326,12 @@ The leverage, studentized residual, and Cook's Distance for case 32 are shown be
 
 
 \titledquestion{\ramsey 11.20}
+\setlength{\parindent}{1em}
+
 
 \begin{parts}
+\setlength{\parindent}{1em}
+
 
 \part \textit{Examine the effects on the p-value for significance of regression and on R-squared of deleting (i) the case with the smallest value of X, and (ii) the two cases with the smallest values of X.}
 
@@ -388,15 +400,58 @@ The total sum of squares and residual sum of squares for the 3 models are shown 
 The R-squared statistic is defined as $(1 - \frac{\text{Residual Sum of Squares}}{\text{Total Sum of Squares}})$, so with the total sum of squares decreasing so dramatically from Model 1 to Models 2 and 3, but the residual sum of squares staying more or less the same, the R-squared statistic decreases dramatically when the two smallest X values are removed.
 
 
-
 \part \textit{Compute the case influence statistics, and discuss interesting cases.}
 
+Plots of the case influence statistics are shown in Figure \ref{fig:6c}, and a scatterplot of Calcite vs Carbonate is shown in Figure \ref{fig:6c_scatter}.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=5.5in]{6c.png}
+	\caption{Plots of the leverage statistics, studentized residuals, and Cook's Distances for each observation in the regression of Calcite on Carbonate, using the full dataset.}
+	\label{fig:6c}
+\end{figure}
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{6c_scatter.png}
+	\caption{Scatterplot of Calcite vs Carbonate with points labeled by the Sample Number, corresponding to the Sample Number in Figure \ref{fig:6c}.}
+	\label{fig:6c_scatter}
+\end{figure}
+
+Cases 1 and 2 have leverages that are greater than $(\text{2 times the average leverage}) = (2 \times p/n) = (2 \times 2/18) = 0.222$, so they warrant further attention. Neither Case 1 nor Case 2 have abnormal studentized residuals. Based on its large leverage, Case 1 has a large Cook's Distance, however, and is thus an influential observation.
+
+Cases 4, 7, 10, 14, and 15 have studentized residuals moderately far from zero, but not enough to cause concern, especially in light of their small Cook's Distances.
 
 \part \textit{Recompute the case statistics when the case with the smallest X is deleted.}
 
+Plots of the case influence statistics are shown in Figure \ref{fig:6d}.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=5.5in]{6d.png}
+	\caption{Plots of the leverage statistics, studentized residuals, and Cook's Distances for each observation in the regression of Calcite on Carbonate, using the dataset with the smallest X excluded.}
+	\label{fig:6d}
+\end{figure}
+
 \part \textit{Comment on the differences in the two sets of case statistics. Why may pairs of influential observations not be found with the usual case influence statistics?}
 
+After removing the observation with the smallest X (Case 1) from the dataset, the leverage of Case 2 significantly increased and is now much greater than $(\text{2 times the average leverage}) = (2 \times p/n) = (2 \times 2/17) = 0.235$. Case 2 now also has a studentized residual far enough from zero to cause concern. A vale of $2.23$ for Cook's Distance indicates that Case 2 has high influence on the regression coefficients.
+
+In general, pairs of influential observations may not be found with the usual case influence statistics. This is because the presence of the most extreme case can make other observations --- ones which aren't as extreme as the \textit{most} extreme case, but may seem extreme after this case is removed --- seem more or less average.
+
+With all observations included, the mean $X$ value, $\overline{X}$, is shifted toward the most extreme case (Case 1, in this example). As such, $\overline{X}$ is also shifted towards the slightly less extreme Case 2, and the overall leverage of Case 2 is decreased.
+
+$$h_i = \frac{1}{n} + \frac{1}{n-1} \left[ \frac{X_i - \overline{X}}{s_X}  \right]^2$$
+
+Once the most extreme case is removed, however, $\overline{X}$ moves closer towards the other observations, but further away from Case 2, now making Case 2 have an alarmingly high leverage.
+
 \part \textit{What might one conclude about the influence of the two unusual observations in this data set?}
+
+As noted in parts (c) and (e), both Case 1 and Case 2 have high influence over the regression coefficients.
+
 
 
 \end{parts}

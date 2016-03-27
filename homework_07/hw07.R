@@ -16,11 +16,11 @@ library(Sleuth3) # Data sets from Ramsey and Schafer's "Statistical Sleuth (3rd 
 library(ggplot2); theme_set(theme_bw())
 library(GGally)
 library(ggrepel)
-library(dplyr)
 library(MASS)
+library(dplyr)
 # library(tidyr)
 # library(formula.tools)
-# library(gridExtra)
+library(gridExtra)
 
 
 
@@ -148,6 +148,8 @@ lmExcl2 <- lm(formula = Calcite ~ Carbonate,
               data=dinoData, subset = Carbonate > 24)
 summary(lmExcl2)
 
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
 # compare total and residual sum of squares for lmFull
 sum(anova(lmFull)$"Sum Sq")
 (anova(lmFull)$"Sum Sq")[2]
@@ -159,5 +161,68 @@ sum(anova(lmExcl1)$"Sum Sq")
 # compare total and residual sum of squares for lmExcl2
 sum(anova(lmExcl2)$"Sum Sq")
 (anova(lmExcl2)$"Sum Sq")[2]
+
+# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# compute the case influence statistics on the full dataset
+dinoData <- dinoData %>%
+  mutate(leverageFull=hatvalues(lmFull),
+         studResFull=studres(lmFull),
+         cooksDistFull=cooks.distance(lmFull)) %>%
+  mutate(sample=row_number())
+
+# plot the case influence statistics on the full dataset
+plot_leverageFull <- ggplot(dinoData, aes(x=sample, y=leverageFull)) +
+  geom_point() +
+  geom_hline(yintercept=(2*2/nrow(dinoData)), linetype="dotted") +
+  labs(x="Sample Number", y="Leverage") +
+  xlim(1, nrow(dinoData))
+plot_studResFull <- ggplot(dinoData, aes(x=sample, y=studResFull)) +
+  geom_point() +
+  geom_hline(yintercept=c(-2, 2), linetype="dotted") +
+  labs(x="Sample Number", y="Studentized Residual") +
+  xlim(1, nrow(dinoData))
+plot_cooksDistFull <- ggplot(dinoData, aes(x=sample, y=cooksDistFull)) +
+  geom_point() +
+  geom_hline(yintercept=1, linetype="dotted") +
+  labs(x="Sample Number", y="Cook's Distance") +
+  xlim(1, nrow(dinoData))
+plot_Full <- grid.arrange(plot_leverageFull, plot_studResFull, plot_cooksDistFull, nrow=3, ncol=1)
+ggsave(filename="writeup/6c.png", plot=plot_Full, width=8, height=6, units="in")
+
+# scatterplot of Calcite on Carbonate
+ggplot(dinoData, aes(x=Carbonate, y=Calcite)) +
+  geom_point() +
+  geom_text_repel(aes(label=sample), size=3.5)
+ggsave(filename="writeup/6c_scatter.png", width=6.125, height=3.5, units="in")
+
+# Part d ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# compute the case influence statistics, excluding the smallest X
+dinoDataExcl1 <- dinoData %>%
+  select(Carbonate, Calcite, sample) %>%
+  filter(sample != 1) %>%
+  mutate(leverageExcl1=hatvalues(lmExcl1),
+         studResExcl1=studres(lmExcl1),
+         cooksDistExcl1=cooks.distance(lmExcl1))
+
+# plot the case influence statistics, excluding the smallest X
+plot_leverageExcl1 <- ggplot(dinoDataExcl1, aes(x=sample, y=leverageExcl1)) +
+  geom_point() +
+  geom_hline(yintercept=(2*2/nrow(dinoDataExcl1)), linetype="dotted") +
+  labs(x="Sample Number", y="Leverage") +
+  xlim(1, 1+nrow(dinoDataExcl1))
+plot_studResExcl1 <- ggplot(dinoDataExcl1, aes(x=sample, y=studResExcl1)) +
+  geom_point() +
+  geom_hline(yintercept=c(-2, 2), linetype="dotted") +
+  labs(x="Sample Number", y="Studentized Residual") +
+  xlim(1, 1+nrow(dinoDataExcl1))
+plot_cooksDistExcl1 <- ggplot(dinoDataExcl1, aes(x=sample, y=cooksDistExcl1)) +
+  geom_point() +
+  geom_hline(yintercept=1, linetype="dotted") +
+  labs(x="Sample Number", y="Cook's Distance") +
+  xlim(1, 1+nrow(dinoDataExcl1))
+plot_Excl1 <- grid.arrange(plot_leverageExcl1, plot_studResExcl1, plot_cooksDistExcl1, nrow=3, ncol=1)
+ggsave(filename="writeup/6d.png", plot=plot_Excl1, width=8, height=6, units="in")
 
 rm(list = ls()) # clear working environment
