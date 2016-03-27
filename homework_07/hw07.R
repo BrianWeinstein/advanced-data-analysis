@@ -18,8 +18,6 @@ library(GGally)
 library(ggrepel)
 library(MASS)
 library(dplyr)
-# library(tidyr)
-# library(formula.tools)
 library(gridExtra)
 
 
