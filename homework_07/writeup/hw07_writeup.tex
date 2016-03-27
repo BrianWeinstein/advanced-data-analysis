@@ -319,6 +319,87 @@ The leverage, studentized residual, and Cook's Distance for case 32 are shown be
 
 \titledquestion{\ramsey 11.20}
 
+\begin{parts}
+
+\part \textit{Examine the effects on the p-value for significance of regression and on R-squared of deleting (i) the case with the smallest value of X, and (ii) the two cases with the smallest values of X.}
+
+The relevant portions of the linear model summary outputs are shown below.
+
+\begin{itemize}
+
+
+\item Model 1 (full dataset):
+\begin{codeSmall}
+Residual standard error: 0.9959 on 16 degrees of freedom
+Multiple R-squared:  0.8427,	Adjusted R-squared:  0.8329 
+F-statistic: 85.73 on 1 and 16 DF,  p-value: 0.00000007929
+\end{codeSmall}
+
+With the full dataset, the p-value for the overall significance of regression (i.e., the p-value based on the F-statistic, which is the same as the p-value associated with the slope estimate for simple linear regression), is $7.929 \times 10^{-8}$, and the R-squared is $0.8427$.
+
+
+\item Model 2 (dataset excluding the case with the smallest value of X):
+\begin{codeSmall}
+Residual standard error: 0.9807 on 15 degrees of freedom
+Multiple R-squared:  0.6718,	Adjusted R-squared:  0.6499 
+F-statistic:  30.7 on 1 and 15 DF,  p-value: 0.00005653
+\end{codeSmall}
+
+By removing the case with the smallest value of X, the p-value of $5.653 \times 10^{-5}$ still indicates that there's overwhelming evidence of an association between Calcite and Carbonate, but it is three orders of magnitude smaller than in Model 1 . The R-squared has also decreased to $0.6718$.
+
+
+\item Model 3 (dataset excluding the two cases with the smallest values of X):
+\begin{codeSmall}
+Residual standard error: 0.8875 on 14 degrees of freedom
+Multiple R-squared:  0.3398,	Adjusted R-squared:  0.2926 
+F-statistic: 7.205 on 1 and 14 DF,  p-value: 0.0178
+\end{codeSmall}
+
+By removing the two cases with the smallest values of X, the p-value of $0.0178$ is still significant, but is considerably smaller than in Models 1 and 2. The R-squared has also decreased even further to $0.2926$.
+
+\end{itemize}
+
+
+\part \textit{Why does R-squared change so much?}
+
+The two cases with the smallest values of X also have the two smallest values of Y, and significantly increase the overall variation in the Y variable. By removing the smallest value of X in Model 2 (and then also the second-smallest value of X in Model 3), the total variation in Y decreases significantly, but the residual sum of squares doesn't change very much.
+
+The total sum of squares and residual sum of squares for the 3 models are shown below.
+\begin{codeSmall}
+> # compare total and residual sum of squares for lmFull
+> sum(anova(lmFull)$"Sum Sq")
+[1] 100.9
+> (anova(lmFull)$"Sum Sq")[2]
+[1] 15.86942
+> 
+> # compare total and residual sum of squares for lmExcl1
+> sum(anova(lmExcl1)$"Sum Sq")
+[1] 43.95882
+> (anova(lmExcl1)$"Sum Sq")[2]
+[1] 14.42715
+> 
+> # compare total and residual sum of squares for lmExcl2
+> sum(anova(lmExcl2)$"Sum Sq")
+[1] 16.70438
+> (anova(lmExcl2)$"Sum Sq")[2]
+[1] 11.02839
+\end{codeSmall}
+
+The R-squared statistic is defined as $(1 - \frac{\text{Residual Sum of Squares}}{\text{Total Sum of Squares}})$, so with the total sum of squares decreasing so dramatically from Model 1 to Models 2 and 3, but the residual sum of squares staying more or less the same, the R-squared statistic decreases dramatically when the two smallest X values are removed.
+
+
+
+\part \textit{Compute the case influence statistics, and discuss interesting cases.}
+
+
+\part \textit{Recompute the case statistics when the case with the smallest X is deleted.}
+
+\part \textit{Comment on the differences in the two sets of case statistics. Why may pairs of influential observations not be found with the usual case influence statistics?}
+
+\part \textit{What might one conclude about the influence of the two unusual observations in this data set?}
+
+
+\end{parts}
 
 
 \end{questions}

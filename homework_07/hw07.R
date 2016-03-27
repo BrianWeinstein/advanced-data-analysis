@@ -123,15 +123,41 @@ studres(lmFpm)[32]
 # calculate Cook's Distance for case 32
 cooks.distance(lmFpm)[32]
 
-
-
-
 rm(list = ls()) # clear working environment
 
 
 
 # Problem 6: Ramsey 11.20  #######################################################################
 
+# load data
+dinoData <- Sleuth3::ex1120
 
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# regression of Calcite on Carbonate with the full dataset
+lmFull <- lm(formula = Calcite ~ Carbonate, data=dinoData)
+summary(lmFull)
+
+# regression of Calcite on Carbonate, excluding the smallest X
+lmExcl1 <- lm(formula = Calcite ~ Carbonate,
+              data=dinoData, subset = Carbonate > 22)
+summary(lmExcl1)
+
+# regression of Calcite on Carbonate, excluding the smallest two X's
+lmExcl2 <- lm(formula = Calcite ~ Carbonate,
+              data=dinoData, subset = Carbonate > 24)
+summary(lmExcl2)
+
+# compare total and residual sum of squares for lmFull
+sum(anova(lmFull)$"Sum Sq")
+(anova(lmFull)$"Sum Sq")[2]
+
+# compare total and residual sum of squares for lmExcl1
+sum(anova(lmExcl1)$"Sum Sq")
+(anova(lmExcl1)$"Sum Sq")[2]
+
+# compare total and residual sum of squares for lmExcl2
+sum(anova(lmExcl2)$"Sum Sq")
+(anova(lmExcl2)$"Sum Sq")[2]
 
 rm(list = ls()) # clear working environment
