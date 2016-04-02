@@ -186,24 +186,34 @@ summary(lmNonnative)$coefficients
 # test for any influential observations
 galapDataTransf <- galapDataTransf %>%
   mutate(cdLmNonnative=cooks.distance(lmNonnative))
-ggplot(galapDataTransf, aes(x=Island, y=cdLmNative)) +
+ggplot(galapDataTransf, aes(x=Island, y=cdLmNonnative)) +
   geom_point() +
   geom_hline(yintercept=1, linetype="dotted") +
   labs(x="Island", y="Cook's Distance") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-ggsave(filename="writeup/2a_cd.png", width=6.125, height=3.5, units="in")
-
-
-
-
-
-
-
-
+ggsave(filename="writeup/2b_cd.png", width=6.125, height=3.5, units="in")
 
 rm(list = ls()) # clear working environment
 
 # Problem 3: Ramsey 20.11 #######################################################################
+
+# load data
+shuttleData <- Sleuth3::ex2011 %>%
+  mutate(Failure=ifelse(Failure=="Yes", 1, 0))
+
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+glmShuttle <- glm(formula = Failure ~ Temperature,
+                  data = shuttleData, family = binomial)
+summary(glmShuttle)$coefficients
+
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# calcualte the Z statistic and associated pvalue
+tempEst <- (summary(glmShuttle)$coefficients)["Temperature", "Estimate"]
+tempSe <- (summary(glmShuttle)$coefficients)["Temperature", "Std. Error"]
+tempZstat <- (tempEst - 0)/tempSe
+tempPval <- pnorm(q = -1 * abs(tempZstat), mean = 0, sd = 1) ; tempPval
 
 
 

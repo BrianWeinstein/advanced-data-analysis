@@ -257,12 +257,33 @@ Examining Cook's Distances for this model in Figure \ref{fig:2b_cd}, none of the
 
 \part \textit{Fit the logistic regression of Failure (1 for failure) on Temperature. Report the estimated coefficients and their standard errors.}
 
+The coefficients and associated standard errors for the logistic regression of Failure on Temperature are shown below.
 
-
+\begin{codeSmall}
+> glmShuttle <- glm(formula = Failure ~ Temperature,
++                   data = shuttleData, family = binomial)
+> summary(glmShuttle)$coefficients
+              Estimate Std. Error   z value   Pr(>|z|)
+(Intercept) 10.8753491 5.70291251  1.906982 0.05652297
+Temperature -0.1713205 0.08343865 -2.053251 0.04004824
+\end{codeSmall}$
 
 
 
 \part \textit{Test whether the coefficient of Temperature is 0, using Wald’s test. Report a one-sided p-value (the alternative hypothesis is that the coefficient is negative; odds of failure decrease with increasing temperature).}
+
+Using Wald's test (confirming the Z statistic and associated two-sided p-value from part (a)), the data provides moderate evidence that the odds of failure decrease with increasing temperature (one-sided p-value  $0.0200$ from Wald's test).
+
+\begin{codeSmall}
+> tempEst <- (summary(glmShuttle)$coefficients)["Temperature", "Estimate"]
+> tempSe <- (summary(glmShuttle)$coefficients)["Temperature", "Std. Error"]
+> tempZstat <- (tempEst - 0)/tempSe
+> tempPval <- pnorm(q = -1 * abs(tempZstat), mean = 0, sd = 1) ; tempPval # one-sided
+[1] 0.02002412
+\end{codeSmall}
+
+
+
 
 \part \textit{Test whether the coefficient of Temperature is 0, using the drop-in-deviance test.}
 
