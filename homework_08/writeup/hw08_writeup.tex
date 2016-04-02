@@ -284,14 +284,77 @@ Using Wald's test (confirming the Z statistic and associated two-sided p-value f
 
 
 
-
 \part \textit{Test whether the coefficient of Temperature is 0, using the drop-in-deviance test.}
+
+Using the drop-in-deviance test (likelihood ratio test), the data provides moderate evidence that the odds of failure decrease with increasing temperature (one-sided p-value $0.0148$ from a drop-in-deviance test's test).
+
+\begin{codeSmall}
+> # fit a reduced model
+> glmShuttleReduced <- glm(formula = Failure ~ 1,
++                   data = shuttleData, family = binomial)
+> 
+> # calculate the likelihood ratio test statistic and associated pvalue
+> lrtStat <- summary(glmShuttleReduced)$deviance - summary(glmShuttle)$deviance
+> lrtDf <- summary(glmShuttleReduced)$df[2] - summary(glmShuttle)$df[2]
+> lrtPval <- pchisq(q = lrtStat, df = lrtDf, lower.tail = FALSE); lrtPval
+[1] 0.01476632
+> 
+> # verify lrtPval using anova function
+> anova(glmShuttle, glmShuttleReduced, test="LRT")
+Analysis of Deviance Table
+
+Model 1: Failure ~ Temperature
+Model 2: Failure ~ 1
+  Resid. Df Resid. Dev Df Deviance Pr(>Chi)  
+1        22     23.030                       
+2        23     28.975 -1  -5.9441  0.01477 *
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+\end{codeSmall}
+
 
 \part \textit{Give a 95\% confidence interval for the coefficient of Temperature.}
 
+A 95\% confidence interval for the coefficient of Temperature ($-0.1713$) is from $-0.3340$ to $-0.0078$.
+
+\begin{codeSmall}
+> tempEst
+[1] -0.1713205
+> tempEst + c(-1, 1) * (qnorm(p = 0.975, mean = 0, sd = 1) * tempSe)
+[1] -0.334857256 -0.007783746
+\end{codeSmall}
+
+
 \part \textit{What is the estimated logit of failure probability at 31 degrees F (the launch temperature on January 28, 1986)? What is the estimated probability of failure?}
 
-\part \textit{Why must the answer to part (e) be treated cautiously? (Answer: It is a prediction outside the range of the available explanatory variable values.)}
+The estimated logit of failure probability at Temperature=31 is given by
+
+\begin{align*}
+\text{logit}(\pi) &= 10.8753 + (-0.1713) \times \text{Temperature} \\
+&= 10.8753 + (-0.1713) \times 31 \\
+&= 5.5647.
+\end{align*}
+
+\begin{codeSmall}
+> logitPi <- predict(glmShuttle, data.frame(Temperature=31)) ; logitPi
+       1 
+5.564414 
+\end{codeSmall}
+
+The estimated probability of failure is given by
+
+$$\pi = \frac{\exp(\text{logit}(\pi))}{1 + \exp(\text{logit}(\pi))} = \frac{\exp(5.5647)}{1 + \exp(5.5647)} = 0.9962.$$
+
+\begin{codeSmall}
+> exp(logitPi) / (1 + exp(logitPi))
+        1 
+0.9961828 
+\end{codeSmall}
+
+
+\part \textit{Why must the answer to part (e) be treated cautiously?}
+
+The probability of failure at Temperature=31 must be treated cautiously, since the temperature at which we're making the prediction lays outside  the range of the Temperature variable values used to create the model, which range from 53 to 81 degrees F. This extrapolation is dangerous, since the model from part (a) isn't necessarily valid over a temperature outside of this range.
 
 
 \end{parts}

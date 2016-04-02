@@ -203,6 +203,7 @@ shuttleData <- Sleuth3::ex2011 %>%
 
 # Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
+# fit a logistic regression model
 glmShuttle <- glm(formula = Failure ~ Temperature,
                   data = shuttleData, family = binomial)
 summary(glmShuttle)$coefficients
@@ -213,13 +214,43 @@ summary(glmShuttle)$coefficients
 tempEst <- (summary(glmShuttle)$coefficients)["Temperature", "Estimate"]
 tempSe <- (summary(glmShuttle)$coefficients)["Temperature", "Std. Error"]
 tempZstat <- (tempEst - 0)/tempSe
-tempPval <- pnorm(q = -1 * abs(tempZstat), mean = 0, sd = 1) ; tempPval
+tempPval <- pnorm(q = -1 * abs(tempZstat), mean = 0, sd = 1) ; tempPval # one-sided
 
+# Part c ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
+# fit a reduced model
+glmShuttleReduced <- glm(formula = Failure ~ 1,
+                  data = shuttleData, family = binomial)
+
+# calculate the likelihood ratio test statistic and associated pvalue
+lrtStat <- summary(glmShuttleReduced)$deviance - summary(glmShuttle)$deviance
+lrtDf <- summary(glmShuttleReduced)$df[2] - summary(glmShuttle)$df[2]
+lrtPval <- pchisq(q = lrtStat, df = lrtDf, lower.tail = FALSE); lrtPval
+
+# verify lrtPval using anova function
+anova(glmShuttle, glmShuttleReduced, test="LRT")
+
+# Part d ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# compute a 95% CI for the Temperature estimate
+tempEst
+tempEst + c(-1, 1) * (qnorm(p = 0.975, mean = 0, sd = 1) * tempSe)
+
+# Part e ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# estimated logit of failure probability at Temperature=31
+logitPi <- predict(glmShuttle, data.frame(Temperature=31)) ; logitPi
+
+# estimated probability of failure probability at Temperature=31
+exp(logitPi) / (1 + exp(logitPi))
 
 rm(list = ls()) # clear working environment
 
 # Problem 4: Ramsey 20.15 #######################################################################
+
+
+
+
 
 
 
