@@ -109,14 +109,14 @@ allModels_forward$anova
 # create a linear model with the forward selection subset
 lmForwardSubset <- lm(formula = Mortality ~ NonWhite + Educ + JanTemp +
                         House + JulyTemp + Precip + Density,
-                   data = pollutionData)
+                      data = pollutionData)
 summary(lmForwardSubset)
 
 # create a linear model with the forward selection subset, plus the 3 pollution vars
 lmForwardSubsetPoll <- lm(formula = Mortality ~ NonWhite + Educ + JanTemp +
-                        House + JulyTemp + Precip + Density +
-                        log(HC) + log(NOX) + log(SO2),
-                      data = pollutionData)
+                            House + JulyTemp + Precip + Density +
+                            log(HC) + log(NOX) + log(SO2),
+                          data = pollutionData)
 summary(lmForwardSubsetPoll)
 
 # perform extra sum of squares F test
@@ -124,7 +124,80 @@ anova(lmForwardSubsetPoll, lmForwardSubset)
 
 rm(list = ls()) # clear working environment
 
+
+
 # Problem 2: Ramsey 12.20 #######################################################################
+
+# load data
+galapData <- Sleuth3::ex1220
+
+# define Nonnative species, remove Total variable
+galapData <- galapData %>%
+  mutate(Nonnative=Total-Native) %>%
+  select(Island, Native, Nonnative, Area:AreaNear)
+
+# plot a matrix of pairwise scatterplots
+plot.pairs <- ggpairs(data=select(galapData, Area:AreaNear, Nonnative, Native),
+                      lower=list(continuous=wrap("points", size=0.5)))
+plot.pairs
+
+# log transform the necessary variables
+galapDataTransf <- galapData %>%
+  mutate(LogArea=log(Area), LogElev=log(Elev), LogDistNear=log(DistNear),
+         LogDistSc=log(1 + DistSc), LogAreaNear=log(AreaNear)) %>%
+  select(Island, Native, Nonnative, LogArea, LogElev, LogDistNear, LogDistSc, LogAreaNear)
+
+# plot a matrix of transformed pairwise scatterplots
+plot.pairs.transf <- ggpairs(data=select(galapDataTransf, LogArea:LogAreaNear, Nonnative, Native),
+                             lower=list(continuous=wrap("points", size=0.5)))
+plot.pairs.transf
+png(filename="writeup/2_pairs_tranf.png", width=11, height=9, units="in", res=300)
+print(plot.pairs.transf)
+dev.off()
+
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# create a linear model with response=Native
+lmNative <- lm(formula = Native ~ LogArea + LogElev +
+                 LogDistNear + LogDistSc + LogAreaNear,
+               data = galapDataTransf)
+summary(lmNative)$coefficients
+
+# test for any influential observations
+galapDataTransf <- galapDataTransf %>%
+  mutate(cdLmNative=cooks.distance(lmNative))
+ggplot(galapDataTransf, aes(x=Island, y=cdLmNative)) +
+  geom_point() +
+  geom_hline(yintercept=1, linetype="dotted") +
+  labs(x="Island", y="Cook's Distance") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+ggsave(filename="writeup/2a_cd.png", width=6.125, height=3.5, units="in")
+
+
+
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# create a linear model with response=Nonnative
+lmNonnative <- lm(formula = Nonnative ~ LogArea + LogElev +
+                    LogDistNear + LogDistSc + LogAreaNear,
+                  data = galapDataTransf)
+summary(lmNonnative)$coefficients
+
+# test for any influential observations
+galapDataTransf <- galapDataTransf %>%
+  mutate(cdLmNonnative=cooks.distance(lmNonnative))
+ggplot(galapDataTransf, aes(x=Island, y=cdLmNative)) +
+  geom_point() +
+  geom_hline(yintercept=1, linetype="dotted") +
+  labs(x="Island", y="Cook's Distance") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+ggsave(filename="writeup/2a_cd.png", width=6.125, height=3.5, units="in")
+
+
+
+
+
+
 
 
 

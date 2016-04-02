@@ -83,7 +83,7 @@ A matrix of pairwise scatterplots is shown in Figure \ref{fig:1a_pairs}.
 	\centering
 	\captionsetup{width=0.8\textwidth}
 	\includegraphics[width=\textwidth]{1a_pairs.png}
-	\caption{Pairwise scatterplots of the weather and socioeconomic varibles from the ``Pollution and Mortality'' dataset.}
+	\caption{Pairwise scatterplots of the weather and socioeconomic variables from the ``Pollution and Mortality'' dataset.}
 	\label{fig:1a_pairs}
 \end{figure}
 
@@ -150,7 +150,7 @@ Model 2: Mortality ~ NonWhite + Educ + JanTemp + House + JulyTemp + Precip +
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 \end{codeSmall}
 
-Using the results from the 7-variable model and the 10-variable model (including the 7 variables, plus the 3 pollution variables), the data provides convincing evidence that the three pollution variables are associated with mortality (p-value = 0.008162; extra sum of squares F-test). Using forward selection, the p-value is almost identical to (negligibly smaller than) the one found using the model in part (a).
+Using the results from the 7-variable model and the 10-variable model (including the 7 variables, plus the 3 pollution variables), the data provides convincing evidence that the three pollution variables are associated with mortality (p-value = 0.008162; extra sum of squares F-test). Using forward selection, the p-value is almost identical to (just negligibly smaller than) the one found using the model in part (a).
 
 \end{parts}
 
@@ -158,9 +158,97 @@ Using the results from the 7-variable model and the 10-variable model (including
 
 
 \titledquestion{\ramsey 12.20}
+\setlength{\parindent}{1em}
+
+\textit{The number of species on an island is known to be related to the island's area. Of interest is what other variables are also related to the number of species, after island area is accounted for, and whether the answer differs for native species and nonnative species.}
+
+We first define the ``Nonnative'' species value as the total number of species (Total), minus the number of native species (Native). An initial matrix of pairwise scatterplots indicates both (1) severe outliers, and (2) nonlinear behavior between the explanatory variables and Native and Nonnative.
+
+Testing various variable transformations to reduce outliers and make the data more linear, we find that a good set of explanatory variables is log(Area), log(Elev), log(DistNear), log(1 + DistSc), and log(AreaNear). A matrix of pairwise scatterplots with this set of transformed variables is shown in Figure \ref{fig:2_pairs_tranf}. On the untransformed scale, Isabela island has an Area much larger than the rest of the dataset, but on the log scale this is no longer an issue (for neither the Area variable nor the AreaNear variable).
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=\textwidth]{2_pairs_tranf.png}
+	\caption{Pairwise scatterplots of the transformed variables in the ``Galapagos Islands'' dataset.}
+	\label{fig:2_pairs_tranf}
+\end{figure}
+
+
+\begin{parts}
+\setlength{\parindent}{1em}
+
+\part \textit{Native Species}
+
+A multiple regression of Native on LogArea, LogElev, LogDistNear, LogDistSc, and LogAreaNear is shown below.
+
+\begin{codeSmall}
+> # create a linear model with response=Native
+> lmNative <- lm(formula = Native ~ LogArea + LogElev +
++                  LogDistNear + LogDistSc + LogAreaNear,
++                data = galapDataTransf)
+> summary(lmNative)$coefficients
+              Estimate Std. Error    t value     Pr(>|t|)
+(Intercept) 17.4186072 26.6342475  0.6539928 0.5193343862
+LogArea      6.7877699  1.6800966  4.0401069 0.0004761012
+LogElev      1.6306771  5.2281734  0.3119019 0.7578086491
+LogDistNear -4.2190775  1.8650490 -2.2621805 0.0330196612
+LogDistSc   -0.8665726  1.9225987 -0.4507298 0.6562300815
+LogAreaNear -1.6606874  0.7468994 -2.2234419 0.0358553724
+\end{codeSmall}$
+
+After accounting for the relationship between Native and Area (where we use the log-transformed value of Area, here), there is suggestive (but inconclusive) evidence that the distance to the nearest island (LogDistNear) is associated with the number of native species on the given island (two sided p-value = 0.0759 for a test that the LogDistNear coefficient is zero). There is moderate evidence that the area of the nearest island (LogAreaNear) is associated with the number of native species on the given island (two sided p-value = 0.0359 for a test that the LogAreaNear coefficient is zero). None of the other variables have a significant relationship with the number of native species.
+
+Examining Cook's Distances for this model in Figure \ref{fig:2a_cd}, none of the observations are influential.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{2a_cd.png}
+	\caption{Cook's Distances for each observation in the regression of Native on LogArea, LogElev, LogDistNear, and LogDistSc.}
+	\label{fig:2a_cd}
+\end{figure}
+
+
+\part \textit{Nonnative Species}
+
+A multiple regression of Nonnative on LogArea, LogElev, LogDistNear, LogDistSc, and LogAreaNear is shown below.
+
+\begin{codeSmall}
+> lmNonnative <- lm(formula = Nonnative ~ LogArea + LogElev +
++                     LogDistNear + LogDistSc + LogAreaNear,
++                   data = galapDataTransf)
+> summary(lmNonnative)$coefficients
+              Estimate Std. Error    t value  Pr(>|t|)
+(Intercept)  90.078403 106.215060  0.8480756 0.4047749
+LogArea      23.169532   6.700079  3.4580983 0.0020433
+LogElev      -3.250762  20.849500 -0.1559156 0.8774036
+LogDistNear -11.513117   7.437653 -1.5479502 0.1347209
+LogDistSc    -7.436224   7.667156 -0.9698803 0.3417798
+LogAreaNear  -7.974738   2.978570 -2.6773716 0.0131716
+\end{codeSmall}$
+
+After accounting for the relationship between Nonnative and Area (where we use the log-transformed value of Area, here), there is convincing evidence that the area of the nearest island (LogAreaNear) is associated with the number of nonnative species on the given island (two sided p-value = 0.0132 for a test that the LogAreaNear coefficient is zero). As compared to the regression of Native, there is no longer any evidence that the distance to the nearest island (LogDistNear) is associated with the number of nonnative species on the given island. None of the other variables have a significant relationship with the number of nonnative species.
+
+Examining Cook's Distances for this model in Figure \ref{fig:2b_cd}, none of the observations are influential.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{2b_cd.png}
+	\caption{Cook's Distances for each observation in the regression of Nonnative on LogArea, LogElev, LogDistNear, and LogDistSc.}
+	\label{fig:2b_cd}
+\end{figure}
 
 
 
+
+
+
+
+
+
+\end{parts}
 
 \titledquestion{\ramsey 20.11}
 
