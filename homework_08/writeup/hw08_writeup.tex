@@ -428,27 +428,34 @@ glm1 <- glm(formula = Nest ~ .,
 \end{codeSmall}
 
 We then perform a drop-in-deviance test (likelihood ratio test), comparing the model with all 7 ring radii, \texttt{glm7}, to the model with only the innermost 6 ring radii, \texttt{glm6}.
+
 \begin{codeSmall}
 > anova(glm7, glm6, test="LRT")$"Pr(>Chi)"[[2]]
 [1] 0.1335806
 \end{codeSmall}$
+
 The large p-value indicates that measurements at PctRing7 are not important in distinguishing nest sites from random sites.
 
-Nest, we perform a drop-in-deviance test, comparing \texttt{glm7} to \texttt{glm5}.
+Next, we perform a drop-in-deviance test, comparing \texttt{glm7} to \texttt{glm5}.
+
 \begin{codeSmall}
 > anova(glm7, glm5, test="LRT")$"Pr(>Chi)"[[2]]
 [1] 0.1496591
 \end{codeSmall}$
+
 The large p-value here indicates that measurements at PctRing7 and PctRing6 are not important in distinguishing nest sites from random sites.
 
-Nest, we perform a drop-in-deviance test, comparing \texttt{glm7} to \texttt{glm4}.
+Next, we perform a drop-in-deviance test, comparing \texttt{glm7} to \texttt{glm4}.
+
 \begin{codeSmall}
 > anova(glm7, glm4, test="LRT")$"Pr(>Chi)"[[2]]
 [1] 0.05645491
 \end{codeSmall}$
+
 The p-value of $0.0565$ is now significant (and much smaller than the first two tests), indicating that measurements at PctRing1 through PctRing5 \textit{are} important in distinguishing nest sites from random sites, and that measurements at PctRing6 and PctRing7 are not important.
 
 We therefore use the model that includes PctRing1 through PctRing5.
+
 \begin{codeSmall}
 > summary(glm5)$coefficients
                Estimate Std. Error    z value   Pr(>|z|)
