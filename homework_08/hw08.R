@@ -18,6 +18,7 @@ library(dplyr)
 library(ggplot2); theme_set(theme_bw())
 library(GGally)
 library(leaps)
+library(tidyr)
 # library(ggrepel)
 # library(gridExtra)
 
@@ -220,7 +221,7 @@ tempPval <- pnorm(q = -1 * abs(tempZstat), mean = 0, sd = 1) ; tempPval # one-si
 
 # fit a reduced model
 glmShuttleReduced <- glm(formula = Failure ~ 1,
-                  data = shuttleData, family = binomial)
+                         data = shuttleData, family = binomial)
 
 # calculate the likelihood ratio test statistic and associated pvalue
 lrtStat <- summary(glmShuttleReduced)$deviance - summary(glmShuttle)$deviance
@@ -247,6 +248,47 @@ exp(logitPi) / (1 + exp(logitPi))
 rm(list = ls()) # clear working environment
 
 # Problem 4: Ramsey 20.15 #######################################################################
+
+# load data
+owlData <- Sleuth3::ex2015
+
+# convert to long format
+owlData2 <- owlData %>%
+  gather(key="Ring", value="PctMature", PctRing1:PctRing7) %>%
+  mutate(Ring=factor(Ring))
+
+# create a column indicating the radius associated with each Ring level
+dict <- data.frame(Ring=c("PctRing1", "PctRing2", "PctRing3", "PctRing4", "PctRing5", "PctRing6", "PctRing7"),
+                   Radius=c(0.91, 1.18, 1.40, 1.60, 1.77, 2.41, 3.38))
+owlData2 <- left_join(owlData2, dict, by="Ring")
+rm(dict)
+
+# Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+# create boxplots
+ggplot(owlData2, aes(x=Site, y=PctMature)) +
+  geom_violin(alpha=0.15) +
+  geom_boxplot()
+ggsave(filename="writeup/4a.png", width=6.125, height=3.5, units="in")
+
+# computute the estimated difference, 1-sided p-value, and 95% CI
+tt <- t.test(formula=PctMature~Site, data=owlData2,
+             var.equal=TRUE, conf.level=0.95)
+diff(tt$estimate)[[1]] * -1
+tt$p.value / 2
+tt$conf.int
+
+# Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
+
+ggplot(owlData2, aes(x=Ring, y=PctMature)) +
+  geom_jitter(aes(color=Site, shape=Site), width=0.3, size=2)
+ggsave(filename="writeup/4b_jitter.png", width=6.125, height=3.5, units="in")
+
+
+
+
+
+
 
 
 

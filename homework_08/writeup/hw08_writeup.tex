@@ -356,25 +356,80 @@ $$\pi = \frac{\exp(\text{logit}(\pi))}{1 + \exp(\text{logit}(\pi))} = \frac{\exp
 
 The probability of failure at Temperature=31 must be treated cautiously, since the temperature at which we're making the prediction lays outside  the range of the Temperature variable values used to create the model, which range from 53 to 81 degrees F. This extrapolation is dangerous, since the model from part (a) isn't necessarily valid over a temperature outside of this range.
 
+\end{parts}
+
+
+\titledquestion{\ramsey 20.15}
+\setlength{\parindent}{1em}
+
+\textit{A study examined the association between nesting locations of the Northern Spotted Owl and availability of mature forests. Wildlife biologists identified 30 nest sites. The researchers selected 30 other sites at random coordinates in the same forest. On the basis of aerial photographs, the percentage of mature forest (older than 80 years) was measured in various rings around each of the 60 sites, as shown in Display 20.16.}
+
+\begin{parts}
+\setlength{\parindent}{1em}
+
+\part \textit{Apply two-sample t-tools to these data to see whether the percentage of mature forest is larger at nest sites than at random sites.}
+
+A boxplot of the percentage of mature forest around Nest sites and Random sites is shown in Figure \ref{fig:4a}. The distributions are nearly normal and have similar variances, making the two-sample t-test a good tool for this dataset\footnote{Note here that I've used \textit{all} of the measurements around the Nest and Random sites, not just those at PctRing1. The two-sample t-test gives the same conclusion when we restrict the dataset just to the PctRing1 measurements.}.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{4a.png}
+	\caption{Boxplot of the percentage of mature forest around Nest sites and Random sites.}
+	\label{fig:4a}
+\end{figure}
+
+\begin{codeSmall}
+> tt <- t.test(formula=PctMature~Site, data=owlData2,
++              var.equal=TRUE, conf.level=0.95)
+> diff(tt$estimate)[[1]] * -1
+[1] 11.44524
+> tt$p.value / 2
+[1] 1.115927e-13
+> tt$conf.int
+[1]  8.477749 14.412727
+attr(,"conf.level")
+[1] 0.95
+\end{codeSmall}$
+
+The data provides overwhelming evidence that the mean percentage of mature forest is larger around nest sites than at random sites (one-sided p-value $1.1159 \time 10^{-13}$ from a two-sample t-test). The mean percentage of mature forest around Nest sites is $11.445$ percentage points higher than around Random sites (95\% confidence interval from $8.4777$ to $14.4127$ percentage points).
+
+
+\part \textit{Construct a binary response variable that indicates whether a site is a nest site. Use logistic regression to investigate how large an area about the site has importance in distinguishing nest sites from random sites on the basis of mature forest.}
+
+A jittered scatterplot of PctMature vs Ring, coded by Site type, is shown in Figure \ref{fig:4b_jitter}.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{4b_jitter.png}
+	\caption{A jittered scatterplot of PctMature vs Ring, coded by Site type.}
+	\label{fig:4b_jitter}
+\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
 
 \end{parts}
 
 
-
-
-
-
-\titledquestion{\ramsey 20.15}
-
-
-
-
 \titledquestion{} % Problem 5
+\setlength{\parindent}{1em}
 
 
 
 
 \titledquestion{} % Problem 6
+\setlength{\parindent}{1em}
 
 
 
