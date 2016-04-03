@@ -284,17 +284,52 @@ ggplot(owlData2, aes(x=Ring, y=PctMature)) +
   geom_jitter(aes(color=Site, shape=Site), width=0.3, size=2)
 ggsave(filename="writeup/4b_jitter.png", width=6.125, height=3.5, units="in")
 
+ggplot(owlData2, aes(x=Site, y=PctMature)) +
+  geom_violin(alpha=0.15) +
+  geom_boxplot() +
+  facet_grid(facets=.~Ring) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x=NULL)
+ggsave(filename="writeup/4b_boxplots.png", width=6.125, height=3.5, units="in")
 
 
+# create a nest site indicator variable
+owlData <- owlData %>%
+  mutate(Nest=ifelse(Site=="Nest", 1, 0))
 
+# fit the 7 possible logistic regression models
+glm7 <- glm(formula = Nest ~ .,
+            data = select(owlData, Nest, PctRing1:PctRing7),
+            family = binomial)
+glm6 <- glm(formula = Nest ~ .,
+            data = select(owlData, Nest, PctRing1:PctRing6),
+            family = binomial)
+glm5 <- glm(formula = Nest ~ .,
+            data = select(owlData, Nest, PctRing1:PctRing5),
+            family = binomial)
+glm4 <- glm(formula = Nest ~ .,
+            data = select(owlData, Nest, PctRing1:PctRing4),
+            family = binomial)
+glm3 <- glm(formula = Nest ~ .,
+            data = select(owlData, Nest, PctRing1:PctRing3),
+            family = binomial)
+glm2 <- glm(formula = Nest ~ .,
+            data = select(owlData, Nest, PctRing1:PctRing2),
+            family = binomial)
+glm1 <- glm(formula = Nest ~ .,
+            data = select(owlData, Nest, PctRing1:PctRing1),
+            family = binomial)
 
+# perform the likelihood ratio test (drop in deviance test), get pvalues
+anova(glm7, glm6, test="LRT")$"Pr(>Chi)"[[2]]
+anova(glm7, glm5, test="LRT")$"Pr(>Chi)"[[2]]
+anova(glm7, glm4, test="LRT")$"Pr(>Chi)"[[2]]
+anova(glm7, glm3, test="LRT")$"Pr(>Chi)"[[2]]
+anova(glm7, glm2, test="LRT")$"Pr(>Chi)"[[2]]
+anova(glm7, glm1, test="LRT")$"Pr(>Chi)"[[2]]
 
-
-
-
-
-
-
+# use the model with PctRing1 through PctRing5
+summary(glm5)$coefficients
 
 rm(list = ls()) # clear working environment
 

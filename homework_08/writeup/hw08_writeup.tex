@@ -286,7 +286,7 @@ Using Wald's test (confirming the Z statistic and associated two-sided p-value f
 
 \part \textit{Test whether the coefficient of Temperature is 0, using the drop-in-deviance test.}
 
-Using the drop-in-deviance test (likelihood ratio test), the data provides moderate evidence that the odds of failure decrease with increasing temperature (one-sided p-value $0.0148$ from a drop-in-deviance test's test).
+Using the drop-in-deviance test (likelihood ratio test), the data provides moderate evidence that the odds of failure decrease with increasing temperature (one-sided p-value $0.0148$ from a drop-in-deviance test).
 
 \begin{codeSmall}
 > # fit a reduced model
@@ -397,26 +397,68 @@ The data provides overwhelming evidence that the mean percentage of mature fores
 
 \part \textit{Construct a binary response variable that indicates whether a site is a nest site. Use logistic regression to investigate how large an area about the site has importance in distinguishing nest sites from random sites on the basis of mature forest.}
 
-A jittered scatterplot of PctMature vs Ring, coded by Site type, is shown in Figure \ref{fig:4b_jitter}.
+Boxplots of the percentage of mature forest around Nest sites and Random sites, for each ring radius is shown in Figure \ref{fig:4b_boxplots}.
 
 \begin{figure}[!h]
 	\centering
 	\captionsetup{width=0.8\textwidth}
-	\includegraphics[width=4.25in]{4b_jitter.png}
-	\caption{A jittered scatterplot of PctMature vs Ring, coded by Site type.}
-	\label{fig:4b_jitter}
+	\includegraphics[width=4.25in]{4b_boxplots.png}
+	\caption{Boxplots of the percentage of mature forest around Nest sites and Random sites, for each ring radius.}
+	\label{fig:4b_boxplots}
 \end{figure}
 
+The binary response variable ``Nest'' indicates if a Site is a nest site (1) or a random site (0).
 
+To investigate how large an area about the site has importance in distinguishing nest sites from random sites, we can fit a full model using the measurements at all 7 rings, and then using a drop-in-deviance test, compare it to a model with the innermost 6 rings, then to the model with the innermost 5 rings, etc., until finding the smallest model in which the p-value (from the drop-in-deviance test) is not significant.
 
+A subset of the model definitions are shown below.
 
+\begin{codeSmall}
+# fit the 7 possible logistic regression models
+glm7 <- glm(formula = Nest ~ .,
+            data = select(owlData, Nest, PctRing1:PctRing7),
+            family = binomial)
+glm6 <- glm(formula = Nest ~ .,
+            data = select(owlData, Nest, PctRing1:PctRing6),
+            family = binomial)
+...
+glm1 <- glm(formula = Nest ~ .,
+            data = select(owlData, Nest, PctRing1:PctRing1),
+            family = binomial)
+\end{codeSmall}
 
+We then perform a drop-in-deviance test (likelihood ratio test), comparing the model with all 7 ring radii, \texttt{glm7}, to the model with only the innermost 6 ring radii, \texttt{glm6}.
+\begin{codeSmall}
+> anova(glm7, glm6, test="LRT")$"Pr(>Chi)"[[2]]
+[1] 0.1335806
+\end{codeSmall}$
+The large p-value indicates that measurements at PctRing7 are not important in distinguishing nest sites from random sites.
 
+Nest, we perform a drop-in-deviance test, comparing \texttt{glm7} to \texttt{glm5}.
+\begin{codeSmall}
+> anova(glm7, glm5, test="LRT")$"Pr(>Chi)"[[2]]
+[1] 0.1496591
+\end{codeSmall}$
+The large p-value here indicates that measurements at PctRing7 and PctRing6 are not important in distinguishing nest sites from random sites.
 
+Nest, we perform a drop-in-deviance test, comparing \texttt{glm7} to \texttt{glm4}.
+\begin{codeSmall}
+> anova(glm7, glm4, test="LRT")$"Pr(>Chi)"[[2]]
+[1] 0.05645491
+\end{codeSmall}$
+The p-value of $0.0565$ is now significant (and much smaller than the first two tests), indicating that measurements at PctRing1 through PctRing5 \textit{are} important in distinguishing nest sites from random sites, and that measurements at PctRing6 and PctRing7 are not important.
 
-
-
-
+We therefore use the model that includes PctRing1 through PctRing5.
+\begin{codeSmall}
+> summary(glm5)$coefficients
+               Estimate Std. Error    z value   Pr(>|z|)
+(Intercept) -8.35204928 2.48519484 -3.3607221 0.00077739
+PctRing1     0.06293323 0.03385943  1.8586617 0.06307510
+PctRing2    -0.11121477 0.04850913 -2.2926563 0.02186780
+PctRing3     0.11739702 0.04711212  2.4918649 0.01270744
+PctRing4    -0.01266591 0.03894926 -0.3251899 0.74503737
+PctRing5     0.06359722 0.03519530  1.8069805 0.07076531
+\end{codeSmall}$
 
 
 \end{parts}
