@@ -480,7 +480,37 @@ PctRing5     0.06359722 0.03519530  1.8069805 0.07076531
 \titledquestion{} % Problem 6
 \setlength{\parindent}{1em}
 
+\textit{Consider a properly normalized density function $f(x)$ on the real line and its natural exponential family,}
+$$f(x|\theta) = f(x) e^{\theta x - \phi(\theta)}.$$
 
+
+\begin{parts}
+\setlength{\parindent}{1em}
+
+\part In order for $f(x|\theta)$ to be a well-defined density function, we need
+$$f(x|\theta) \geq 0 \ \forall \ x, \quad \text{and} \quad \int f(x|\theta) d x = 1.$$
+
+\part The choice of $\phi(\theta)$ such that $f(x|\theta)$ is a properly normalized density function is
+
+\begin{gather*}
+1 = \int f(x|\theta) d x = \int f(x) e^{\theta x - \phi(\theta)} dx
+= \int f(x) e^{\theta x} e^{-\phi(\theta)} dx
+= e^{-\phi(\theta)} \int f(x) e^{\theta x} dx \\
+\Rightarrow e^{\phi(\theta)} = \int f(x) e^{\theta x} dx \\
+\Rightarrow \phi(\theta) = \log\left(\int f(x) e^{\theta x} dx\right).
+\end{gather*}
+
+\part 
+
+
+
+\part 
+
+
+
+
+
+\end{parts}
 
 
 \end{questions}

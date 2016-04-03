@@ -335,9 +335,7 @@ rm(list = ls()) # clear working environment
 
 # Problem 5 #######################################################################
 
-
-
-rm(list = ls()) # clear working environment
+# no code needed
 
 # Problem 6 #######################################################################
 
