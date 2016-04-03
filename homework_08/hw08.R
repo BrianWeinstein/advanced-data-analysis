@@ -174,8 +174,6 @@ ggplot(galapDataTransf, aes(x=Island, y=cdLmNative)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ggsave(filename="writeup/2a_cd.png", width=6.125, height=3.5, units="in")
 
-
-
 # Part b ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
 # create a linear model with response=Nonnative
@@ -195,6 +193,8 @@ ggplot(galapDataTransf, aes(x=Island, y=cdLmNonnative)) +
 ggsave(filename="writeup/2b_cd.png", width=6.125, height=3.5, units="in")
 
 rm(list = ls()) # clear working environment
+
+
 
 # Problem 3: Ramsey 20.11 #######################################################################
 
@@ -246,6 +246,8 @@ logitPi <- predict(glmShuttle, data.frame(Temperature=31)) ; logitPi
 exp(logitPi) / (1 + exp(logitPi))
 
 rm(list = ls()) # clear working environment
+
+
 
 # Problem 4: Ramsey 20.15 #######################################################################
 
@@ -333,12 +335,54 @@ summary(glm5)$coefficients
 
 rm(list = ls()) # clear working environment
 
+
+
 # Problem 5 #######################################################################
 
 # no code needed
 
+
+
 # Problem 6 #######################################################################
 
+# Part d ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
+# input data
+data6 <- data.frame(Y=c(0, 0, 1, 1), X=c(-2, -1, 1, 2))
+
+# fit a generalized linear model
+glm6 <- glm(formula = Y ~ X - 1, data = data6, family = binomial) ; glm6
+
+# plot the logistic fit
+ggplot(data6, aes(x = X, y = Y)) +
+  geom_point(size = 2) +
+  geom_smooth(method = "glm", se=FALSE,
+              method.args = list(family = "binomial"))
+ggsave(filename="writeup/6d_logistic.png", width=6.125, height=3.5, units="in")
+
+# define function to calculate the probability for a given outcome
+piI <- function(beta1, X){
+  exp(beta1 * X) / (1 + exp(beta1 * X))
+}
+
+# define function to calculate the log likelihood of a set of outcomes
+logLikelihood <- function(beta1){
+  log(
+    prod(
+      piI(beta1, data6$X)^(data6$Y) * (1 - piI(beta1, data6$X))^(1-(data6$Y))
+    )
+  )
+}
+
+# compute the logLIkelihood for various choices of beta1
+llTest <-data.frame(beta1=seq(-15, 50, 1)) %>%
+  mutate(logLikelihood=sapply(beta1, function(beta1){logLikelihood(beta1)}))
+
+# plot the logLIkelihood as a function of beta1
+ggplot(llTest, aes(x=beta1, y=logLikelihood)) +
+  geom_point(size=0.75) +
+  geom_line() +
+  geom_vline(xintercept = glm6$coefficients[[1]], linetype="dashed")
+ggsave(filename="writeup/6d_loglikelihood.png", width=6.125, height=3.5, units="in")
 
 rm(list = ls()) # clear working environment

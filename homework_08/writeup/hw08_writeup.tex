@@ -507,9 +507,41 @@ $$\phi '(\theta) = \frac{\partial \phi}{\partial \theta} =\frac{\int x f(x) e^{\
 
 $$\phi ''(\theta) = \frac{\partial^2 \phi}{\partial \theta^2} = \frac{\int x^2 f(x) e^{\theta  x} dx}{\int f(x) e^{\theta  x} dx}  -\frac{\left(\int x f(x) e^{\theta  x} dx\right)^2}{\left(\int f(x) e^{\theta  x} dx\right)^2}$$
 
-\part 
+\part The ``maximum likelihood estimate'' of $\beta_1$ is shown below.
 
+\begin{codeSmall}
+> # input data
+> data6 <- data.frame(Y=c(0, 0, 1, 1), X=c(-2, -1, 1, 2))
+> 
+> # fit a generalized linear model
+> glm6 <- glm(formula = Y ~ X - 1, data = data6, family = binomial) ; glm6
+Warning message:
+glm.fit: fitted probabilities numerically 0 or 1 occurred 
 
+Call:  glm(formula = Y ~ X - 1, family = binomial, data = data6)
+
+Coefficients:
+    X  
+23.14  
+
+Degrees of Freedom: 4 Total (i.e. Null);  3 Residual
+Null Deviance:	    5.545 
+Residual Deviance: 3.567e-10 	AIC: 2
+\end{codeSmall}
+
+This estimate doesn't make much sense, however, since the maximum likelihood estimate shouldn't (can't) converge when there is complete separation of the data, as there is here.
+
+At least with the data we have, we can't obtain a reasonable estimate of $\text{P}(Y = 1|X = 0.5)$. With the current data, any arbitrary $X$  split between -1 and 1 gives perfect separation. Given that we can't uniquely define the correct split, it isn't clear how we could estimate $\text{P}(Y = 1|X = 0.5)$.
+
+A plot of the log-likelihood as a function of $\beta_1$ is shown in Figure \ref{fig:6d_loglikelihood}. The plot shows that the log-likelihood never finds a maximum. The \texttt{glm} function chose $\beta_1=23.14$, but, as shown in the plot, this choice is somewhat arbitrary. A sufficient and necessary condition for the MLE of logistic regression coefficients to exist, is for there to be some overlap of the response in each $X$ (i.e., we can't have complete separation).
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{6d_loglikelihood.png}
+	\caption{Log-likelihood as a function of $\beta_1$.}
+	\label{fig:6d_loglikelihood}
+\end{figure}
 
 
 
