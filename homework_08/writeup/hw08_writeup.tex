@@ -49,6 +49,7 @@
    {\endverbatim\endminipage\egroup}
 
 \newcommand{\ramsey}{\href{http://www.statisticalsleuth.com/}{Ramsey }}
+\newcommand{\pr}{\text{P}}
 
 
 
@@ -474,6 +475,15 @@ PctRing5     0.06359722 0.03519530  1.8069805 0.07076531
 \titledquestion{} % Problem 5
 \setlength{\parindent}{1em}
 
+\begin{align*}
+\pr(Y=1|X, Z=1) &= \frac{\pr(Y=1, X, Z=1)}{\pr(X, Z=1)} \\
+&= \frac{\pr(Z=1 | X, Y=1) \cdot \pr(X, Y=1)}{\pr(X, Z=1)} \\
+&= \frac{\pi(X) \phi(Y=1) \cdot \pr(X, Y=1)}{\pr(X, Z=1)} \\
+&= \frac{\pi(X) \phi(Y=1) \cdot \pr(Y=1|X) \cdot \pr(X)}{\pr(X, Z=1)} \\
+&= \frac{\pi(X) \phi(Y=1) \cdot \frac{e^{\alpha + X^T \beta}}{1 + e^{\alpha + X^T \beta}} \cdot \pr(X)}{\pr(X, Z=1)} \\
+&= \frac{e^{\alpha + X^T \beta}}{1 + e^{\alpha + X^T \beta}} \cdot \pi(X) \phi(Y=1) \cdot \frac{\pr(X)}{\pr(X, Z=1)} \\
+&= \frac{e^{\alpha + X^T \beta}}{1 + e^{\alpha + X^T \beta}} \cdot \pi(X) \phi(Y=1) \cdot \frac{1}{\pr(Z=1|X)} \\
+\end{align*}
 
 
 
@@ -523,17 +533,13 @@ Call:  glm(formula = Y ~ X - 1, family = binomial, data = data6)
 Coefficients:
     X  
 23.14  
-
-Degrees of Freedom: 4 Total (i.e. Null);  3 Residual
-Null Deviance:	    5.545 
-Residual Deviance: 3.567e-10 	AIC: 2
 \end{codeSmall}
 
 This estimate doesn't make much sense, however, since the maximum likelihood estimate shouldn't (can't) converge when there is complete separation of the data, as there is here.
 
 At least with the data we have, we can't obtain a reasonable estimate of $\text{P}(Y = 1|X = 0.5)$. With the current data, any arbitrary $X$  split between -1 and 1 gives perfect separation. Given that we can't uniquely define the correct split, it isn't clear how we could estimate $\text{P}(Y = 1|X = 0.5)$.
 
-A plot of the log-likelihood as a function of $\beta_1$ is shown in Figure \ref{fig:6d_loglikelihood}. The plot shows that the log-likelihood never finds a maximum. The \texttt{glm} function chose $\beta_1=23.14$, but, as shown in the plot, this choice is somewhat arbitrary. A sufficient and necessary condition for the MLE of logistic regression coefficients to exist, is for there to be some overlap of the response in each $X$ (i.e., we can't have complete separation).
+A plot of the log-likelihood as a function of $\beta_1$ is shown in Figure \ref{fig:6d_loglikelihood}.
 
 \begin{figure}[!h]
 	\centering
@@ -543,6 +549,7 @@ A plot of the log-likelihood as a function of $\beta_1$ is shown in Figure \ref{
 	\label{fig:6d_loglikelihood}
 \end{figure}
 
+The plot shows that the log-likelihood never finds a maximum. The \texttt{glm} function chose $\beta_1=23.14$, but, as shown in the plot, this choice is somewhat arbitrary. A sufficient and necessary condition for the MLE of logistic regression coefficients to exist, is for there to be some overlap of the response in each $X$ (i.e., we can't have complete separation).
 
 
 \end{parts}
