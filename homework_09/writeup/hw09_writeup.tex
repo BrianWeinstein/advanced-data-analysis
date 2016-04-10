@@ -67,6 +67,119 @@ Code is attached here and also posted at \href{https://github.com/BrianWeinstein
 
 \titledquestion{\ramsey 20.12}
 
+\textit{Duchenne Muscular Dystrophy (DMD) is a genetically transmitted disease, passed from a mother to her children. Doctors must rely on some kind of test to detect the presence of the disease. The data in Display 20.15 are levels of two enzymes in the blood, creatine kinase (CK) and hemopexin (H), for 38 known DMD carriers and 82 women who are not carriers. It is desired to use these data to obtain an equation for indicating whether a woman is a likely carrier.}
+
+\begin{parts}
+
+\part \textit{Make a scatterplot of $H$ versus $\log(CK)$; use one plotting symbol to represent the controls on the plot and another to represent the carriers. Does it appear from the plot that these enzymes might be useful predictors of whether a woman is a carrier?}
+
+A coded scatterplot of $H$ vs $\log(CK)$ is shown in Figure \ref{fig:1a}. Based on the scatterplot, it does appear that these enzymes might be useful predictors of whether a woman is a carrier --- visually, at least, it looks like the carriers have higher levels of CK, and slightly higher levels of H.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{1a.png}
+	\caption{A coded scatterplot of $H$ vs $\log(CK)$.}
+	\label{fig:1a}
+\end{figure}
+
+
+
+\part \textit{Fit the logistic regression of carrier on $CK$ and $CK$-squared. Does the $CK$-squared term significantly differ from 0? Next fit the logistic regression of carrier on $\log(CK)$ and $[\log(CK)]^2$. Does the squared term significantly differ from 0? Which scale (untransformed or log-transformed) seems more appropriate for $CK$?}
+
+The logistic regression of carrier on $CK$ and $CK$-squared is shown below. The $CK$-squared term does not significantly differ from 0 (two-sided p-value 0.1219).
+
+\begin{codeSmall}
+> glm_1b1 <- glm(formula = Group ~ CK + I(CK^2),
++                   data = mdData, family = binomial)
+> summary(glm_1b1)$coefficients
+                  Estimate    Std. Error   z value          Pr(>|z|)
+(Intercept)  4.17746146864 0.72637612139  5.751100 0.000000008866482
+CK          -0.05797905485 0.01299217478 -4.462614 0.000008096600851
+I(CK^2)      0.00005054336 0.00003267841  1.546690 0.121938045015280
+\end{codeSmall}$
+
+The logistic regression of carrier on $\log(CK)$ and $[\log(CK)]^2$ is shown below. The $[\log(CK)]^2$ term does not significantly differ from 0 (two-sided p-value 0.1737).
+
+\begin{codeSmall}
+> glm_1b2 <- glm(formula = Group ~ log(CK) + I(log(CK)^2),
++                data = mdData, family = binomial)
+> summary(glm_1b2)$coefficients
+              Estimate Std. Error    z value  Pr(>|z|)
+(Intercept)  -9.735313  16.297521 -0.5973493 0.5502742
+log(CK)       8.516251   8.358066  1.0189261 0.3082381
+I(log(CK)^2) -1.445731   1.062746 -1.3603736 0.1737117
+\end{codeSmall}$
+
+The log-transformed scale is more appropriate for $CK$, since it ranges over many orders of magnitude on the untransformed scale (from 15 to 925). A coded scatterplot of $H$ vs $CK$, shown in Figure \ref{fig:1b}, further illustrates the need for the transformation.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{1b.png}
+	\caption{A coded scatterplot of $H$ vs $CK$.}
+	\label{fig:1b}
+\end{figure}
+
+
+
+\part \textit{Fit the logistic regression of carrier on $\log(CK)$ and $H$. Report the coefficients and standard errors.}
+
+The coefficients and standard errors in the logistic regression of carrier on $\log(CK)$ and $H$ is shown below.
+
+\begin{codeSmall}
+> glm_1c <- glm(formula = Group ~ log(CK) + H,
++                data = mdData, family = binomial)
+> summary(glm_1c)$coefficients
+              Estimate Std. Error   z value       Pr(>|z|)
+(Intercept) 28.9134030 5.80016937  4.984924 0.000000619862
+log(CK)     -4.0204252 0.82909534 -4.849171 0.000001239784
+H           -0.1365189 0.03654202 -3.735943 0.000187013358
+\end{codeSmall}$
+
+
+
+\part \textit{Carry out a drop-in-deviance test for the hypothesis that neither $\log(CK)$ nor $H$ are useful predictors of whether a woman is a carrier.}
+
+We first fit a reduced model that includes only an intercept term.
+
+\begin{codeSmall}
+> # fit a reduced model
+> glm_1d <- glm(formula = Group ~ 1,
++               data = mdData, family = binomial)
+> summary(glm_1d)$coefficients
+             Estimate Std. Error  z value      Pr(>|z|)
+(Intercept) 0.7691331  0.1962419 3.919311 0.00008880244
+\end{codeSmall}$
+
+We then compare the model from part (c) to this reduced model using a drop-in-deviance test (likelihood ratio test), testing the hypothesis that neither $\log(CK)$ nor $H$ are useful predictors of whether a woman is a carrier.
+
+\begin{codeSmall}
+> anova(glm_1c, glm_1d, test="LRT")
+Analysis of Deviance Table
+
+Model 1: Group ~ log(CK) + H
+Model 2: Group ~ 1
+  Resid. Df Resid. Dev Df Deviance  Pr(>Chi)    
+1       117     61.992                          
+2       119    149.840 -2  -87.847 < 2.2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+\end{codeSmall}
+
+There is overwhelming evidence that either (1) one of the variables or (@) both of the variables are useful predictors of whether a woman is a carrier of DMD (two-sided p-value $2.2 \times 10^{-16}$ from a drop-in-deviance test).
+
+
+\part \textit{Typical values of $CK$ and $H$ are 80 and 85. Suppose that a suspected carrier has values of 300 and 100. What are the odds that she is a carrier relative to the odds that a woman with typical values (80 and 85) is a carrier?}
+
+
+
+
+
+
+
+
+\end{parts}
 
 
 
