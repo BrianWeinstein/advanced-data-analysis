@@ -75,6 +75,11 @@ Code is attached here and also posted at \href{https://github.com/BrianWeinstein
 
 A coded scatterplot of $H$ vs $\log(CK)$ is shown in Figure \ref{fig:1a}. Based on the scatterplot, it does appear that these enzymes might be useful predictors of whether a woman is a carrier --- visually, at least, it looks like the carriers have higher levels of CK, and slightly higher levels of H.
 
+\begin{codeSmall}
+> mdData <- Sleuth3::ex2012
+> mdData$Group <- relevel(mdData$Group, ref = "Control")
+\end{codeSmall}
+
 \begin{figure}[!h]
 	\centering
 	\captionsetup{width=0.8\textwidth}
@@ -91,12 +96,12 @@ The logistic regression of carrier on $CK$ and $CK$-squared is shown below. The 
 
 \begin{codeSmall}
 > glm_1b1 <- glm(formula = Group ~ CK + I(CK^2),
-+                   data = mdData, family = binomial)
++                data = mdData, family = binomial)
 > summary(glm_1b1)$coefficients
                   Estimate    Std. Error   z value          Pr(>|z|)
-(Intercept)  4.17746146864 0.72637612139  5.751100 0.000000008866482
-CK          -0.05797905485 0.01299217478 -4.462614 0.000008096600851
-I(CK^2)      0.00005054336 0.00003267841  1.546690 0.121938045015280
+(Intercept) -4.17746146864 0.72637612139 -5.751100 0.000000008866482
+CK           0.05797905485 0.01299217478  4.462614 0.000008096600851
+I(CK^2)     -0.00005054336 0.00003267841 -1.546690 0.121938045015287
 \end{codeSmall}$
 
 The logistic regression of carrier on $\log(CK)$ and $[\log(CK)]^2$ is shown below. The $[\log(CK)]^2$ term does not significantly differ from 0 (two-sided p-value 0.1737).
@@ -106,9 +111,9 @@ The logistic regression of carrier on $\log(CK)$ and $[\log(CK)]^2$ is shown bel
 +                data = mdData, family = binomial)
 > summary(glm_1b2)$coefficients
               Estimate Std. Error    z value  Pr(>|z|)
-(Intercept)  -9.735313  16.297521 -0.5973493 0.5502742
-log(CK)       8.516251   8.358066  1.0189261 0.3082381
-I(log(CK)^2) -1.445731   1.062746 -1.3603736 0.1737117
+(Intercept)   9.735313  16.297521  0.5973493 0.5502742
+log(CK)      -8.516251   8.358066 -1.0189261 0.3082381
+I(log(CK)^2)  1.445731   1.062746  1.3603736 0.1737117
 \end{codeSmall}$
 
 The log-transformed scale is more appropriate for $CK$, since it ranges over many orders of magnitude on the untransformed scale (from 15 to 925). A coded scatterplot of $H$ vs $CK$, shown in Figure \ref{fig:1b}, further illustrates the need for the transformation.
@@ -131,10 +136,10 @@ The coefficients and standard errors in the logistic regression of carrier on $\
 > glm_1c <- glm(formula = Group ~ log(CK) + H,
 +                data = mdData, family = binomial)
 > summary(glm_1c)$coefficients
-              Estimate Std. Error   z value       Pr(>|z|)
-(Intercept) 28.9134030 5.80016937  4.984924 0.000000619862
-log(CK)     -4.0204252 0.82909534 -4.849171 0.000001239784
-H           -0.1365189 0.03654202 -3.735943 0.000187013358
+               Estimate Std. Error   z value       Pr(>|z|)
+(Intercept) -28.9134030 5.80016937 -4.984924 0.000000619862
+log(CK)       4.0204252 0.82909534  4.849171 0.000001239784
+H             0.1365189 0.03654202  3.735943 0.000187013358
 \end{codeSmall}$
 
 
@@ -144,12 +149,11 @@ H           -0.1365189 0.03654202 -3.735943 0.000187013358
 We first fit a reduced model that includes only an intercept term.
 
 \begin{codeSmall}
-> # fit a reduced model
 > glm_1d <- glm(formula = Group ~ 1,
 +               data = mdData, family = binomial)
 > summary(glm_1d)$coefficients
-             Estimate Std. Error  z value      Pr(>|z|)
-(Intercept) 0.7691331  0.1962419 3.919311 0.00008880244
+              Estimate Std. Error   z value      Pr(>|z|)
+(Intercept) -0.7691331  0.1962419 -3.919311 0.00008880244
 \end{codeSmall}$
 
 We then compare the model from part (c) to this reduced model using a drop-in-deviance test (likelihood ratio test), testing the hypothesis that neither $\log(CK)$ nor $H$ are useful predictors of whether a woman is a carrier.
@@ -167,16 +171,28 @@ Model 2: Group ~ 1
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 \end{codeSmall}
 
-There is overwhelming evidence that either (1) one of the variables or (@) both of the variables are useful predictors of whether a woman is a carrier of DMD (two-sided p-value $2.2 \times 10^{-16}$ from a drop-in-deviance test).
+There is overwhelming evidence that either (1) one of the variables or (2) both of the variables are useful predictors of whether a woman is a carrier of DMD (two-sided p-value $2.2 \times 10^{-16}$ from a drop-in-deviance test).
 
 
 \part \textit{Typical values of $CK$ and $H$ are 80 and 85. Suppose that a suspected carrier has values of 300 and 100. What are the odds that she is a carrier relative to the odds that a woman with typical values (80 and 85) is a carrier?}
 
+The odds of a woman being a carrier with values of 300 and 100 is 1575 times higher than the odds of a woman with values of 80 and 85.
 
-
-
-
-
+\begin{codeSmall}
+> # calculate odds and probability of having DMD at CK=80, H=85
+> odds1 <- exp(predict(glm_1c, data.frame(CK=80, H=85)))[[1]] ; odds1
+[1] 1.361127
+> 1 / (1 + exp(-odds1))
+[1] 0.7959428
+> # calculate odds and probability of having DMD at CK=300, H=100
+> odds2 <- exp(predict(glm_1c, data.frame(CK=300, H=100)))[[1]] ; odds2
+[1] 2143.332
+> 1 / (1 + exp(-odds2))
+[1] 1
+> # calculate the odds ratio
+> odds2/odds1
+[1] 1574.675
+\end{codeSmall}
 
 
 \end{parts}

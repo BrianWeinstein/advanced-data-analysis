@@ -28,6 +28,7 @@ library(dplyr)
 
 # load data
 mdData <- Sleuth3::ex2012
+mdData$Group <- relevel(mdData$Group, ref = "Control")
 
 # Part a ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
@@ -72,13 +73,16 @@ anova(glm_1c, glm_1d, test="LRT")
 
 # Part e ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
 
-# calculate odds at CK=80, H=85
-exp(predict(glm_1c, data.frame(CK=80, H=85)))
+# calculate odds and probability of having DMD at CK=80, H=85
+odds1 <- exp(predict(glm_1c, data.frame(CK=80, H=85)))[[1]] ; odds1
+1 / (1 + exp(-odds1))
 
-# calculate odds at CK=300, H=100
-1/(1 +exp(-predict(glm_1c, data.frame(CK=300, H=100))))
-1/(1 +exp(-predict(glm_1c, data.frame(CK=80, H=85))))
+# calculate odds and probability of having DMD at CK=300, H=100
+odds2 <- exp(predict(glm_1c, data.frame(CK=300, H=100)))[[1]] ; odds2
+1 / (1 + exp(-odds2))
 
+# calculate the odds ratio
+odds2/odds1
 
 rm(list = ls()) # clear working environment
 
