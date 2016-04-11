@@ -135,7 +135,8 @@ glm2QuasiSummary
 glm2QuasiSummary %>%
   select(Term, Estimate, QL_StdError, QL_TValue, QL_PValue)
 
-
+# verify that ~50% of fish get tumors at Dose=0.0333345
+1/(1+exp(-1 * predict(glm2, data.frame(Dose=0.0333345))))
 
 
 testdata <- case2102 %>% mutate(Prop=Removed/Placed, Dark=ifelse(Morph=="dark", 1, 0))

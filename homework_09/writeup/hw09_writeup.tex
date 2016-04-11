@@ -270,7 +270,7 @@ Examining a plot of the deviance residuals vs fitted values in Figure \ref{fig:2
 \end{figure}
 
 
-Next, taking extra-binomial variation into account, we adjust the standard errors t-statistics, and associated p-values for the model estimates.
+Next, taking extra-binomial variation into account, we adjust the standard errors, t-statistics, and associated p-values for the model estimates.
 
 The dispersion parameter is estimated to be $\hat{\psi}=\frac{26.048}{17}=1.5322$, the quasi-likelihood standard error is $\text{sqrt}(\hat{\psi})$ times the maximum likelihood standard error, the t-value is the the estimate divided by the quasi-likelihood standard error, and the associated two-sided p-value (now based on the t distribution, with 17 degrees of freedom) is defined in the normal way. The computation, and  summary of the maximum-likelihood and quasi-likelihood statistics are shown below.
 
@@ -290,7 +290,7 @@ The dispersion parameter is estimated to be $\hat{\psi}=\frac{26.048}{17}=1.5322
 3 I(log(Dose)^2) -0.39195     0.06136  -6.38761   0.00000     0.07595  -5.16031   0.00008
 \end{codeSmall}
 
-The final model is thus:
+The final model, after taking the extra-binomial variation into account, is
 
 \begin{codeSmall}
             Term Estimate QL_StdError QL_TValue QL_PValue
@@ -299,19 +299,24 @@ The final model is thus:
 3 I(log(Dose)^2) -0.39195     0.07595  -5.16031   0.00008
 \end{codeSmall}
 
-\todo{describe relationship between dose and odds}
+and the odds $\omega$ of liver tumor as a function of Dose is given by
+$$\omega=\frac{\pi}{1- \pi} = \text{e}^{1.02921 - 1.03048 \cdot \log(\text{Dose}) - 0.39195 \cdot [\log(\text{Dose})]^2 }.$$
 
+The dose at which it's estimated that 50\% of fish will get liver tumors is found by setting the probability of liver tumor $\pi$ equal to 0.5, and then (numerically) solving for Dose:
 
+\begin{gather*}
+\pi = 0.5 = \frac{1}{1 + \text{e}^{-(1.02921 - 1.03048 \cdot \log(\text{Dose}) - 0.39195 \cdot [\log(\text{Dose})]^2)}} \\
+\Rightarrow \text{Dose} \approx 0.0333345.
+\end{gather*}
 
+To verify this result, we plug the value into the model:
 
-
-
-
-\todo{find does at which 50 pct of fish get tumors}
-
-
-
-
+\begin{code}
+> # verify that ~50% of fish are expected to get tumors at Dose=0.0333345
+> 1/(1+exp(-1 * predict(glm2, data.frame(Dose=0.0333345))))
+        1 
+0.5000034
+\end{code}
 
 
 \titledquestion{} % Problem 3
@@ -332,6 +337,6 @@ and give the form of $\alpha$ and $\beta$.}
 
 \end{questions}
 
-\listoftodos
+%\listoftodos
 
 \end{document}
