@@ -14,13 +14,7 @@ options(scipen=5)
 # load packages
 library(Sleuth3) # Data sets from Ramsey and Schafer's "Statistical Sleuth (3rd ed)"
 library(ggplot2); theme_set(theme_bw())
-# library(MASS)
 library(dplyr)
-# library(GGally)
-# library(leaps)
-# library(tidyr)
-# library(ggrepel)
-# library(gridExtra)
 
 
 
