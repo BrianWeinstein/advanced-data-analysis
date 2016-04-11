@@ -55,7 +55,7 @@
 \begin{document}
 
 
-\title{STAT W4201 001, Homework 19}
+\title{STAT W4201 001, Homework 9}
 \author{Brian Weinstein (bmw2148)}
 \date{Apr 13, 2016}
 \maketitle
@@ -290,8 +290,6 @@ The dispersion parameter is estimated to be $\hat{\psi}=\frac{26.048}{17}=1.5322
 The final model is thus:
 
 \begin{codeSmall}
-> glm2QuasiSummary %>%
-+   select(Term, Estimate, QL_StdError, QL_TValue, QL_PValue)
             Term Estimate QL_StdError QL_TValue QL_PValue
 1    (Intercept)  1.02921     0.61078   1.68508   0.11024
 2      log(Dose) -1.03048     0.44243  -2.32911   0.03244
@@ -299,6 +297,12 @@ The final model is thus:
 \end{codeSmall}
 
 \todo{describe relationship between dose and odds}
+
+
+
+
+
+
 
 \todo{find does at which 50 pct of fish get tumors}
 

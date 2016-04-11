@@ -131,7 +131,9 @@ glm2QuasiSummary$QL_PValue <- 2 * pt(q = -1 * abs(glm2QuasiSummary$QL_TValue),
 glm2QuasiSummary[, -1] <- round(glm2QuasiSummary[, -1], 5)
 glm2QuasiSummary
 
-
+# final model
+glm2QuasiSummary %>%
+  select(Term, Estimate, QL_StdError, QL_TValue, QL_PValue)
 
 
 
