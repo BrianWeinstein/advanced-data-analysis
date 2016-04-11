@@ -135,21 +135,9 @@ glm2QuasiSummary
 glm2QuasiSummary %>%
   select(Term, Estimate, QL_StdError, QL_TValue, QL_PValue)
 
-# verify that ~50% of fish get tumors at Dose=0.0333345
+# solved numerically in mathematica that Dose=0.0333345:
+# verify that ~50% of fish are expected to get tumors at Dose=0.0333345
 1/(1+exp(-1 * predict(glm2, data.frame(Dose=0.0333345))))
-
-
-testdata <- case2102 %>% mutate(Prop=Removed/Placed, Dark=ifelse(Morph=="dark", 1, 0))
-testglm <- glm(formula = Prop ~ Dark + Distance + Dark * Distance, data=testdata, family = binomial, weights = Placed)
-summary(testglm)
-testglm_reduced <- glm(formula = Prop ~ Dark + Distance, data=testdata, family = binomial, weights = Placed)
-summary(testglm)
-anova(testglm_reduced, testglm)
-pchisq(11.931, 1, lower.tail = FALSE)
-
-testglmquasi <- glm(formula = Prop ~ Dark + Distance + Dark * Distance, data=testdata, family = quasibinomial, weights = Placed)
-summary(testglmquasi)
-
 
 rm(list = ls()) # clear working environment
 
