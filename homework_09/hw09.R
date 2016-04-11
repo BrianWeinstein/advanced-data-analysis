@@ -58,7 +58,7 @@ ggsave(filename="writeup/1b.png", width=6.125, height=3.5, units="in")
 
 # fit a logistic regression model on log(CK) and H
 glm_1c <- glm(formula = Group ~ log(CK) + H,
-               data = mdData, family = binomial)
+              data = mdData, family = binomial)
 summary(glm_1c)$coefficients
 
 # Part d ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ###
@@ -90,6 +90,62 @@ rm(list = ls()) # clear working environment
 
 # Problem 2: Ramsey 21.16 #######################################################################
 
+# load data and create a tumor proportion variable
+troutData <- Sleuth3::ex2116 %>%
+  mutate(TumorProp=Tumor/Total)
+
+# scatterplot
+set.seed(1)
+ggplot(troutData, aes(x=log(Dose), y=log(TumorProp/(1-TumorProp)))) +
+  geom_jitter(size=2, width=0.05)
+ggsave(filename="writeup/2_scatter.png", width=6.125, height=3.5, units="in")
+
+# fit a binomial counts logistic regression model on a rich model
+glm2 <- glm(formula = TumorProp ~ log(Dose) + I(log(Dose)^2),
+            data = troutData, family = binomial, weights = Total)
+summary(glm2)
+
+# compute the goodness of fit p value
+pchisq(q = summary(glm2)$deviance, df = summary(glm2)$df.residual,
+       lower.tail = FALSE)
+
+# examine deviance residuals
+qplot(x=glm2$fitted.values, y=summary(glm2)$deviance.resid) +
+  geom_point(size=2) +
+  geom_hline(yintercept = c(-2, 2), linetype="dashed", color="gray")
+ggsave(filename="writeup/2_devresid.png", width=6.125, height=3.5, units="in")
+
+# estimate the dispersion parameter
+dispersion_param <- summary(glm2)$deviance / summary(glm2)$df.residual
+dispersion_param
+sqrt(dispersion_param)
+
+# compute the quasi-likelihood standard errors, t-statistics, and pvalues
+glm2QuasiSummary <- data.frame(summary(glm2)$coefficients) %>%
+  mutate(Term=row.names(.)) %>%
+  select(Term, Estimate, ML_StdError=Std..Error, ML_ZValue=z.value, ML_PValue=Pr...z..) %>%
+  mutate(QL_StdError=ML_StdError * sqrt(dispersion_param),
+         QL_TValue=Estimate/QL_StdError)
+glm2QuasiSummary$QL_PValue <- 2 * pt(q = -1 * abs(glm2QuasiSummary$QL_TValue),
+                                     df = as.integer(summary(glm2)$df.residual))
+glm2QuasiSummary[, -1] <- round(glm2QuasiSummary[, -1], 5)
+glm2QuasiSummary
+
+
+
+
+
+
+testdata <- case2102 %>% mutate(Prop=Removed/Placed, Dark=ifelse(Morph=="dark", 1, 0))
+testglm <- glm(formula = Prop ~ Dark + Distance + Dark * Distance, data=testdata, family = binomial, weights = Placed)
+summary(testglm)
+testglm_reduced <- glm(formula = Prop ~ Dark + Distance, data=testdata, family = binomial, weights = Placed)
+summary(testglm)
+anova(testglm_reduced, testglm)
+pchisq(11.931, 1, lower.tail = FALSE)
+
+testglmquasi <- glm(formula = Prop ~ Dark + Distance + Dark * Distance, data=testdata, family = quasibinomial, weights = Placed)
+summary(testglmquasi)
 
 
 rm(list = ls()) # clear working environment

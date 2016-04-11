@@ -203,6 +203,108 @@ The odds of a woman being a carrier with values of 300 and 100 is 1575 times hig
 
 \textit{Twenty tanks of rainbow trout embryos were exposed to one of five doses of Aflatoxicol for one hour. The data in Display 21.20 (from George Bailey and Jerry Hendricks) represent the numbers of fish in each tank and the numbers of these that had liver tumors after one year. Describe the relationship between dose of Aflatoxicol and odds of liver tumor. It is also of interest to determine the dose at which 50\% of the fish will get liver tumors. (Note: Tank effects are to be expected, meaning that tanks given the same dose may have slightly different  $\pi$’s. Thus, one should suspect extra-binomial variation.)}
 
+A jittered scatterplot of logit(proportion of trout with liver tumors) vs log(Dose) is shown in Figure \ref{fig:2_scatter}. The scatterplot reveals a possible quadratic parameter.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{2_scatter.png}
+	\caption{A jittered scatterplot of logit(proportion of trout with liver tumors) vs log(Dose).}
+	\label{fig:2_scatter}
+\end{figure}
+
+
+Based on the study design, there's no guarantee that, at each Dose, the $\pi$'s from each tank will be the same. As such, extra-binomial variation is suspected.
+
+To test for extra-binomial variation, we first fit a rich model with both log(Dose) and [log(Dose)]$^2$ as explanatory variables, as shown below.
+
+\begin{codeSmall}
+> glm2 <- glm(formula = TumorProp ~ log(Dose) + I(log(Dose)^2),
++ data = troutData, family = binomial, weights = Total)
+> summary(glm2)
+
+Call:
+glm(formula = TumorProp ~ log(Dose) + I(log(Dose)^2), family = binomial, 
+    data = troutData, weights = Total)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-2.1349  -0.6860  -0.1067   1.0382   1.8863  
+
+Coefficients:
+               Estimate Std. Error z value Pr(>|z|)    
+(Intercept)     1.02921    0.49343   2.086  0.03699 *  
+log(Dose)      -1.03048    0.35743  -2.883  0.00394 ** 
+I(log(Dose)^2) -0.39195    0.06136  -6.388 1.68e-10 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 667.195  on 19  degrees of freedom
+Residual deviance:  26.048  on 17  degrees of freedom
+AIC: 119.45
+
+Number of Fisher Scoring iterations: 4
+\end{codeSmall}
+
+The residual deviance of 26.048 on 17 degrees of freedom gives a p-value of 0.0736 from a goodness of fit test, as shown below. The p-value is low enough to indicate that the model is inadequate, and suggests the possible presence of extra-binomial variation.
+
+\begin{codeSmall}
+> pchisq(q = summary(glm2)$deviance, df = summary(glm2)$df.residual,
++        lower.tail = FALSE)
+[1] 0.07358942
+\end{codeSmall}
+
+Examining a plot of the deviance residuals vs fitted values in Figure \ref{fig:2_devresid}, only one residual --- for the tank at Dose 0.010, where only 2 of the 89 fish had tumors --- is extreme. There's no pattern in the residual plot, so this likely isn't the cause of the low p-value from the goodness of fit test and can likely be ignored. We thus assume that cause of the low p-value is due to the presence of extra-binomial variation.
+
+\begin{figure}[!h]
+	\centering
+	\captionsetup{width=0.8\textwidth}
+	\includegraphics[width=4.25in]{2_devresid.png}
+	\caption{Scatterplot of deviance residuals vs fitted values, for \texttt{glm2}.}
+	\label{fig:2_devresid}
+\end{figure}
+
+
+Next, taking extra-binomial variation into account, we adjust the standard errors t-statistics, and associated p-values for the model estimates.
+
+The dispersion parameter is estimated to be $\hat{\psi}=\frac{26.048}{17}=1.5322$, the quasi-likelihood standard error is $\text{sqrt}(\hat{\psi})$ times the maximum likelihood standard error, the t-value is the the estimate divided by the quasi-likelihood standard error, and the associated two-sided p-value (now based on the t distribution, with 17 degrees of freedom) is defined in the normal way. The computation, and  summary of the maximum-likelihood and quasi-likelihood statistics are shown below.
+
+\begin{codeSmall}
+> glm2QuasiSummary <- data.frame(summary(glm2)$coefficients) %>%
++   mutate(Term=row.names(.)) %>%
++   select(Term, Estimate, ML_StdError=Std..Error, ML_ZValue=z.value, ML_PValue=Pr...z..) %>%
++   mutate(QL_StdError=ML_StdError * sqrt(dispersion_param),
++          QL_TValue=Estimate/QL_StdError)
+> glm2QuasiSummary$QL_PValue <- 2 * pt(q = -1 * abs(glm2QuasiSummary$QL_TValue),
++                                      df = as.integer(summary(glm2)$df.residual))
+> glm2QuasiSummary[, -1] <- round(glm2QuasiSummary[, -1], 5)
+> glm2QuasiSummary
+            Term Estimate ML_StdError ML_ZValue ML_PValue QL_StdError QL_TValue QL_PValue
+1    (Intercept)  1.02921     0.49343   2.08585   0.03699     0.61078   1.68508   0.11024
+2      log(Dose) -1.03048     0.35743  -2.88306   0.00394     0.44243  -2.32911   0.03244
+3 I(log(Dose)^2) -0.39195     0.06136  -6.38761   0.00000     0.07595  -5.16031   0.00008
+\end{codeSmall}
+
+The final model is thus:
+
+\begin{codeSmall}
+> glm2QuasiSummary %>%
++   select(Term, Estimate, QL_StdError, QL_TValue, QL_PValue)
+            Term Estimate QL_StdError QL_TValue QL_PValue
+1    (Intercept)  1.02921     0.61078   1.68508   0.11024
+2      log(Dose) -1.03048     0.44243  -2.32911   0.03244
+3 I(log(Dose)^2) -0.39195     0.07595  -5.16031   0.00008
+\end{codeSmall}
+
+\todo{describe relationship between dose and odds}
+
+\todo{find does at which 50 pct of fish get tumors}
+
+
+
+
 
 
 \titledquestion{} % Problem 3
@@ -221,6 +323,6 @@ and give the form of $\alpha$ and $\beta$.}
 
 \end{questions}
 
-%\listoftodos
+\listoftodos
 
 \end{document}
