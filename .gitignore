@@ -5,4 +5,4 @@
 *.synctex.gz
 *.tdo
 archive_git_repo.sh
-hw09_problem2.nb
+hw09_problem*.nb
