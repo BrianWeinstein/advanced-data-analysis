@@ -49,6 +49,7 @@
    {\endverbatim\endminipage\egroup}
 
 \newcommand{\ramsey}{\href{http://www.statisticalsleuth.com/}{Ramsey }}
+\newcommand{\pr}{\text{P}}
 
 
 
@@ -331,6 +332,21 @@ G_2 \quad : \quad Z \sim N(\mu_2, \Sigma)
 Let $z$ be an observation made on an individual drawn at random from the combined population. The prior odds that the individual belongs to $G_1$ are $\pi_1/(1 - \pi_1)$. Show that the posterior odds given $z$ are
 $$\frac{\pi_1}{1 - \pi_1} \exp(\alpha + \beta^T z )$$
 and give the form of $\alpha$ and $\beta$.}
+
+Let $\omega(A)$ denote the odds of $A$.
+
+\begin{align*}
+\omega(G_1|z) &= \frac{\pr(G_1|z)}{1 - \pr(G_1|z)} \\
+&= \frac{\pr(G_1|z)}{\pr(G_2|z)} \\
+&= \frac{\pr(z|G_1)}{\pr(z|G_2)} \cdot \frac{\pr(G_1)}{\pr(G_2)}\\
+&= \frac{    \exp \left( \frac{-(z-\mu_1)^2}{2 \sigma^2}   \right)   }{\exp \left( \frac{-(z-\mu_2)^2}{2 \sigma^2}   \right)} \cdot \frac{\pi_1}{1 - \pi_1}\\
+&= \exp \left(     \left( \frac{\mu_1 - \mu_2}{\sigma^2} \right)^T z   - \frac{\mu_1^2 - \mu_2^2}{2 \sigma^2}          \right)   \cdot \frac{\pi_1}{1 - \pi_1}\\
+&= \frac{\pi_1}{1 - \pi_1} \cdot \exp \left(  (\mu_1 - \mu_2)^T  \Sigma^{-1} z   - \frac{1}{2} \left(  \mu_2^T \Sigma^{-1} \mu_2   - \mu_1^T \Sigma^{-1} \mu_1    \right)             \right) \\
+&= \frac{\pi_1}{1 - \pi_1} \cdot \exp \left(  \beta^T z   + \alpha \right)
+\end{align*}
+
+where $\alpha=\frac{1}{2} \left(  \mu_2^T \Sigma^{-1} \mu_2   - \mu_1^T \Sigma^{-1} \mu_1    \right) $ and $\beta = \Sigma^{-1} (\mu_2 - \mu_1)$.
+
 
 
 
